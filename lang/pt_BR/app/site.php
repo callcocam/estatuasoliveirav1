@@ -15,6 +15,16 @@ return [
         'quote_button' => 'Orçamento',
     ],
 
+    'auth' => [
+        'login' => 'Entrar',
+        'register' => 'Criar conta',
+        'user_menu' => 'Menu do usuário',
+        'my_quotes' => 'Meus orçamentos',
+        'admin_panel' => 'Painel',
+        'logout' => 'Sair',
+        'customer_area' => 'Área do cliente',
+    ],
+
     'meta' => [
         'home_title' => 'Estátuas, vasos e fontes em cimento, mármore e gesso',
         'home_description' => 'Há mais de 25 anos fabricando estátuas, vasos, fontes, bancos e decorações em cimento, mármore e gesso para casa, sítio e jardim.',

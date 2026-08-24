@@ -3,6 +3,8 @@ import { useT } from '@/composables/useT';
 import type { SiteTheme } from '@/composables/useTheme';
 import { useTheme } from '@/composables/useTheme';
 
+withDefaults(defineProps<{ compact?: boolean }>(), { compact: false });
+
 const { theme, themes, setTheme } = useTheme();
 const { t } = useT();
 
@@ -22,7 +24,10 @@ function themeName(value: SiteTheme): string {
 
 <template>
     <div
-        class="inline-flex gap-1 rounded-full border border-site-outline-variant p-1"
+        :class="[
+            'inline-flex gap-1 rounded-full border p-1',
+            compact ? 'border-current/30' : 'border-site-outline-variant',
+        ]"
         role="radiogroup"
         :aria-label="t('app.theme.switcher.label')"
     >
@@ -38,13 +43,24 @@ function themeName(value: SiteTheme): string {
             :title="themeName(value)"
             @click="setTheme(value)"
             :class="[
-                'flex h-6 w-6 items-center justify-center rounded-full transition-shadow',
+                'flex items-center justify-center rounded-full transition-shadow',
+                compact ? 'h-5 w-5' : 'h-6 w-6',
                 theme === value
-                    ? 'ring-2 ring-site-primary ring-offset-2 ring-offset-site-surface'
-                    : 'hover:ring-1 hover:ring-site-outline-variant',
+                    ? compact
+                        ? 'ring-2 ring-current/60 ring-offset-1 ring-offset-site-primary-container'
+                        : 'ring-2 ring-site-primary ring-offset-2 ring-offset-site-surface'
+                    : compact
+                      ? 'hover:ring-1 hover:ring-current/40'
+                      : 'hover:ring-1 hover:ring-site-outline-variant',
             ]"
         >
-            <span :class="['h-4 w-4 rounded-full', swatches[value]]" />
+            <span
+                :class="[
+                    'rounded-full',
+                    compact ? 'h-3 w-3' : 'h-4 w-4',
+                    swatches[value],
+                ]"
+            />
         </button>
     </div>
 </template>

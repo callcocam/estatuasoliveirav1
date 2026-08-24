@@ -2,6 +2,10 @@
 
 return [
 
+    'layout' => [
+        'back_to_site' => 'Voltar ao site',
+    ],
+
     'fields' => [
         'name' => 'Nome',
         'name_placeholder' => 'Nome completo',

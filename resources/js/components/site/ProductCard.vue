@@ -22,8 +22,17 @@ const { t } = useT();
                 loading="lazy"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div v-else class="flex h-full w-full items-center justify-center text-site-outline">
-                <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+            <div
+                v-else
+                class="flex h-full w-full items-center justify-center text-site-outline"
+            >
+                <svg
+                    class="h-12 w-12"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1"
+                >
                     <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -33,16 +42,32 @@ const { t } = useT();
             </div>
         </div>
         <div class="flex flex-1 flex-col gap-1 p-5">
-            <p v-if="product.categoryName" class="text-xs tracking-widest text-site-on-surface-variant uppercase">
+            <p
+                v-if="product.categoryName"
+                class="text-xs tracking-widest text-site-on-surface-variant uppercase"
+            >
                 {{ product.categoryName }}
             </p>
-            <h3 class="font-display text-lg text-site-on-surface transition-colors group-hover:text-site-primary">
+            <h3
+                class="font-display text-lg text-site-on-surface transition-colors group-hover:text-site-primary"
+            >
                 {{ product.name }}
             </h3>
-            <p class="mt-auto flex flex-wrap gap-x-3 pt-1 text-sm text-site-on-surface-variant">
-                <span v-if="product.reference">{{ t('app.site.products.reference', { reference: product.reference }) }}</span>
+            <p
+                class="mt-auto flex flex-wrap gap-x-3 pt-1 text-sm text-site-on-surface-variant"
+            >
+                <span v-if="product.reference">{{
+                    t('app.site.products.reference', {
+                        reference: product.reference,
+                    })
+                }}</span>
                 <span v-if="product.widthCm && product.heightCm">
-                    {{ t('app.site.products.dimensions', { width: product.widthCm, height: product.heightCm }) }}
+                    {{
+                        t('app.site.products.dimensions', {
+                            width: product.widthCm,
+                            height: product.heightCm,
+                        })
+                    }}
                 </span>
             </p>
         </div>

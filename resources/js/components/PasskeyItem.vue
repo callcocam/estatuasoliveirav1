@@ -109,9 +109,7 @@ const handleDelete = () => {
                         {{
                             isDeleting
                                 ? t('app.settings.passkeys.item.removing')
-                                : t(
-                                      'app.settings.passkeys.item.remove_confirm',
-                                  )
+                                : t('app.settings.passkeys.item.remove_confirm')
                         }}
                     </Button>
                 </DialogFooter>

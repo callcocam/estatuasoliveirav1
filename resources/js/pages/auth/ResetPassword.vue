@@ -2,9 +2,9 @@
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import SiteButton from '@/components/site/SiteButton.vue';
+import SiteInput from '@/components/site/SiteInput.vue';
+import SitePasswordInput from '@/components/site/SitePasswordInput.vue';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useT } from '@/composables/useT';
@@ -41,7 +41,7 @@ const inputEmail = ref(props.email);
         <div class="grid gap-6">
             <div class="grid gap-2">
                 <Label for="email">{{ t('app.auth.fields.email') }}</Label>
-                <Input
+                <SiteInput
                     id="email"
                     type="email"
                     name="email"
@@ -57,7 +57,7 @@ const inputEmail = ref(props.email);
                 <Label for="password">{{
                     t('app.auth.fields.password')
                 }}</Label>
-                <PasswordInput
+                <SitePasswordInput
                     id="password"
                     name="password"
                     autocomplete="new-password"
@@ -73,7 +73,7 @@ const inputEmail = ref(props.email);
                 <Label for="password_confirmation">{{
                     t('app.auth.fields.password_confirmation')
                 }}</Label>
-                <PasswordInput
+                <SitePasswordInput
                     id="password_confirmation"
                     name="password_confirmation"
                     autocomplete="new-password"
@@ -86,7 +86,7 @@ const inputEmail = ref(props.email);
                 <InputError :message="errors.password_confirmation" />
             </div>
 
-            <Button
+            <SiteButton
                 type="submit"
                 class="mt-4 w-full"
                 :disabled="processing"
@@ -94,7 +94,7 @@ const inputEmail = ref(props.email);
             >
                 <Spinner v-if="processing" />
                 {{ t('app.auth.reset_password.submit') }}
-            </Button>
+            </SiteButton>
         </div>
     </Form>
 </template>

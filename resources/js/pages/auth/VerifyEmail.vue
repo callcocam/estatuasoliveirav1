@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import SiteButton from '@/components/site/SiteButton.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useT } from '@/composables/useT';
 import AuthLayout from '@/layouts/AuthLayout.vue';
@@ -37,12 +37,16 @@ const { t } = useT();
         class="space-y-6 text-center"
         v-slot="{ processing }"
     >
-        <Button :disabled="processing" variant="secondary">
+        <SiteButton :disabled="processing" variant="secondary">
             <Spinner v-if="processing" />
             {{ t('app.auth.verify_email.resend') }}
-        </Button>
+        </SiteButton>
 
-        <TextLink :href="logout()" as="button" class="mx-auto block text-sm">
+        <TextLink
+            :href="logout()"
+            as="button"
+            class="mx-auto block text-sm text-site-primary decoration-site-outline-variant"
+        >
             {{ t('app.auth.verify_email.log_out') }}
         </TextLink>
     </Form>

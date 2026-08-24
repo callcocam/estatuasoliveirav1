@@ -6,8 +6,8 @@ import {
 } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyConfirmationController';
 import InputError from '@/components/InputError.vue';
 import PasskeyVerify from '@/components/PasskeyVerify.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
+import SiteButton from '@/components/site/SiteButton.vue';
+import SitePasswordInput from '@/components/site/SitePasswordInput.vue';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useT } from '@/composables/useT';
@@ -47,7 +47,7 @@ const { t } = useT();
                 <Label htmlFor="password">{{
                     t('app.auth.fields.password')
                 }}</Label>
-                <PasswordInput
+                <SitePasswordInput
                     id="password"
                     name="password"
                     class="mt-1 block w-full"
@@ -60,14 +60,14 @@ const { t } = useT();
             </div>
 
             <div class="flex items-center">
-                <Button
+                <SiteButton
                     class="w-full"
                     :disabled="processing"
                     data-test="confirm-password-button"
                 >
                     <Spinner v-if="processing" />
                     {{ t('app.auth.confirm_password.submit') }}
-                </Button>
+                </SiteButton>
             </div>
         </div>
     </Form>

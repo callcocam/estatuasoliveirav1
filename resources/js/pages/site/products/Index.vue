@@ -21,7 +21,10 @@ let searchTimer: ReturnType<typeof setTimeout> | undefined;
 
 watch(search, (value) => {
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => applyFilters(props.filters.categoria, value), 400);
+    searchTimer = setTimeout(
+        () => applyFilters(props.filters.categoria, value),
+        400,
+    );
 });
 
 function applyFilters(categoria: string | null, busca: string | null): void {
@@ -35,17 +38,29 @@ function applyFilters(categoria: string | null, busca: string | null): void {
         query.busca = busca;
     }
 
-    router.get(productsIndex({ query }).url, {}, { preserveState: true, preserveScroll: true, replace: true });
+    router.get(
+        productsIndex({ query }).url,
+        {},
+        { preserveState: true, preserveScroll: true, replace: true },
+    );
 }
 </script>
 
 <template>
-    <SiteLayout :title="t('app.site.meta.products_title')" :description="t('app.site.products.subtitle')">
+    <SiteLayout
+        :title="t('app.site.meta.products_title')"
+        :description="t('app.site.products.subtitle')"
+    >
         <div class="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
-            <SectionHeading :title="t('app.site.products.title')" :subtitle="t('app.site.products.subtitle')" />
+            <SectionHeading
+                :title="t('app.site.products.title')"
+                :subtitle="t('app.site.products.subtitle')"
+            />
 
             <!-- Filtros -->
-            <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div
+                class="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+            >
                 <div class="flex flex-wrap gap-2">
                     <button
                         type="button"
@@ -76,7 +91,9 @@ function applyFilters(categoria: string | null, busca: string | null): void {
                 </div>
 
                 <label class="relative block md:w-72">
-                    <span class="sr-only">{{ t('app.site.products.search_label') }}</span>
+                    <span class="sr-only">{{
+                        t('app.site.products.search_label')
+                    }}</span>
                     <input
                         v-model="search"
                         type="search"
@@ -87,13 +104,25 @@ function applyFilters(categoria: string | null, busca: string | null): void {
             </div>
 
             <!-- Grade -->
-            <InfiniteScroll v-if="products.data.length" data="products" :buffer="400">
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    <ProductCard v-for="product in products.data" :key="product.id" :product="product" />
+            <InfiniteScroll
+                v-if="products.data.length"
+                data="products"
+                :buffer="400"
+            >
+                <div
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                >
+                    <ProductCard
+                        v-for="product in products.data"
+                        :key="product.id"
+                        :product="product"
+                    />
                 </div>
 
                 <template #loading>
-                    <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div
+                        class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    >
                         <div
                             v-for="index in 4"
                             :key="index"
@@ -104,9 +133,16 @@ function applyFilters(categoria: string | null, busca: string | null): void {
             </InfiniteScroll>
 
             <!-- Estado vazio -->
-            <div v-else class="rounded-site-card bg-site-surface-container-low px-6 py-20 text-center">
-                <h2 class="font-display text-2xl text-site-on-surface">{{ t('app.site.products.empty_title') }}</h2>
-                <p class="mt-3 text-sm text-site-on-surface-variant">{{ t('app.site.products.empty_text') }}</p>
+            <div
+                v-else
+                class="rounded-site-card bg-site-surface-container-low px-6 py-20 text-center"
+            >
+                <h2 class="font-display text-2xl text-site-on-surface">
+                    {{ t('app.site.products.empty_title') }}
+                </h2>
+                <p class="mt-3 text-sm text-site-on-surface-variant">
+                    {{ t('app.site.products.empty_text') }}
+                </p>
                 <Link
                     :href="productsIndex()"
                     class="mt-6 inline-block rounded-site bg-site-primary px-6 py-2.5 text-sm font-medium text-site-on-primary"

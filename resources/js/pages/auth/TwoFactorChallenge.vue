@@ -2,8 +2,8 @@
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import { computed, ref, watchEffect } from 'vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import SiteButton from '@/components/site/SiteButton.vue';
+import SiteInput from '@/components/site/SiteInput.vue';
 import {
     InputOTP,
     InputOTPGroup,
@@ -86,14 +86,17 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                     </div>
                     <InputError :message="errors.code" />
                 </div>
-                <Button type="submit" class="w-full" :disabled="processing">{{
-                    t('app.auth.two_factor.continue')
-                }}</Button>
-                <div class="text-center text-sm text-muted-foreground">
+                <SiteButton
+                    type="submit"
+                    class="w-full"
+                    :disabled="processing"
+                    >{{ t('app.auth.two_factor.continue') }}</SiteButton
+                >
+                <div class="text-center text-sm text-site-on-surface-variant">
                     <span>{{ t('app.auth.two_factor.or_you_can') }} </span>
                     <button
                         type="button"
-                        class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                        class="text-site-primary underline decoration-site-outline-variant underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current!"
                         @click="() => toggleRecoveryMode(clearErrors)"
                     >
                         {{ t(authConfigContent.buttonText) }}
@@ -109,7 +112,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                 reset-on-error
                 #default="{ errors, processing, clearErrors }"
             >
-                <Input
+                <SiteInput
                     name="recovery_code"
                     type="text"
                     :placeholder="t('app.auth.two_factor.recovery.placeholder')"
@@ -117,15 +120,18 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                     required
                 />
                 <InputError :message="errors.recovery_code" />
-                <Button type="submit" class="w-full" :disabled="processing">{{
-                    t('app.auth.two_factor.continue')
-                }}</Button>
+                <SiteButton
+                    type="submit"
+                    class="w-full"
+                    :disabled="processing"
+                    >{{ t('app.auth.two_factor.continue') }}</SiteButton
+                >
 
-                <div class="text-center text-sm text-muted-foreground">
+                <div class="text-center text-sm text-site-on-surface-variant">
                     <span>{{ t('app.auth.two_factor.or_you_can') }} </span>
                     <button
                         type="button"
-                        class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                        class="text-site-primary underline decoration-site-outline-variant underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current!"
                         @click="() => toggleRecoveryMode(clearErrors)"
                     >
                         {{ t(authConfigContent.buttonText) }}

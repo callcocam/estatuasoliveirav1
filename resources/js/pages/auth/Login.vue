@@ -2,11 +2,11 @@
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasskeyVerify from '@/components/PasskeyVerify.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
+import SiteButton from '@/components/site/SiteButton.vue';
+import SiteInput from '@/components/site/SiteInput.vue';
+import SitePasswordInput from '@/components/site/SitePasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useT } from '@/composables/useT';
@@ -53,7 +53,7 @@ const { t } = useT();
                 <Label for="email">{{
                     t('app.auth.fields.email_address')
                 }}</Label>
-                <Input
+                <SiteInput
                     id="email"
                     type="email"
                     name="email"
@@ -74,13 +74,13 @@ const { t } = useT();
                     <TextLink
                         v-if="canResetPassword"
                         :href="request()"
-                        class="text-sm"
+                        class="text-sm text-site-primary decoration-site-outline-variant"
                         :tabindex="5"
                     >
                         {{ t('app.auth.login.forgot_password') }}
                     </TextLink>
                 </div>
-                <PasswordInput
+                <SitePasswordInput
                     id="password"
                     name="password"
                     required
@@ -93,12 +93,17 @@ const { t } = useT();
 
             <div class="flex items-center justify-between">
                 <Label for="remember" class="flex items-center space-x-3">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        :tabindex="3"
+                        class="border-site-outline data-[state=checked]:border-site-primary data-[state=checked]:bg-site-primary data-[state=checked]:text-site-on-primary"
+                    />
                     <span>{{ t('app.auth.login.remember_me') }}</span>
                 </Label>
             </div>
 
-            <Button
+            <SiteButton
                 type="submit"
                 class="mt-4 w-full"
                 :tabindex="4"
@@ -107,14 +112,15 @@ const { t } = useT();
             >
                 <Spinner v-if="processing" />
                 {{ t('app.auth.login.submit') }}
-            </Button>
+            </SiteButton>
         </div>
 
-        <div class="text-center text-sm text-muted-foreground">
+        <div class="text-center text-sm text-site-on-surface-variant">
             {{ t('app.auth.login.no_account') }}
             <TextLink
                 :href="register()"
                 :tabindex="5"
+                class="text-site-primary decoration-site-outline-variant"
                 data-test="register-link"
             >
                 {{ t('app.auth.login.sign_up') }}

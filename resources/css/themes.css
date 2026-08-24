@@ -106,3 +106,98 @@
     /* "Zen Shadow": única sombra permitida, difusa a 4%. */
     --site-shadow: 0 10px 40px rgb(0 0 0 / 0.04);
 }
+
+/*
+ * Variantes escuras — mesma semântica Material-like das paletas claras,
+ * ativadas quando `.dark` (useAppearance) e `data-theme` coexistem no <html>.
+ *
+ * Derivação: superfícies em tons ~6–17% de luminância do hue do tema
+ * (dim ⇢ containers ⇢ highest cada vez mais claros), `on-*` em tom ~80–90
+ * para contraste AA, `inverse-*` espelhando o modo claro. Os pares
+ * primary/tertiary-container continuam ESCUROS com `on-*-container` claros
+ * (mesma regra do modo claro), então cards/CTAs não precisam de overrides.
+ */
+
+.dark[data-theme='stone'] {
+    /* Superfícies: azul-acinzentado escuro (hue do navy #001d4a). */
+    --site-surface: #121318;
+    --site-surface-dim: #0c0e13;
+    --site-surface-container-lowest: #0c0e13;
+    --site-surface-container-low: #191c20;
+    --site-surface-container: #1d2024;
+    --site-surface-container-high: #282a2f;
+    --site-surface-container-highest: #33353a;
+    --site-on-surface: #e2e2e9; /* contraste ~13:1 sobre surface */
+    --site-on-surface-variant: #c4c6d0;
+    --site-inverse-surface: #e2e2e9;
+    --site-inverse-on-surface: #2f3034;
+    --site-outline: #8e9099;
+    --site-outline-variant: #44474e;
+    --site-surface-tint: #adc6ff;
+
+    /* Primary: navy vira azul claro (tone ~80); on-primary volta ao navy. */
+    --site-primary: #adc6ff;
+    --site-on-primary: #04305f; /* ~9:1 sobre primary */
+    --site-primary-container: #284777;
+    --site-on-primary-container: #d8e2ff;
+    --site-secondary: #c2c7ce;
+    --site-on-secondary: #2c3137;
+    --site-secondary-container: #42474e;
+    --site-on-secondary-container: #dee3ea;
+    --site-tertiary: #ffb59c;
+    --site-on-tertiary: #591c00;
+    --site-tertiary-container: #5d2b14;
+    --site-on-tertiary-container: #ffdbcf;
+    --site-error: #ffb4ab;
+    --site-on-error: #690005;
+    --site-error-container: #93000a;
+    --site-on-error-container: #ffdad6;
+
+    /* Prata mantém-se legível no escuro. */
+    --site-accent: #c0c0c0;
+
+    /* Sombra mais opaca: 4% some sobre fundo escuro. */
+    --site-shadow: 0 10px 40px rgb(0 0 0 / 0.4);
+}
+
+.dark[data-theme='terracotta'] {
+    /* Superfícies: marrom-terroso escuro (hue do terracota #934936). */
+    --site-surface: #181210;
+    --site-surface-dim: #120d0b;
+    --site-surface-container-lowest: #120d0b;
+    --site-surface-container-low: #201a17;
+    --site-surface-container: #251e1b;
+    --site-surface-container-high: #302825;
+    --site-surface-container-highest: #3b332f;
+    --site-on-surface: #f0dfd9; /* contraste ~13:1 sobre surface */
+    --site-on-surface-variant: #d8c2bb;
+    --site-inverse-surface: #f0dfd9;
+    --site-inverse-on-surface: #382e2a;
+    --site-outline: #a08d86;
+    --site-outline-variant: #53433e;
+    --site-surface-tint: #ffb4a2;
+
+    /* Primary: terracota vira salmão claro (tone ~80). */
+    --site-primary: #ffb5a0;
+    --site-on-primary: #571f0e; /* ~9:1 sobre primary */
+    --site-primary-container: #702e1d;
+    --site-on-primary-container: #ffdbd0;
+    --site-secondary: #efbd94;
+    --site-on-secondary: #462a10;
+    --site-secondary-container: #653f1d;
+    --site-on-secondary-container: #ffdcbe;
+    --site-tertiary: #ffb877;
+    --site-on-tertiary: #4a2800;
+    --site-tertiary-container: #613907;
+    --site-on-tertiary-container: #ffddb8;
+    --site-error: #ffb4ab;
+    --site-on-error: #690005;
+    --site-error-container: #93000a;
+    --site-on-error-container: #ffdad6;
+
+    /* Sand-beige já é claro; funciona como acento no escuro. */
+    --site-accent: #d9a066;
+
+    /* Sombra mais opaca: 4% some sobre fundo escuro. */
+    --site-shadow: 0 10px 40px rgb(0 0 0 / 0.4);
+}

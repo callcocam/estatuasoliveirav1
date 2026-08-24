@@ -18,8 +18,16 @@ Cada arquivo em `docs/` é **autocontido** — foi escrito para ser executado em
 | 5 | [05-admin.md](05-admin.md) | 1, 3 | Painel administrativo completo | ✅ Concluído |
 | 6 | [06-midias-e-arquivos.md](06-midias-e-arquivos.md) | 1, 2 | Migração física das imagens do projeto antigo | ✅ Concluído |
 | 7 | [07-qualidade-e-deploy.md](07-qualidade-e-deploy.md) | todos | Cobertura de testes, revisão, preparação de deploy | ✅ Concluído (2026-08-24) |
+| 8 | [08-auth-no-site.md](08-auth-no-site.md) | 4, 5 | Links de login/registro/logout no site público | ✅ Concluído (2026-08-24) |
+| 9 | [09-auth-com-cara-do-site.md](09-auth-com-cara-do-site.md) | 3, 8 | Páginas de auth com a identidade visual do site | ⬜ Pendente |
+| 10 | [10-tema-escuro.md](10-tema-escuro.md) | 3 | Variante escura dos dois temas + toggle claro/escuro/sistema | ⬜ Pendente |
+| 11 | [11-area-do-cliente.md](11-area-do-cliente.md) | 5, 8 | Área do cliente enxuta + auditoria de permissões não-admin | ⬜ Pendente |
+| 12 | [12-botoes-compartilhamento.md](12-botoes-compartilhamento.md) | 4 | Compartilhar produto (Web Share API + WhatsApp/FB/X/copiar link) | ⬜ Pendente |
+| 13 | [13-ia-descricao-produtos.md](13-ia-descricao-produtos.md) | 5 | Botão "Gerar descrição" com IA (Gemini free por padrão, troca p/ pago via .env) | ⬜ Pendente |
 
 Os planos 1, 3 podem rodar **em paralelo** (chats simultâneos). O plano 4 e 5 podem rodar em paralelo entre si depois que 1 e 3 terminarem.
+
+Segunda leva (pós-lançamento): o plano 10 pode rodar em paralelo com o 8. O 9 depende do 8 (menu/links prontos) e idealmente valida também o dark do 10. O 11 depende do 8.
 
 ## Regras globais (valem para todos os chats)
 

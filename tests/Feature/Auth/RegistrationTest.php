@@ -2,11 +2,14 @@
 
 use App\Enums\UserRole;
 use App\Models\User;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('registration screen can be rendered', function () {
     $response = $this->get(route('register'));
 
-    $response->assertOk();
+    $response->assertOk()->assertInertia(fn (Assert $page) => $page
+        ->component('auth/Register'),
+    );
 });
 
 test('new users can register as customers and are redirected to their quotes', function () {

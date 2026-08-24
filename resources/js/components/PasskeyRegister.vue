@@ -84,7 +84,9 @@ const handleCancel = () => {
                 id="passkey-name"
                 type="text"
                 v-model="name"
-                :placeholder="t('app.settings.passkeys.register.name_placeholder')"
+                :placeholder="
+                    t('app.settings.passkeys.register.name_placeholder')
+                "
                 class="mt-1 block w-full border-foreground/20"
                 autofocus
             />

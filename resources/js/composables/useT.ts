@@ -21,7 +21,9 @@ export function useT() {
         () => (page.props.translations as TranslationTree | undefined) ?? {},
     );
 
-    const locale = computed<string>(() => (page.props.locale as string | undefined) ?? 'pt_BR');
+    const locale = computed<string>(
+        () => (page.props.locale as string | undefined) ?? 'pt_BR',
+    );
 
     function t(key: string, replacements?: Replacements): string {
         let node: string | TranslationTree | undefined = translations.value;
@@ -44,7 +46,8 @@ export function useT() {
         }
 
         return Object.entries(replacements).reduce(
-            (message, [name, value]) => message.replaceAll(`:${name}`, String(value)),
+            (message, [name, value]) =>
+                message.replaceAll(`:${name}`, String(value)),
             node,
         );
     }

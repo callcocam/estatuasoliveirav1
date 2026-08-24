@@ -28,7 +28,8 @@ setLayoutProps({
 
 const { t } = useT();
 const page = usePage();
-const user = computed(() => page.props.auth.user);
+// Página protegida por auth: o usuário compartilhado nunca é nulo aqui.
+const user = computed(() => page.props.auth.user!);
 </script>
 
 <template>

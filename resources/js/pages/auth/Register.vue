@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
+import SiteButton from '@/components/site/SiteButton.vue';
+import SiteInput from '@/components/site/SiteInput.vue';
+import SitePasswordInput from '@/components/site/SitePasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useT } from '@/composables/useT';
@@ -38,7 +38,7 @@ const { t } = useT();
         <div class="grid gap-6">
             <div class="grid gap-2">
                 <Label for="name">{{ t('app.auth.fields.name') }}</Label>
-                <Input
+                <SiteInput
                     id="name"
                     type="text"
                     required
@@ -55,7 +55,7 @@ const { t } = useT();
                 <Label for="email">{{
                     t('app.auth.fields.email_address')
                 }}</Label>
-                <Input
+                <SiteInput
                     id="email"
                     type="email"
                     required
@@ -71,7 +71,7 @@ const { t } = useT();
                 <Label for="password">{{
                     t('app.auth.fields.password')
                 }}</Label>
-                <PasswordInput
+                <SitePasswordInput
                     id="password"
                     required
                     :tabindex="3"
@@ -87,7 +87,7 @@ const { t } = useT();
                 <Label for="password_confirmation">{{
                     t('app.auth.fields.password_confirmation')
                 }}</Label>
-                <PasswordInput
+                <SitePasswordInput
                     id="password_confirmation"
                     required
                     :tabindex="4"
@@ -101,7 +101,7 @@ const { t } = useT();
                 <InputError :message="errors.password_confirmation" />
             </div>
 
-            <Button
+            <SiteButton
                 type="submit"
                 class="mt-2 w-full"
                 tabindex="5"
@@ -110,14 +110,14 @@ const { t } = useT();
             >
                 <Spinner v-if="processing" />
                 {{ t('app.auth.register.submit') }}
-            </Button>
+            </SiteButton>
         </div>
 
-        <div class="text-center text-sm text-muted-foreground">
+        <div class="text-center text-sm text-site-on-surface-variant">
             {{ t('app.auth.register.already_registered') }}
             <TextLink
                 :href="login()"
-                class="underline underline-offset-4"
+                class="text-site-primary underline decoration-site-outline-variant underline-offset-4"
                 :tabindex="6"
                 data-test="login-link"
             >
