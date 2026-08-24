@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { useT } from '@/composables/useT';
 import { show } from '@/routes/products';
 import type { SiteProductCard } from '@/types/site';
-import { Link } from '@inertiajs/vue3';
 
 defineProps<{ product: SiteProductCard }>();
 

@@ -35,7 +35,7 @@ class ProductController extends Controller
 
         $categories = Category::query()
             ->published()
-            ->whereHas('products', fn ($query) => $query->published())
+            ->whereRelation('products', 'status', PublishStatus::Published)
             ->orderBy('sort_order')
             ->get()
             ->map(fn (Category $category): array => [

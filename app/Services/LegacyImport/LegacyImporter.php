@@ -96,7 +96,7 @@ abstract class LegacyImporter
         $candidate = $slug;
         $suffix = 1;
 
-        while ($model::withTrashed()->where('slug', $candidate)->whereKeyNot($ulid)->exists()) {
+        while ($model::query()->withoutGlobalScopes()->where('slug', $candidate)->whereKeyNot($ulid)->exists()) {
             $candidate = $slug.'-'.(++$suffix);
         }
 

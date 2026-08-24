@@ -3,11 +3,14 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\PublishStatus;
+use App\Http\Requests\Concerns\ResolvesRouteModelId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
+    use ResolvesRouteModelId;
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +25,7 @@ class ProductRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('products', 'slug')->ignore($this->route('product')?->id),
+                Rule::unique('products', 'slug')->ignore($this->routeModelId('product')),
             ],
             'reference' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:10000'],

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { InfiniteScroll, Link } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { show as productShow } from '@/routes/products';
 import type { SiteGalleryImage } from '@/types/site';
-import { InfiniteScroll, Link } from '@inertiajs/vue3';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 defineProps<{
     images: { data: SiteGalleryImage[] };

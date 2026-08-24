@@ -1,6 +1,6 @@
-import type { SiteCompany } from '@/types/site';
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import type { SiteCompany } from '@/types/site';
 
 /**
  * Company profile shared by HandleInertiaRequests as the `site` prop

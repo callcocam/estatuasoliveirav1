@@ -20,7 +20,7 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->words(3, true);
+        $name = implode(' ', (array) fake()->unique()->words(3));
 
         return [
             'category_id' => Category::factory(),

@@ -20,7 +20,6 @@ class UniqueSlug
 
         while ($modelClass::query()
             ->withoutGlobalScopes()
-            ->when(method_exists($modelClass, 'bootSoftDeletes'), fn ($query) => $query->withTrashed())
             ->where('slug', $slug)
             ->when($ignoreId !== null, fn ($query) => $query->whereKeyNot($ignoreId))
             ->exists()) {

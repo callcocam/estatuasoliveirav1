@@ -9,7 +9,7 @@ class ProductPresenter
     /**
      * Shape a product for the public catalog cards.
      *
-     * @return array{id: string, name: string, slug: string, reference: string|null, categoryName: string|null, image: string|null, widthCm: int|null, heightCm: int|null}
+     * @return array<string, mixed>
      */
     public static function card(Product $product): array
     {

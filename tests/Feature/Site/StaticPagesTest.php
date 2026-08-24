@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Site\SitemapController;
 use App\Models\Product;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('renders the about page', function () {
@@ -45,4 +47,19 @@ it('generates a sitemap with static routes and published products', function () 
         ->assertSee(route('home'), false)
         ->assertSee(route('products.show', $published), false)
         ->assertDontSee('rascunho-oculto', false);
+});
+
+it('caches the generated sitemap', function () {
+    Product::factory()->published()->create(['slug' => 'buda-cache']);
+
+    $this->get(route('sitemap'))->assertOk();
+
+    expect(Cache::has(SitemapController::CACHE_KEY))->toBeTrue();
+
+    Product::factory()->published()->create(['slug' => 'nao-aparece-ainda']);
+
+    $this->get(route('sitemap'))
+        ->assertOk()
+        ->assertSee('buda-cache', false)
+        ->assertDontSee('nao-aparece-ainda', false);
 });

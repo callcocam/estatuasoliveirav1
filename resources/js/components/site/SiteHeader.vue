@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, ref, watch } from 'vue';
 import ThemeSwitcher from '@/components/site/ThemeSwitcher.vue';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
 import { about, contact, gallery, home } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
-import { Link, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
 
 const { t } = useT();
 const { company, whatsappUrl } = useCompany();

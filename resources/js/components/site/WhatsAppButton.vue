@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
-import { computed } from 'vue';
 
 /**
  * Botão de conversa no WhatsApp na cor verde da marca (tokens site-whatsapp).

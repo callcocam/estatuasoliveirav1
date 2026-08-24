@@ -23,7 +23,7 @@ class LegacyIdMap
     /**
      * Load the persisted map from storage, when present.
      */
-    public static function load(): static
+    public static function load(): self
     {
         $contents = Storage::disk('local')->exists(self::STORAGE_PATH)
             ? Storage::disk('local')->get(self::STORAGE_PATH)
@@ -32,7 +32,7 @@ class LegacyIdMap
         /** @var array<string, array<string, string>> $map */
         $map = $contents ? (json_decode($contents, true) ?: []) : [];
 
-        return new static($map);
+        return new self($map);
     }
 
     /**

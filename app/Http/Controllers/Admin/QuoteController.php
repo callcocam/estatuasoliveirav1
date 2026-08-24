@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\QuoteStoreRequest;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -23,7 +24,7 @@ class QuoteController extends Controller
 
         $quotes = Quote::query()
             ->withTrashed()
-            ->with(['user' => fn ($query) => $query->withTrashed()])
+            ->with(['user' => fn ($query) => $query->withoutGlobalScope(SoftDeletingScope::class)])
             ->withCount('items')
             ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
             ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
@@ -32,7 +33,7 @@ class QuoteController extends Controller
             ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
             ->when($search !== '', fn ($query) => $query
                 ->whereHas('user', fn ($userQuery) => $userQuery
-                    ->withTrashed()
+                    ->withoutGlobalScope(SoftDeletingScope::class)
                     ->where(fn ($searchQuery) => $searchQuery
                         ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
                         ->orWhereRaw('LOWER(email) LIKE ?', ['%'.mb_strtolower($search).'%']))))
@@ -103,7 +104,7 @@ class QuoteController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                 ]),
-            'productResults' => Inertia::optional(fn () => $search === '' ? [] : Product::query()
+            'productResults' => Inertia::optional(fn () => $search === '' ? collect() : Product::query()
                 ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
                 ->orderBy('name')
                 ->limit(10)

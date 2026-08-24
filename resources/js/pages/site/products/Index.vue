@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { InfiniteScroll, Link, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 import ProductCard from '@/components/site/ProductCard.vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { index as productsIndex } from '@/routes/products';
 import type { SiteCategorySummary, SiteProductCard } from '@/types/site';
-import { InfiniteScroll, Link, router } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
 
 const props = defineProps<{
     products: { data: SiteProductCard[] };

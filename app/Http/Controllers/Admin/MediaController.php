@@ -32,6 +32,8 @@ class MediaController extends Controller
         $data = $request->validated();
 
         $modelClass = self::MEDIABLE_TYPES[$data['mediable_type']];
+
+        /** @var Category|Product|Slider $model */
         $model = $modelClass::query()->findOrFail($data['mediable_id']);
 
         $file = $request->file('file');

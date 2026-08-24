@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import ProductCard from '@/components/site/ProductCard.vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
@@ -11,8 +13,6 @@ import type {
     SiteProductCard,
     SiteSlider,
 } from '@/types/site';
-import { Link } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     sliders: SiteSlider[];

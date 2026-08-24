@@ -5,10 +5,26 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
 {
+    /**
+     * Cache key for the rendered sitemap XML.
+     */
+    public const CACHE_KEY = 'site.sitemap.xml';
+
     public function __invoke(): Response
+    {
+        $xml = Cache::remember(self::CACHE_KEY, now()->addHour(), fn (): string => $this->buildXml());
+
+        return response($xml, 200, ['Content-Type' => 'application/xml']);
+    }
+
+    /**
+     * Build the full sitemap XML for public pages and published products.
+     */
+    private function buildXml(): string
     {
         $urls = collect([
             ['loc' => route('home'), 'priority' => '1.0'],
@@ -35,8 +51,6 @@ class SitemapController extends Controller
             return '<url><loc>'.e($url['loc']).'</loc>'.$lastmod."<priority>{$url['priority']}</priority></url>";
         })->implode('');
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.$entries.'</urlset>';
-
-        return response($xml, 200, ['Content-Type' => 'application/xml']);
+        return '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.$entries.'</urlset>';
     }
 }

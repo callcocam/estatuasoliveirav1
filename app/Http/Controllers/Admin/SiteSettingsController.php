@@ -70,10 +70,12 @@ class SiteSettingsController extends Controller
             $previous = Setting::get('branding_logo_path');
             $path = $request->file('logo')->store('branding', 'public');
 
-            Setting::set('branding_logo_path', $path, 'branding');
+            if (is_string($path)) {
+                Setting::set('branding_logo_path', $path, 'branding');
 
-            if ($previous && $previous !== $path) {
-                Storage::disk('public')->delete($previous);
+                if (is_string($previous) && $previous !== $path) {
+                    Storage::disk('public')->delete($previous);
+                }
             }
         }
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { contact } from '@/routes';
-import { Link } from '@inertiajs/vue3';
 
 const { t } = useT();
 const { company } = useCompany();

@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
 import { about, contact, gallery, home, terms } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
-import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
 
 const { t } = useT();
 const { company, whatsappUrl } = useCompany();

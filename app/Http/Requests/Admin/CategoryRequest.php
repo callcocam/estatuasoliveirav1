@@ -3,11 +3,14 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\PublishStatus;
+use App\Http\Requests\Concerns\ResolvesRouteModelId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
+    use ResolvesRouteModelId;
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,7 +24,7 @@ class CategoryRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('categories', 'slug')->ignore($this->route('category')?->id),
+                Rule::unique('categories', 'slug')->ignore($this->routeModelId('category')),
             ],
             'description' => ['nullable', 'string', 'max:2000'],
             'status' => ['required', Rule::enum(PublishStatus::class)],

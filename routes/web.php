@@ -18,9 +18,18 @@ Route::get('produtos', [ProductController::class, 'index'])->name('products.inde
 Route::get('produtos/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('galeria', GalleryController::class)->name('gallery');
 Route::get('contato', [ContactController::class, 'show'])->name('contact');
-Route::post('contato', [ContactController::class, 'store'])->name('contact.store');
+Route::post('contato', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 Route::get('termos-e-politica', TermsController::class)->name('terms');
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
+
+// Redirects 301 das URLs do site legado (estatuasoliveira.com.br).
+Route::redirect('historia', '/nossa-historia', 301);
+Route::redirect('estatuas', '/produtos', 301);
+Route::redirect('lancamentos', '/produtos', 301);
+Route::redirect('informacoes', '/contato', 301);
+Route::get('estatua/{slug}/visualizar', fn (string $slug) => redirect()->route('products.show', $slug, 301));
+Route::get('estatuas/{slug}/categories', fn (string $slug) => redirect()->to('/produtos?categoria='.$slug, 301));
+Route::redirect('orcamentos', '/meus-orcamentos', 301);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', fn (Request $request) => redirect(RoleRedirect::pathFor($request->user())))->name('dashboard');

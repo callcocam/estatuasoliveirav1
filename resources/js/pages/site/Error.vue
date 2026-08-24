@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { home } from '@/routes';
-import { Link } from '@inertiajs/vue3';
 
 defineProps<{ status: number }>();
 

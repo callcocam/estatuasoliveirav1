@@ -60,3 +60,21 @@ it('silently discards submissions that fill the honeypot field', function () {
     expect(ContactMessage::query()->count())->toBe(0);
     Mail::assertNothingQueued();
 });
+
+it('rate limits repeated contact submissions', function () {
+    Mail::fake();
+
+    foreach (range(1, 5) as $i) {
+        $this->post(route('contact.store'), [
+            'name' => "Visitante {$i}",
+            'email' => "visitante{$i}@example.com",
+            'message' => 'Gostaria de um orçamento.',
+        ])->assertRedirect();
+    }
+
+    $this->post(route('contact.store'), [
+        'name' => 'Visitante 6',
+        'email' => 'visitante6@example.com',
+        'message' => 'Mais uma mensagem.',
+    ])->assertTooManyRequests();
+});

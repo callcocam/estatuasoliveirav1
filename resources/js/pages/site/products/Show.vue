@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Deferred, Link } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import ProductCard from '@/components/site/ProductCard.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useT } from '@/composables/useT';
@@ -6,8 +8,6 @@ import SiteLayout from '@/layouts/SiteLayout.vue';
 import { contact } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
 import type { SiteProductCard, SiteProductDetail } from '@/types/site';
-import { Deferred, Link } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
 
 const props = defineProps<{
     product: SiteProductDetail;

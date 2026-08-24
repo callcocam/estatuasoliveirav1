@@ -235,5 +235,7 @@ return [
         'alt_placeholder' => 'Texto alternativo',
         'remove' => 'Remover imagem',
         'cover' => 'Capa',
+        'renamed' => ':renamed imagem(ns) renomeada(s) para o slug do produto, :skipped já corretas, :missing sem arquivo físico.',
+        'rename_dry_run' => ':renamed imagem(ns) seriam renomeadas, :skipped já corretas, :missing sem arquivo físico (dry-run).',
     ],
 ];

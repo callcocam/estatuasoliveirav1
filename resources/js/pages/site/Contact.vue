@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { Form } from '@inertiajs/vue3';
 import SectionHeading from '@/components/site/SectionHeading.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { store } from '@/routes/contact';
-import { Form } from '@inertiajs/vue3';
 
 const { t } = useT();
 const { company } = useCompany();

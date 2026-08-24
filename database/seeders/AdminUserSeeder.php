@@ -20,7 +20,8 @@ class AdminUserSeeder extends Seeder
             return;
         }
 
-        $password = env('ADMIN_INITIAL_PASSWORD') ?: Str::password(16);
+        $configured = config('site.admin_initial_password');
+        $password = is_string($configured) && $configured !== '' ? $configured : Str::password(16);
 
         User::factory()->create([
             'name' => 'Estátuas Oliveira',
@@ -29,8 +30,8 @@ class AdminUserSeeder extends Seeder
             'password' => $password,
         ]);
 
-        if (! env('ADMIN_INITIAL_PASSWORD')) {
-            $this->command?->warn("Admin criado ({$email}) com senha gerada: {$password}");
+        if ($password !== $configured) {
+            $this->command->warn("Admin criado ({$email}) com senha gerada: {$password}");
         }
     }
 }

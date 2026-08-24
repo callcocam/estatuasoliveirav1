@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import SiteFooter from '@/components/site/SiteFooter.vue';
 import SiteHeader from '@/components/site/SiteHeader.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useCompany } from '@/composables/useCompany';
-import { Head } from '@inertiajs/vue3';
-import { computed } from 'vue';
 
 const props = defineProps<{
     title: string;

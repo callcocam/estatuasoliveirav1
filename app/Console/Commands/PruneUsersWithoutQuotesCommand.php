@@ -8,6 +8,7 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 #[Signature('users:prune-without-quotes
     {--dry-run : Apenas mostra quantos usuários seriam excluídos, sem excluir}')]
@@ -47,6 +48,6 @@ class PruneUsersWithoutQuotesCommand extends Command
     {
         return User::query()
             ->where('role', UserRole::Customer)
-            ->whereDoesntHave('quotes', fn (Builder $quotes) => $quotes->withTrashed());
+            ->whereDoesntHave('quotes', fn (Builder $quotes) => $quotes->withoutGlobalScope(SoftDeletingScope::class));
     }
 }

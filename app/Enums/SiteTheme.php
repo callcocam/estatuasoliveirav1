@@ -27,9 +27,13 @@ enum SiteTheme: string
      */
     public static function resolve(Request $request): self
     {
-        return self::tryFrom((string) $request->cookie(self::COOKIE))
-            ?? self::tryFrom((string) Setting::get(self::SETTING_KEY))
-            ?? self::tryFrom((string) config('site.default_theme'))
+        $cookie = $request->cookie(self::COOKIE);
+        $setting = Setting::get(self::SETTING_KEY);
+        $default = config('site.default_theme');
+
+        return (is_string($cookie) ? self::tryFrom($cookie) : null)
+            ?? (is_string($setting) ? self::tryFrom($setting) : null)
+            ?? (is_string($default) ? self::tryFrom($default) : null)
             ?? self::Stone;
     }
 

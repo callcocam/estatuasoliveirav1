@@ -35,11 +35,17 @@ A pasta `stitch_est_tuas_oliveira_ui_redesign/image_from_https_estatuasoliveira.
 
 ## Critérios de aceite
 
-- [ ] Imagens acessíveis via disk `public` nos caminhos novos com ULID
-- [ ] Relatório sem faltas não justificadas
-- [ ] Site exibe imagens reais de produtos e sliders
-- [ ] Testes passando
+- [x] Imagens acessíveis via disk `public` nos caminhos migrados
+- [x] Relatório sem faltas não justificadas
+- [x] Site exibe imagens reais de produtos e sliders
+- [x] Testes passando
 
 ## Registro de execução
 
-_(preencher ao executar)_
+- **2026-08-24** — Concluído.
+- Layout real do legado: arquivos em `/home/caltj/projects/estatuasoliveira/public/storage/{products,sliders,companies}` (166 + 23 + 28 arquivos), paths do banco novo já espelhavam esses caminhos relativos (`products/202005/...`). `public/dist/upload` não continha originais relevantes.
+- Como o artisan roda no container (sem acesso ao projeto legado no host), a fonte é um espelho local: `rsync -a .../estatuasoliveira/public/storage/{products,sliders,companies} storage/app/private/legacy-media/` e o comando lê de `--source=storage/app/private/legacy-media` (default).
+- Decisão de convenção: **não** renomeamos para `products/{ulid}/...` — o comando copia para o `media.path` atual e o renomeio SEO fica com `php artisan media:rename-to-slug` (`products/{slug}[-n].{ext}`, só produtos ativos). 37 mídias já estavam com path de slug (rename rodou antes dos arquivos existirem); o migrator resolve o arquivo original via dump + `legacy-id-map.json` (`legacyPaths`).
+- Execução: `legacy:import-media --dry-run` → 170 cópias planejadas, 0 ausentes; execução real copiou 169 mídias + logo (`companies/202006/83144932-1591191622-logo-new.png`); segunda execução: 170 "já migrados" (idempotente). Relatório em `storage/app/private/legacy-media-report.json`.
+- Validação: URLs `/storage/products/...`, `/storage/sliders/...`, `/storage/companies/...` retornando 200 via nginx; `media:rename-to-slug` depois da cópia: 37 já corretas, 0 sem arquivo.
+- Testes: `tests/Feature/Console/LegacyImportMediaCommandTest.php` (8 testes: cópia+metadados, dry-run, download de produção, ausente→relatório, `--prune`, idempotência, fallback de path legado, logo).

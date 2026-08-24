@@ -94,7 +94,7 @@ class QuoteImporter extends LegacyImporter
         $item = new QuoteItem([
             'quote_id' => $quoteUlid,
             'product_id' => $product?->id,
-            'name' => $product?->name ?? trim((string) ($row['description'] ?? '')) ?: 'Produto removido',
+            'name' => $product->name ?? trim((string) ($row['description'] ?? '')) ?: 'Produto removido',
             'quantity' => $quantity,
             'unit_price' => $unitPrice,
             'total' => $total,
