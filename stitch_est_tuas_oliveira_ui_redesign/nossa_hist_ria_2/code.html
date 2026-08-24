@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nossa História - Estátuas Oliveira</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "sand-beige": "#D9A066",
+                "outline": "#87726e",
+                "aged-paper": "#E8E2D2",
+                "tertiary": "#613906",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#f7ba8b",
+                "on-primary-fixed-variant": "#763221",
+                "on-tertiary-container": "#ffc68f",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface-container-high": "#ebe8e1",
+                "terracotta": "#8E4432",
+                "primary": "#702e1d",
+                "on-secondary": "#ffffff",
+                "surface-variant": "#e5e2db",
+                "on-secondary-container": "#784c26",
+                "on-secondary-fixed": "#2f1500",
+                "clay-brown": "#5D4037",
+                "background": "#fcf9f2",
+                "error": "#ba1a1a",
+                "secondary": "#82542d",
+                "surface-tint": "#944936",
+                "tertiary-container": "#7c501d",
+                "secondary-fixed": "#ffdcc3",
+                "on-tertiary-fixed-variant": "#663d0b",
+                "surface-container": "#f1eee7",
+                "siena": "#A47148",
+                "primary-fixed": "#ffdad2",
+                "on-primary-fixed": "#3c0700",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#31312c",
+                "on-tertiary": "#ffffff",
+                "tertiary-fixed": "#ffdcbd",
+                "tertiary-fixed-dim": "#f7bb7e",
+                "inverse-on-surface": "#f3f0e9",
+                "on-tertiary-fixed": "#2c1600",
+                "on-surface": "#1c1c18",
+                "on-error-container": "#93000a",
+                "primary-container": "#8e4432",
+                "inverse-primary": "#ffb4a3",
+                "error-container": "#ffdad6",
+                "surface-container-highest": "#e5e2db",
+                "on-error": "#ffffff",
+                "secondary-container": "#fdbf90",
+                "on-background": "#1c1c18",
+                "linen": "#F4F1EA",
+                "on-secondary-fixed-variant": "#663d18",
+                "surface": "#fcf9f2",
+                "on-primary-container": "#ffc3b5",
+                "surface-container-low": "#f6f3ec",
+                "on-surface-variant": "#54433f",
+                "outline-variant": "#dac1bc",
+                "surface-bright": "#fcf9f2",
+                "surface-dim": "#dcdad3"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "section-gap": "104px",
+                "max-width": "1280px"
+        },
+        "fontFamily": {
+                "body-lg": [
+                        "Manrope"
+                ],
+                "headline-lg-mobile": [
+                        "EB Garamond"
+                ],
+                "headline-md": [
+                        "EB Garamond"
+                ],
+                "label-sm": [
+                        "Manrope"
+                ],
+                "headline-display": [
+                        "EB Garamond"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "EB Garamond"
+                ]
+        },
+        "fontSize": {
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-display": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #702e1d 0%, #A47148 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-unit max-w-max-width mx-auto bg-background shadow-sm opacity-95 backdrop-blur-md border-b border-secondary-container transition-all duration-300 md:px-margin-desktop px-margin-mobile h-[80px]">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">Estátuas Oliveira</span>
+</div>
+<div class="hidden md:flex gap-8 items-center font-body-md text-body-md uppercase tracking-wider">
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low px-3 py-2 rounded-DEFAULT" href="#">Home</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">História</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low px-3 py-2 rounded-DEFAULT" href="#">Galeria</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low px-3 py-2 rounded-DEFAULT" href="#">Lançamentos</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low px-3 py-2 rounded-DEFAULT" href="#">Contato</a>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<button aria-label="Search" class="hover:bg-surface-container-low p-2 rounded-full transition-all duration-300 scale-105">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="Shopping Bag" class="hover:bg-surface-container-low p-2 rounded-full transition-all duration-300 scale-105">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button aria-label="Person" class="hover:bg-surface-container-low p-2 rounded-full transition-all duration-300 scale-105 hidden md:block">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button aria-label="Menu" class="md:hidden hover:bg-surface-container-low p-2 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[120px] pb-24 px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto">
+<!-- Hero Section: Nossa História -->
+<section class="flex flex-col md:flex-row gap-16 items-center mb-32">
+<div class="flex-1 space-y-8">
+<div class="inline-block bg-surface-container-low px-4 py-2 rounded-sm border border-secondary-container">
+<span class="font-label-sm text-label-sm text-primary-container tracking-widest uppercase">Tradição &amp; Arte</span>
+</div>
+<h1 class="font-headline-display text-headline-lg-mobile md:text-headline-display text-primary leading-tight text-gradient">
+                    Nossa História
+                </h1>
+<div class="w-16 h-[1px] bg-secondary"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed max-w-2xl">
+                    Há mais de 25 anos no mercado nossa empresa "Estátuas Oliveira" se dedica a proporcionar o embelezamento de ambientes. Fabricamos vários itens em cimento, mármore e gesso para decorar sua casa, sítio e jardim.
+                </p>
+</div>
+<div class="flex-1 relative w-full aspect-[4/5] md:aspect-[3/4] group">
+<div class="absolute inset-0 bg-outline-variant/50 translate-x-4 translate-y-4 rounded-DEFAULT transition-transform duration-500 group-hover:translate-x-6 group-hover:translate-y-6"></div>
+<img class="absolute inset-0 w-full h-full object-cover rounded-DEFAULT shadow-[0_4px_40px_rgba(0,0,0,0.04)] z-10 transition-transform duration-700 hover:scale-[1.02]" data-alt="A beautifully sculpted cement statue in a lush green outdoor garden setting, dappled sunlight filtering through trees, creating a serene and zen atmosphere, premium craftsmanship, high-resolution photography." src="https://lh3.googleusercontent.com/aida/AEtjO1WFjipd8ooQOILoK1J1G_wicmUiS2qIeR66rA5aDFcH2kvlPo1sImWmXELYAWtSD_T83GkniTPncWvE4kpKV9Pg-0ZQzRkZecMBFxcWKlSIFtwXrnIApca4v02qhU6xOr5fZbVjUJSyxJk9ISW_f9EcAb7UjZD9zSCRIrvhCFEaiq9jGdMhA6FSnaI5aXRlOSIu4cByMqmJYvy9o_2T75fvGa7eL74gKHYb8bwJksPBYua0xiEHv2TY"/>
+</div>
+</section>
+<!-- Spacer Divider -->
+<div class="w-full h-[1px] bg-secondary-container my-24"></div>
+<!-- The Experience Section -->
+<section class="flex flex-col md:flex-row-reverse gap-16 items-center mb-32">
+<div class="flex-1 space-y-8">
+<h2 class="font-headline-lg text-headline-lg text-primary">
+                    Um Refúgio ao Ar Livre
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Além de uma infinidade de estátuas, vasos, fontes, bancos, mesas e decorações temos também opções em cerâmica. Venham conhecer nossos produtos em meio de um lugar agradável ao ar livre com muitas árvores e aquários naturais.
+                </p>
+<p class="font-body-md text-body-md text-primary font-medium mt-4">
+                    Aguardamos a sua visita.
+                </p>
+<button class="mt-8 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest px-8 py-4 hover:bg-terracotta transition-colors duration-300">
+                    Visite-nos
+                </button>
+</div>
+<div class="flex-1 relative w-full aspect-square md:aspect-[4/5] overflow-hidden rounded-DEFAULT shadow-[0_4px_40px_rgba(0,0,0,0.04)]">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" data-alt="A tranquil outdoor display area featuring various garden statues, fountains, and stone benches surrounded by lush green foliage and natural light, evoking a sense of calm and premium outdoor design." src="https://lh3.googleusercontent.com/aida/AP1WRLtLEi1DDlEVxI-cgqnRcF79InrFp8ywKj2bA9YwE06JzL5yZv13uXQkumv-WRr_nbuRzrXJmSJdCTT8x34LAn512b3ojLAlqVBfLlnDwe6jXpOdVzxHZwcfV-OdTidvLWCpb6R2bulYNsObBIu11KZsXMMDBL_lp0BG9JOyhk1gAWghE_9EJZX8XhGm0njVMKXil9Pp9tlHlkAu1Q6qnbTFR6yr4HRVgEPHdA5A0EJWXLeIC4llh3YoRg"/>
+</div>
+</section>
+<!-- Craftsmanship Grid -->
+<section class="mb-32">
+<div class="text-center mb-16 space-y-4">
+<h3 class="font-headline-lg text-headline-lg text-primary">Nossos Materiais</h3>
+<p class="font-body-md text-body-md text-secondary max-w-xl mx-auto">A excelência em cada detalhe, moldada através de décadas de experiência.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Cimento -->
+<div class="bg-surface-container-low p-8 border border-secondary-container rounded-DEFAULT hover:shadow-[0_8px_40px_rgba(0,0,0,0.04)] transition-all duration-300 group">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="architecture">architecture</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-primary mb-3">Cimento</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Durabilidade e resistência projetadas para harmonizar com ambientes externos e jardins.</p>
+</div>
+<!-- Mármore -->
+<div class="bg-surface-container-low p-8 border border-secondary-container rounded-DEFAULT hover:shadow-[0_8px_40px_rgba(0,0,0,0.04)] transition-all duration-300 group">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="diamond">diamond</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-primary mb-3">Mármore</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Sofisticação e acabamento premium para peças de destaque que elevam qualquer espaço.</p>
+</div>
+<!-- Gesso -->
+<div class="bg-surface-container-low p-8 border border-secondary-container rounded-DEFAULT hover:shadow-[0_8px_40px_rgba(0,0,0,0.04)] transition-all duration-300 group">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="brush">brush</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-primary mb-3">Gesso</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Detalhes intricados e leveza para decorações internas que trazem paz e serenidade.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low py-20 px-margin-mobile md:px-margin-desktop border-t border-secondary-container flex flex-col md:flex-row justify-between gap-gutter max-w-max-width mx-auto">
+<div class="space-y-6 max-w-xs">
+<span class="font-headline-md text-headline-md text-primary">Estátuas Oliveira</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Arte em Cimento e Gesso. Trazendo beleza e tranquilidade para o seu ambiente há mais de 25 anos.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-12 md:gap-24">
+<div class="space-y-4">
+<h5 class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Contato</h5>
+<ul class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+<li class="hover:text-primary transition-colors hover:underline"><a href="#">Telefone: (51) 9999-9999</a></li>
+<li class="hover:text-primary transition-colors hover:underline"><a href="mailto:contato@estatuasoliveira.com.br">E-mail: contato@estatuasoliveira.com.br</a></li>
+<li class="hover:text-primary transition-colors hover:underline"><a href="#">Endereço: Rodovia RS-030, Osório-RS</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Redes Sociais</h5>
+<ul class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+<li class="hover:text-primary transition-colors hover:underline"><a href="#">Instagram</a></li>
+<li class="hover:text-primary transition-colors hover:underline"><a href="#">Facebook</a></li>
+<li class="hover:text-primary transition-colors hover:underline"><a href="#">WhatsApp</a></li>
+</ul>
+</div>
+</div>
+<div class="w-full h-[1px] bg-secondary-container mt-12 mb-8 md:hidden"></div>
+<div class="text-sm font-body-md text-on-surface-variant mt-8 md:mt-0 self-start md:self-end">
+            © 2024 Estátuas Oliveira. Todos os direitos reservados.
+        </div>
+</footer>
+</body></html>

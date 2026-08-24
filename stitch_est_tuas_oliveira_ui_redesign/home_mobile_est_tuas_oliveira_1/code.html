@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estátuas Oliveira - Home (Mobile)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "silver-leaf": "#C0C0C0",
+                  "inverse-surface": "#2f3034",
+                  "secondary-fixed": "#dfe3e6",
+                  "surface-variant": "#e3e2e6",
+                  "on-secondary": "#ffffff",
+                  "on-secondary-fixed": "#181c1f",
+                  "inverse-on-surface": "#f2f0f4",
+                  "on-primary-fixed-variant": "#2f4674",
+                  "surface-dim": "#dbd9de",
+                  "background": "#faf8fd",
+                  "on-primary": "#ffffff",
+                  "on-error": "#ffffff",
+                  "primary-fixed-dim": "#b0c6fc",
+                  "on-secondary-fixed-variant": "#43474a",
+                  "outline": "#757780",
+                  "surface-container-lowest": "#ffffff",
+                  "on-tertiary-container": "#bb7558",
+                  "inverse-primary": "#b0c6fc",
+                  "outline-variant": "#c5c6d0",
+                  "tertiary": "#120300",
+                  "on-surface": "#1b1b1f",
+                  "on-secondary-container": "#5f6366",
+                  "tertiary-container": "#3c1100",
+                  "on-tertiary-fixed-variant": "#6f371f",
+                  "error-container": "#ffdad6",
+                  "secondary": "#5a5f62",
+                  "on-surface-variant": "#44474f",
+                  "on-primary-container": "#7086b9",
+                  "secondary-fixed-dim": "#c3c7ca",
+                  "surface-container": "#efedf2",
+                  "zen-white": "#FDFDFD",
+                  "primary-container": "#001d4a",
+                  "surface-container-low": "#f5f3f7",
+                  "primary-fixed": "#d9e2ff",
+                  "secondary-container": "#dce0e3",
+                  "tertiary-fixed": "#ffdbcd",
+                  "surface-tint": "#485e8d",
+                  "on-primary-fixed": "#001a43",
+                  "on-background": "#1b1b1f",
+                  "surface-container-highest": "#e3e2e6",
+                  "on-error-container": "#93000a",
+                  "mist-gray": "#94A3B8",
+                  "tertiary-fixed-dim": "#ffb597",
+                  "surface-container-high": "#e9e7ec",
+                  "surface": "#faf8fd",
+                  "deep-navy": "#000C1F",
+                  "surface-bright": "#faf8fd",
+                  "primary": "#000619",
+                  "on-tertiary": "#ffffff",
+                  "error": "#ba1a1a",
+                  "on-tertiary-fixed": "#360f00"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.125rem",
+                  "lg": "0.25rem",
+                  "xl": "0.5rem",
+                  "full": "0.75rem"
+          },
+          "spacing": {
+                  "margin-desktop": "64px",
+                  "margin-mobile": "20px",
+                  "gutter": "24px",
+                  "unit": "8px",
+                  "max-width": "1280px"
+          },
+          "fontFamily": {
+                  "headline-md": [
+                          "EB Garamond"
+                  ],
+                  "headline-display": [
+                          "EB Garamond"
+                  ],
+                  "headline-lg-mobile": [
+                          "EB Garamond"
+                  ],
+                  "body-md": [
+                          "Manrope"
+                  ],
+                  "body-lg": [
+                          "Manrope"
+                  ],
+                  "headline-lg": [
+                          "EB Garamond"
+                  ],
+                  "label-sm": [
+                          "Manrope"
+                  ]
+          },
+          "fontSize": {
+                  "headline-md": [
+                          "24px",
+                          {
+                                  "lineHeight": "32px",
+                                  "fontWeight": "500"
+                          }
+                  ],
+                  "headline-display": [
+                          "48px",
+                          {
+                                  "lineHeight": "56px",
+                                  "letterSpacing": "-0.02em",
+                                  "fontWeight": "500"
+                          }
+                  ],
+                  "headline-lg-mobile": [
+                          "28px",
+                          {
+                                  "lineHeight": "36px",
+                                  "fontWeight": "500"
+                          }
+                  ],
+                  "body-md": [
+                          "16px",
+                          {
+                                  "lineHeight": "24px",
+                                  "fontWeight": "400"
+                          }
+                  ],
+                  "body-lg": [
+                          "18px",
+                          {
+                                  "lineHeight": "28px",
+                                  "fontWeight": "400"
+                          }
+                  ],
+                  "headline-lg": [
+                          "32px",
+                          {
+                                  "lineHeight": "40px",
+                                  "fontWeight": "500"
+                          }
+                  ],
+                  "label-sm": [
+                          "12px",
+                          {
+                                  "lineHeight": "16px",
+                                  "letterSpacing": "0.1em",
+                                  "fontWeight": "600"
+                          }
+                  ]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Custom Scrollbar for Carousel */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    .glass-nav {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background-color: rgba(253, 253, 253, 0.85); /* zen-white with opacity */
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+<!-- Mobile Top Navigation (Based on Shared Components) -->
+<header class="fixed top-0 w-full z-50 glass-nav shadow-sm opacity-100 flex justify-between items-center px-margin-mobile py-unit transition-transform duration-300 md:hidden border-b border-secondary-container" id="mobile-header">
+<div class="flex items-center">
+<button aria-label="Open Menu" class="p-2 -ml-2 text-primary focus:outline-none" id="menu-btn">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+<div class="flex-1 text-center font-headline-md text-headline-md text-primary truncate px-4">
+      Estátuas Oliveira
+    </div>
+<div class="flex items-center gap-2">
+<button aria-label="Search" class="p-2 -mr-2 text-primary focus:outline-none">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+</header>
+<!-- Mobile Menu Overlay -->
+<div class="fixed inset-0 z-[60] bg-zen-white transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col" id="mobile-menu">
+<div class="flex justify-between items-center px-margin-mobile py-4 border-b border-secondary-container">
+<span class="font-headline-md text-headline-md text-primary">Menu</span>
+<button class="p-2 -mr-2 text-primary focus:outline-none" id="close-menu-btn">
+<span class="material-symbols-outlined text-3xl">close</span>
+</button>
+</div>
+<nav class="flex-1 overflow-y-auto py-8 px-margin-mobile flex flex-col gap-6">
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-primary border-b-2 border-primary pb-2 w-max" href="#">Home</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-secondary hover:text-primary transition-colors" href="#">História</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-secondary hover:text-primary transition-colors" href="#">Galeria</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-secondary hover:text-primary transition-colors" href="#">Lançamentos</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-secondary hover:text-primary transition-colors" href="#">Contato</a>
+</nav>
+<div class="p-margin-mobile bg-surface-container-low border-t border-secondary-container flex justify-around">
+<button class="flex flex-col items-center text-primary gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm uppercase">Login</span>
+</button>
+<button class="flex flex-col items-center text-primary gap-1">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-label-sm text-label-sm uppercase">Sacola</span>
+</button>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 mt-[60px] md:mt-0 flex flex-col">
+<!-- Hero Section with Parallax Image -->
+<section class="relative w-full h-[60vh] min-h-[400px] overflow-hidden">
+<div class="absolute inset-0 bg-primary/20 z-10"></div>
+<img alt="Grande estátua de Buda" class="absolute inset-0 w-full h-full object-cover object-center z-0" data-alt="A majestic, towering bronze Buddha statue sitting in lotus position under a dramatic, cloudy sky with golden sunlight breaking through. Shot from a slightly low angle to emphasize grandeur. Cinematic lighting, rich warm tones." src="https://lh3.googleusercontent.com/aida/AP1WRLuQPeGhZ7gRp-P8Ng3vVG_eKYtFKK8jdo3tMkiQrFf8CqxbIU9YVYIc9ybe817bgSCj0jlOm7hhAwETK4JWS0pwEA3tRg5OXxzWJmy_BQhY3UNan9HPz3tTBBypbDMNXlJ8EVe4yZA9J5PttWd1GF2G8zRXJvdOyonJZ6KvS3kVyCJOFPSFgtuEsfCl2uQlkMccY_zf0xI_F108gbkCTmFIL-qdxD6-eGJEFWCF4DsvO8hl2lgK0NtsTA"/>
+<div class="relative z-20 h-full flex flex-col justify-end p-margin-mobile pb-12 bg-gradient-to-t from-deep-navy/90 via-deep-navy/40 to-transparent">
+<h1 class="font-headline-display text-headline-lg-mobile text-zen-white mb-2 leading-tight">
+          Paz &amp;<br/>Tranquilidade
+        </h1>
+<p class="font-body-lg text-body-md text-surface-variant mb-6 max-w-sm">
+          Há mais de 25 anos embelezando ambientes com arte em cimento, mármore e gesso.
+        </p>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider py-3 px-6 rounded w-max border border-outline-variant/30 hover:bg-surface-tint transition-colors">
+          Explorar Galeria
+        </button>
+</div>
+</section>
+<!-- Welcome / Intro Section -->
+<section class="py-16 px-margin-mobile bg-zen-white text-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-6">Bem vindo</h2>
+<p class="font-body-md text-body-md text-secondary max-w-md mx-auto leading-relaxed">
+        Fabricamos vários itens em cimento, mármore e gesso para decorar sua casa, sítio e jardim. Além de uma infinidade de estátuas, vasos, fontes, bancos, mesas e decorações temos também opções em cerâmica.
+      </p>
+<div class="mt-8 w-12 h-px bg-secondary-container mx-auto"></div>
+</section>
+<!-- Product Carousel Section -->
+<section class="py-12 bg-surface-container-low overflow-hidden">
+<div class="px-margin-mobile mb-6 flex justify-between items-end">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Destaques</h2>
+<a class="font-label-sm text-label-sm text-surface-tint uppercase tracking-wider flex items-center gap-1" href="#">
+          Ver todos <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Horizontal Scrollable Container -->
+<div class="flex overflow-x-auto hide-scrollbar gap-4 px-margin-mobile pb-8 snap-x snap-mandatory">
+<!-- Product Card 1 -->
+<div class="min-w-[240px] w-[240px] flex-shrink-0 snap-start group cursor-pointer">
+<div class="relative aspect-[4/5] bg-surface-variant overflow-hidden mb-4 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A detailed, serene concrete Buddha head statue resting on a wooden plinth in a lush garden setting. Soft, diffused daylight highlighting the stone texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOPgELodNlRnZKdSsoJ8k4aExRJzH0Fdpsvuw-otY6urGwWUMtdEzS7BbbK2dmmT2hnuUZLKYLTUmqywohv4eoMxvQj9VKu-VXd-sotagKZuILGdnLW_GJEWoZtJeuMdH34jqTXCsNG9K443ZOpeAkrNn1NDtxcmxNdlbAbLikRVC6a1kWgBrKui2NvzNm7A3YRvtW1JRPbiNJeYYiterrFonf1lGkQ2xhgXHYqCAkuT6VJkqWy6Y"/>
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+</div>
+<h3 class="font-body-lg text-body-md text-primary font-medium">Buda Ref: 016</h3>
+<p class="font-label-sm text-label-sm text-secondary mt-1">Cimento Decorativo</p>
+</div>
+<!-- Product Card 2 -->
+<div class="min-w-[240px] w-[240px] flex-shrink-0 snap-start group cursor-pointer">
+<div class="relative aspect-[4/5] bg-surface-variant overflow-hidden mb-4 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A full-body, meditating Buddha statue made of white plaster, placed against a minimalist dark grey wall. Zen aesthetic, high contrast, soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDfeqI1tYCVNF98X8sipL96Vy0llnnbZaAqPzFeTCuVL_UGmXPtxMpE0dCAvXEJJ36XBAsUTg8hI2GGRZcfko_RRhFd2yf_IjhAnxP9Kw7CNGen07qqpJ2NT2-DkwV9vahwtVJBrQ51gSLz--eaNs-LltnUzN9dHK9odr0eM6Ze__AlZvAry-7V-GGunnAGhAY_Vnckk1UbX56N3teavjcIinR-97iXAfSUdx7NL0QvMWzTZ_F-5w"/>
+</div>
+<h3 class="font-body-lg text-body-md text-primary font-medium">Buda Ref: 015</h3>
+<p class="font-label-sm text-label-sm text-secondary mt-1">Gesso Premium</p>
+</div>
+<!-- Product Card 3 -->
+<div class="min-w-[240px] w-[240px] flex-shrink-0 snap-start group cursor-pointer">
+<div class="relative aspect-[4/5] bg-surface-variant overflow-hidden mb-4 rounded-sm shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A weathered stone Buddha statue half-covered in moss, sitting near a small water feature. Natural, tranquil garden environment, soft ambient light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRA1KPHzLhZh-F60MzmO7YU34HxiC6VSYFKhA9s71z3pbcbgZkU4k-nOGtF7-_vTp3VFLv1lfYBa8zxnAMdVRUHBmIKIrL3FJBCXWG_GtLfUeZhaMRCxfwrNPMtqYrpxxc_7w2PBZrFITWhaPxVxmrHpiRcMEWO-GTaDq_G3BbIi4SoEUO9-J8pYkKhApegAEZxFEu1rh1izwkgchLSzDpu4BFJ-h_nwysV0RSNOv2Jt7dnlb78jg"/>
+</div>
+<h3 class="font-body-lg text-body-md text-primary font-medium">Buda Ref: 010</h3>
+<p class="font-label-sm text-label-sm text-secondary mt-1">Mármore Sintético</p>
+</div>
+</div>
+</section>
+<!-- Categories / Chips Section -->
+<section class="py-12 px-margin-mobile bg-zen-white">
+<h2 class="font-headline-md text-headline-md text-primary mb-6 text-center">Explorar Coleções</h2>
+<div class="flex flex-wrap gap-3 justify-center">
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-sm border border-transparent hover:border-outline-variant cursor-pointer transition-colors">Budas</span>
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-sm border border-transparent hover:border-outline-variant cursor-pointer transition-colors">Fontes</span>
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-sm border border-transparent hover:border-outline-variant cursor-pointer transition-colors">Vasos</span>
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-sm border border-transparent hover:border-outline-variant cursor-pointer transition-colors">Animais</span>
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-sm border border-transparent hover:border-outline-variant cursor-pointer transition-colors">Mesas</span>
+</div>
+</section>
+</main>
+<!-- Shared Footer Component injected styles logic -->
+<footer class="bg-surface-container-low dark:bg-deep-navy w-full py-12 px-margin-mobile flex flex-col gap-8 border-t border-secondary-container dark:border-secondary">
+<div class="flex flex-col items-center text-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary dark:text-zen-white">Estátuas Oliveira</h2>
+<p class="font-body-md text-body-md text-secondary max-w-[280px]">
+        Arte em Cimento e Gesso para embelezar seu ambiente.
+      </p>
+</div>
+<div class="flex flex-col gap-3 font-body-md text-body-md text-on-surface dark:text-on-primary">
+<a class="text-secondary-fixed-variant dark:text-mist-gray hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[18px]">call</span>
+        Telefone: (51) 9999-9999
+      </a>
+<a class="text-secondary-fixed-variant dark:text-mist-gray hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+        E-mail: contato@estatuasoliveira.com.br
+      </a>
+<div class="text-secondary-fixed-variant dark:text-mist-gray flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] mt-1">location_on</span>
+<span>Rodovia RS-030, Osório-RS<br/>Glória, 95520-000</span>
+</div>
+</div>
+<div class="flex gap-4 pt-4 border-t border-secondary-container/50">
+<a class="text-secondary-fixed-variant hover:text-primary transition-colors" href="#">Instagram</a>
+<a class="text-secondary-fixed-variant hover:text-primary transition-colors" href="#">Facebook</a>
+<a class="text-secondary-fixed-variant hover:text-primary transition-colors" href="#">WhatsApp</a>
+</div>
+<div class="pt-8 text-center">
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest opacity-80">
+        © 2024 Estátuas Oliveira. Arte em Cimento e Gesso. Osório - RS.
+      </p>
+</div>
+</footer>
+<script>
+    // Mobile Menu Toggle Logic
+    const menuBtn = document.getElementById('menu-btn');
+    const closeBtn = document.getElementById('close-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const header = document.getElementById('mobile-header');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.remove('-translate-x-full');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+    });
+
+    closeBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('-translate-x-full');
+      document.body.style.overflow = '';
+    });
+
+    // Simple hide/show header on scroll down/up
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        // Scroll down
+        header.style.transform = 'translateY(-100%)';
+      } else {
+        // Scroll up
+        header.style.transform = 'translateY(0)';
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
+</body></html>

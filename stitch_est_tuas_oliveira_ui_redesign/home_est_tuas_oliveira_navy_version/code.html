@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estátuas Oliveira - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Eb+Garamond:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdcc3",
+                        "tertiary-container": "#613907",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f6f3ec",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-secondary-container": "#784c26",
+                        "outline": "#87736e",
+                        "sand-beige": "#D9A066",
+                        "aged-paper": "#E8E2D2",
+                        "clay-brown": "#5D4037",
+                        "surface-container": "#f0eee7",
+                        "surface-container-lowest": "#ffffff",
+                        "siena": "#A47148",
+                        "surface-container-highest": "#e5e2db",
+                        "on-tertiary-fixed": "#2c1600",
+                        "secondary-container": "#fdbf90",
+                        "inverse-surface": "#31312c",
+                        "surface-container-high": "#ebe8e1",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#ffb4a2",
+                        "surface-tint": "#934936",
+                        "surface-dim": "#dcdad3",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fcf9f2",
+                        "inverse-primary": "#ffb4a2",
+                        "tertiary-fixed": "#ffdcbd",
+                        "tertiary-fixed-dim": "#f7bb7e",
+                        "on-surface-variant": "#54433f",
+                        "on-tertiary-container": "#dda369",
+                        "secondary-fixed-dim": "#f7ba8a",
+                        "on-secondary": "#ffffff",
+                        "background": "#fcf9f2",
+                        "tertiary": "#442500",
+                        "secondary": "#82542d",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#3c0800",
+                        "glass-surface": "rgba(253, 253, 253, 0.7)",
+                        "surface-variant": "#e5e2db",
+                        "on-primary-container": "#f4977f",
+                        "primary": "#531909",
+                        "linen": "#F4F1EA",
+                        "on-primary-fixed-variant": "#763221",
+                        "on-secondary-fixed-variant": "#663d18",
+                        "on-tertiary-fixed-variant": "#663d0b",
+                        "primary-fixed": "#ffdbd2",
+                        "on-surface": "#1c1c18",
+                        "primary-container": "#702e1d",
+                        "terracotta": "#8E4432",
+                        "outline-variant": "#dac1bb",
+                        "surface": "#fcf9f2",
+                        "on-secondary-fixed": "#2f1500"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "104px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "max-width": "1280px",
+                        "margin-mobile": "20px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Eb Garamond"],
+                        "label-sm": ["Manrope"],
+                        "headline-md": ["Eb Garamond"],
+                        "headline-display": ["Eb Garamond"],
+                        "headline-lg-mobile": ["Eb Garamond"],
+                        "body-lg": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .zen-shadow {
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+        }
+        .glass-panel {
+            background-color: rgba(253, 253, 253, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(253, 253, 253, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant shadow-sm transition-transform duration-200">
+<div class="flex justify-between items-center max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop h-20">
+<div class="font-headline-md text-headline-md font-medium text-primary">Estátuas Oliveira</div>
+<div class="hidden md:flex gap-gutter items-center font-body-md text-body-md uppercase tracking-wider">
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">História</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Galeria</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Lançamentos</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Contato</a>
+</div>
+<div class="flex gap-4 items-center">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors duration-300 text-primary">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors duration-300 text-primary">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative w-full h-[80vh] min-h-[600px] mt-20 flex items-center justify-center">
+<div class="absolute inset-0 z-0">
+<img alt="Hero Buddha" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuQPeGhZ7gRp-P8Ng3vVG_eKYtFKK8jdo3tMkiQrFf8CqxbIU9YVYIc9ybe817bgSCj0jlOm7hhAwETK4JWS0pwEA3tRg5OXxzWJmy_BQhY3UNan9HPz3tTBBypbDMNXlJ8EVe4yZA9J5PttWd1GF2G8zRXJvdOyonJZ6KvS3kVyCJOFPSFgtuEsfCl2uQlkMccY_zf0xI_F108gbkCTmFIL-qdxD6-eGJEFWCF4DsvO8hl2lgK0NtsTA"/>
+<div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60"></div>
+</div>
+<div class="relative z-10 text-center text-on-tertiary px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto">
+<h1 class="font-headline-display text-headline-lg-mobile md:text-headline-display mb-6">Arte em Concreto &amp; Timeless Craft</h1>
+<p class="font-body-lg text-body-lg mb-8 max-w-2xl mx-auto opacity-90">Trazendo tranquilidade e sofisticação orgânica para o seu espaço há 25 anos com esculturas, fontes e vasos clássicos.</p>
+<a class="inline-block bg-primary text-on-primary font-label-sm text-label-sm uppercase px-8 py-4 rounded-sm tracking-wider hover:bg-primary-container transition-colors duration-300" href="#">Explorar Coleção</a>
+</div>
+</header>
+<!-- Welcome / History Section -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto">
+<div class="glass-panel p-8 md:p-16 rounded-xl zen-shadow text-center max-w-4xl mx-auto">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">25 Anos de Tradição e Arte</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                Na Estátuas Oliveira, dedicamos nossa paixão à criação de peças únicas em concreto que transcendem o tempo. 
+                Nossa jornada de 25 anos é marcada pelo compromisso com o design minimalista e a qualidade artesanal. 
+                Cada peça é meticulosamente elaborada para proporcionar um ambiente de calma, autoridade e conexão com a natureza, 
+                perfeita para espaços que buscam uma estética 'Natural/Zen' luxuosa.
+            </p>
+</div>
+</section>
+<!-- Specialties Bento Grid -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto bg-surface-container-low rounded-3xl">
+<div class="text-center mb-16">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Nossas Especialidades</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Descubra as categorias que definem a nossa arte.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Specialty 1 -->
+<div class="relative group overflow-hidden rounded-lg aspect-[4/5] zen-shadow md:col-span-2">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A highly detailed close-up of a beautifully crafted concrete Buddha statue in a serene, modern Zen garden. Soft, diffused natural light illuminates the intricate textures of the stone against a minimalist background of bamboo and white pebbles. The overall mood is calm, sophisticated, and deeply connected to nature, reflecting a high-end artisanal quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHJJvPLLsMNEU3Z6WSN8G4sJLf5M34syMZDRvttbDAI54QbgXUQTsB0geYUFYy2ypwk0dpotmFWFPJSNMdrJ2w3MiKH5nlFdieKpUfQLH0ONyjdXOzDuI6PHoyCG02eCac5TFeOFlJvLeI1KxbepvvYNh1uCbdcqPZqIaWXi0WKXYAWuZ5TvIHWZ8HLfAHH4LRmT6atOn4Zh8Vk9eLe7RVb53OG9pE6yGAjin88feAPanhbVTp9U"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="font-headline-md text-headline-md text-on-tertiary mb-2 transition-colors duration-300 group-hover:text-surface-tint">Budas &amp; Divindades</h3>
+<p class="font-body-md text-body-md text-on-tertiary opacity-80">Paz e espiritualidade esculpidas em pedra.</p>
+</div>
+</div>
+<!-- Specialty 2 -->
+<div class="relative group overflow-hidden rounded-lg aspect-[4/5] zen-shadow">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An elegant, tall classic concrete vase placed on a clean, light-colored stone patio. The vase features subtle, organic curves and a slightly weathered texture, embodying timeless craft. A single, dramatic structural plant is planted within. The lighting is bright and high-key, highlighting the minimalistic and luxurious aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYPLsTHdIsaaxPkdZqlNMUVrnx9lU1Z4S3MjU0GaHzStZm0ir92gSAjnHLCC7ONcniBvxIga2f5M-onLxqu2EOhB4UvQ52bC8p5OQWsIVbuoZa7s27xjFYdbU5AcRrP6fBXE_cjScqTg9y2gs8MC9Q-qqEBK_vyRxk0xLl7U8AjoujeeeQXPDr-OTShKEtW9Nf43VS3plPJNdS6L_jcb-U-2tJOnKs4y7wV-ftTSZpxTmb1owTvdM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="font-headline-md text-headline-md text-on-tertiary mb-2 transition-colors duration-300 group-hover:text-surface-tint">Vasos Clássicos</h3>
+<p class="font-body-md text-body-md text-on-tertiary opacity-80">Elegância atemporal para seus jardins.</p>
+</div>
+</div>
+<!-- Specialty 3 -->
+<div class="relative group overflow-hidden rounded-lg aspect-[4/5] zen-shadow md:col-span-3 h-[400px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sophisticated, modern concrete water fountain integrated into a sleek architectural courtyard. Water gently cascades over minimalist geometric forms, creating a tranquil atmosphere. The scene is lit by warm, ambient sunlight filtering through nearby foliage, emphasizing the raw, earthy texture of the concrete against a bright, airy background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVRbqepvgdmtl-tJX5y_ITf4W405818aJV4JsPzbk5pYfOpoMlnDxnZYzSMXJEM87QUDmHyS7f1DQfCRQuKoyNzv59O073NC0U2OXYDI8bHoEBB_xGRZcmyMpAa3CGUP7gUWT9Wz9JdK36allmwubyDLKoNivw5HRdfZZQyDUjSNGJw047RyK6v-5uyip8YdRoyhffu1Cq-paxNALbsZo8HWRAb3fhlHQjADmoorxNoOsCpxaNH4U"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full md:w-1/2">
+<h3 class="font-headline-md text-headline-md text-on-tertiary mb-2 transition-colors duration-300 group-hover:text-surface-tint">Fontes de Água</h3>
+<p class="font-body-md text-body-md text-on-tertiary opacity-80">O som calmante da natureza em formas arquitetônicas puras.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- New Arrivals -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto">
+<div class="flex justify-between items-end mb-12 border-b border-outline-variant pb-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Lançamentos</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Últimas adições à nossa coleção artesanal.</p>
+</div>
+<a class="hidden md:inline-flex items-center gap-2 font-label-sm text-label-sm uppercase text-primary tracking-wider hover:text-surface-tint transition-colors" href="#">
+                Ver Todos <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Product 1 -->
+<a class="group block" href="#">
+<div class="overflow-hidden rounded-sm zen-shadow aspect-[3/4] mb-4 bg-surface-container-high">
+<img alt="Nova Estátua 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AP1WRLs0KEHtoFYgpxpFc9D-zb5RExettc5GEegOM2ixvEvXzZ6qb8DJFWwLd6ZR2k0OVzxQtISdOOBUBTPIQGY2ccuEECkGJ3b4nMUyTAOIAM9brMay142qD3FXN-S0zQCauXaQ6Ilxxn5s49rxW4c0ZxB5ZsS03gKerqSBExrwanryMJtEBcC1AJJz9ncpG8komY8fh6--xNpHrar4nuVwbx2ebzBAWQa7G3u1pN1V605fqOXzaGcZgbtdtQ"/>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium group-hover:text-surface-tint transition-colors">Escultura Minimalista</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Concreto Natural</p>
+</a>
+<!-- Product 2 -->
+<a class="group block" href="#">
+<div class="overflow-hidden rounded-sm zen-shadow aspect-[3/4] mb-4 bg-surface-container-high">
+<img alt="Nova Estátua 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AP1WRLsSxlwPPj-RfUhMVPqbxgcC-Y1jUy769Q62avO4Nu6C2DOU5iTBFSKnuEP8ohx8rOUg1yoT1xqy8F7lNOXdLQnCTuK_y46tC5D0-rkcwR21hhgyeQ1VWjI9fKPTPw_ZVEiFFFNVd5GiJn6k2ai1rmXqJGy6yPE-9H4AZc-YbxMXKqM1D3E3oWwyFZcxX6eocTQvdf1FnaMmnyz6FZu6zm3bpStTSbOrv5Uaj7E8UafsgV1s5zmlPJVktg"/>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium group-hover:text-surface-tint transition-colors">Vaso Orgânico</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Acabamento Rústico</p>
+</a>
+<!-- Product 3 -->
+<a class="group block" href="#">
+<div class="overflow-hidden rounded-sm zen-shadow aspect-[3/4] mb-4 bg-surface-container-high">
+<img alt="Nova Estátua 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AP1WRLvbtlbjwv23rLRa1Tt1J_IOVBp9BXXkliaOXiTFw_1GJakllgUWmTmbdNWPImy6zXAECxJ645EFjwdsQhT00uc2RhoNifpgyr4sMnswERpxr1hyMUdFjZhuhAubBjdve5L2Jl43toMbvqxfYEfv4ubGvpUU7SxJXADsSrU2mLRtUWSaXiBME13JqZkD_1kHCf0alGiVhohmtAswXIAYY4i6bdZNcwjUHHm118YrleTvt3b0ICCaFNFccA"/>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium group-hover:text-surface-tint transition-colors">Buda Meditando</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Tonalidade Areia</p>
+</a>
+</div>
+<div class="mt-8 text-center md:hidden">
+<a class="inline-block border border-primary text-primary font-label-sm text-label-sm uppercase px-6 py-3 rounded-sm tracking-wider hover:bg-surface-container-low transition-colors" href="#">
+                Ver Todos
+            </a>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full pt-section-gap pb-8 bg-surface-container-highest">
+<div class="max-w-max-width mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="mb-8 md:mb-0">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Estátuas Oliveira</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">© 2024 Estátuas Oliveira. 25 Anos de Tradição e Arte. Trazendo serenidade para seu espaço.</p>
+</div>
+<div class="mb-8 md:mb-0">
+<h4 class="font-body-lg text-body-lg font-medium text-primary mb-4">Contato</h4>
+<ul class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+<li>Telefone: +55 (11) 9999-9999</li>
+<li>Email: contato@estatuasoliveira.com.br</li>
+<li>Endereço: Rua das Artes, 123 - São Paulo</li>
+</ul>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-medium text-primary mb-4">Social</h4>
+<ul class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+<li><a class="hover:text-primary transition-opacity duration-300 hover:opacity-80" href="#">Instagram</a></li>
+<li><a class="hover:text-primary transition-opacity duration-300 hover:opacity-80" href="#">Facebook</a></li>
+<li><a class="hover:text-primary transition-opacity duration-300 hover:opacity-80" href="#">Pinterest</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

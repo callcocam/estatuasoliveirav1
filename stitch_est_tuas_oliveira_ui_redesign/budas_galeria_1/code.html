@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Galeria de Budas - Estátuas Oliveira</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&amp;family=Manrope:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "silver-leaf": "#C0C0C0",
+                        "inverse-surface": "#2f3034",
+                        "secondary-fixed": "#dfe3e6",
+                        "surface-variant": "#e3e2e6",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#181c1f",
+                        "inverse-on-surface": "#f2f0f4",
+                        "on-primary-fixed-variant": "#2f4674",
+                        "surface-dim": "#dbd9de",
+                        "background": "#faf8fd",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#b0c6fc",
+                        "on-secondary-fixed-variant": "#43474a",
+                        "outline": "#757780",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#bb7558",
+                        "inverse-primary": "#b0c6fc",
+                        "outline-variant": "#c5c6d0",
+                        "tertiary": "#120300",
+                        "on-surface": "#1b1b1f",
+                        "on-secondary-container": "#5f6366",
+                        "tertiary-container": "#3c1100",
+                        "on-tertiary-fixed-variant": "#6f371f",
+                        "error-container": "#ffdad6",
+                        "secondary": "#5a5f62",
+                        "on-surface-variant": "#44474f",
+                        "on-primary-container": "#7086b9",
+                        "secondary-fixed-dim": "#c3c7ca",
+                        "surface-container": "#efedf2",
+                        "zen-white": "#FDFDFD",
+                        "primary-container": "#001d4a",
+                        "surface-container-low": "#f5f3f7",
+                        "primary-fixed": "#d9e2ff",
+                        "secondary-container": "#dce0e3",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-tint": "#485e8d",
+                        "on-primary-fixed": "#001a43",
+                        "on-background": "#1b1b1f",
+                        "surface-container-highest": "#e3e2e6",
+                        "on-error-container": "#93000a",
+                        "mist-gray": "#94A3B8",
+                        "tertiary-fixed-dim": "#ffb597",
+                        "surface-container-high": "#e9e7ec",
+                        "surface": "#faf8fd",
+                        "deep-navy": "#000C1F",
+                        "surface-bright": "#faf8fd",
+                        "primary": "#000619",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#360f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "max-width": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "headline-display": ["EB Garamond"],
+                        "headline-lg-mobile": ["EB Garamond"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["EB Garamond"],
+                        "label-sm": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-zen-white text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-zen-white dark:bg-deep-navy border-b border-secondary-container dark:border-secondary shadow-sm opacity-4 fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-unit max-w-max-width mx-auto left-0 right-0">
+<div class="flex-shrink-0">
+<h1 class="font-headline-md text-headline-md text-primary dark:text-zen-white tracking-tight">Estátuas Oliveira</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary transition-colors font-body-md text-body-md uppercase tracking-wider hover:bg-surface-container-low transition-all duration-300 px-3 py-2 rounded" href="#">Home</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary transition-colors font-body-md text-body-md uppercase tracking-wider hover:bg-surface-container-low transition-all duration-300 px-3 py-2 rounded" href="#">História</a>
+<a class="text-primary dark:text-on-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md uppercase tracking-wider scale-105 transition-transform duration-200" href="#">Galeria</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary transition-colors font-body-md text-body-md uppercase tracking-wider hover:bg-surface-container-low transition-all duration-300 px-3 py-2 rounded" href="#">Lançamentos</a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-primary transition-colors font-body-md text-body-md uppercase tracking-wider hover:bg-surface-container-low transition-all duration-300 px-3 py-2 rounded" href="#">Contato</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-on-primary hover:bg-surface-container-low p-2 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="text-primary dark:text-on-primary hover:bg-surface-container-low p-2 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto w-full">
+<div class="text-center mb-16">
+<h2 class="font-headline-display text-headline-display text-primary mb-4">Budas</h2>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">Coleção exclusiva de estátuas de Buda em cimento e gesso, trazendo serenidade e embelezamento para seu ambiente.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-gutter">
+<!-- Filters Sidebar -->
+<aside class="w-full md:w-64 flex-shrink-0 space-y-8">
+<div>
+<h3 class="font-label-sm text-label-sm text-secondary uppercase mb-4 tracking-widest border-b border-secondary-container pb-2">Material</h3>
+<ul class="space-y-3 mt-4">
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Cimento</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Gesso</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Mármore</span>
+</label>
+</li>
+</ul>
+</div>
+<div>
+<h3 class="font-label-sm text-label-sm text-secondary uppercase mb-4 tracking-widest border-b border-secondary-container pb-2">Tamanho</h3>
+<ul class="space-y-3 mt-4">
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Pequeno</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Médio</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox text-primary border-secondary-container rounded focus:ring-primary h-5 w-5 bg-transparent" type="checkbox"/>
+<span class="text-body-md text-on-surface group-hover:text-primary transition-colors">Grande</span>
+</label>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-gutter gap-y-16">
+<!-- Product Card 1 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 006" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AEtjO1VLh178OsKozzceqlJjlvCdAmS3wSrWeLlRf6Fy26BRShy19uL0ssd1250Og21SmRpvKODRF5XJ9MeqgxIf06JYZimBihXiWugvX6K7C9tcHeHjiSltshcuJV7Kf0t_GIwV1BGEbNnH_N2-iNO_Y3RTMnhfD-2pmeZW022OjYONLrKA748r4C4GAtD0DeO2Lfmsl6YDNRlCqKwWCDn9_GhgUd3JeeFO-YbwAbUPdCRfk7Tw7lzgYACbYw"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 bg-surface/90 backdrop-blur-sm text-primary font-label-sm text-label-sm uppercase tracking-wider">Cimento</span>
+</div>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 006</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Estátua meditativa em cimento cru.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 011" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLsSxlwPPj-RfUhMVPqbxgcC-Y1jUy769Q62avO4Nu6C2DOU5iTBFSKnuEP8ohx8rOUg1yoT1xqy8F7lNOXdLQnCTuK_y46tC5D0-rkcwR21hhgyeQ1VWjI9fKPTPw_ZVEiFFFNVd5GiJn6k2ai1rmXqJGy6yPE-9H4AZc-YbxMXKqM1D3E3oWwyFZcxX6eocTQvdf1FnaMmnyz6FZu6zm3bpStTSbOrv5Uaj7E8UafsgV1s5zmlPJVktg"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 bg-surface/90 backdrop-blur-sm text-primary font-label-sm text-label-sm uppercase tracking-wider">Gesso</span>
+</div>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 011</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Detalhes intrincados em acabamento suave.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 014" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLvbtlbjwv23rLRa1Tt1J_IOVBp9BXXkliaOXiTFw_1GJakllgUWmTmbdNWPImy6zXAECxJ645EFjwdsQhT00uc2RhoNifpgyr4sMnswERpxr1hyMUdFjZhuhAubBjdve5L2Jl43toMbvqxfYEfv4ubGvpUU7SxJXADsSrU2mLRtUWSaXiBME13JqZkD_1kHCf0alGiVhohmtAswXIAYY4i6bdZNcwjUHHm118YrleTvt3b0ICCaFNFccA"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 bg-surface/90 backdrop-blur-sm text-primary font-label-sm text-label-sm uppercase tracking-wider">Lançamento</span>
+</div>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 014</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Peça central para jardins zen.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 016" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AEtjO1XI4wkSJ3gYbO4b93Evj2hZaKkZuQ9yRYx-U4Rf-e3PKT617E7sXTCWFrd7RGrZrz37CuAY-NY9srGHOKJEIKjKKRrxEINVms1g2VmoCbI3Parb3aa0WHz6aLKLFo53K-RvfhQJ32-biwbwQkrWkUd1v-hHo35OJ5UeYH4CK7vh6XYxe0tf7lc2qde6_u2Hik6xvgt76MqJgitJXZCUqaqtropDs0QTdFryP2z4v4hhPQf78pmIDJnWzg"/>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 016</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Acabamento envelhecido clássico.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+<!-- Product Card 5 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 017" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLtlml5coWOiVkU2hrkbfioezif1euVxgLwMNAtl9Jt-wq5JCBXeOO6eJjIoMxjuzi0yNaY_QOqyZxfiqMA1XZ8FdoJzOFcLuhV3B8PHwaHGVg7ae8fXhyuZTwXf5S2617ZDNDbKBLkitjn4Z2_b9x0vn04Pa8dAy2UtD1wRVZ2pPNDswBxc0WjTa2QXPAd_cYxEIk_NT0QYO0hJKsGtYKOWoQhtzAo-zahS3SX5rmhab8N8gfFLcdEXlA"/>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 017</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Postura de lótus em miniatura.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+<!-- Product Card 6 -->
+<article class="group cursor-pointer">
+<div class="relative bg-surface-container-low rounded-DEFAULT overflow-hidden aspect-[4/5] mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+<img alt="Buda Ref: 023" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLvEv_avcdZmIunTpLSnr6kjh9w5wiwJRREM5U4WCZyzW8tJjy4rhWcw3ay7IyKClANpsAVEktcMu2BgC5NqfW-xHRPYhAi1ASmNwdBQQbUfiCVCgSaGzHItjSy876Z_nP-rskXI92YaIc32V0rgnJJpO5mfQoake9eX0B2J4WRjxmMIVwt4DkIbd9iLgMWZlwoxgGkMhfHsrRav5h1XfxTe8KRRw93m1_rO5SoMpy2gJdEcopjcqFvy"/>
+</div>
+<div class="px-2">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Buda Ref: 023</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Escultura de rosto sereno.</p>
+<button class="w-full py-3 px-6 bg-transparent border border-silver-leaf text-primary font-label-sm text-label-sm uppercase tracking-[0.05em] group-hover:bg-primary group-hover:text-zen-white transition-colors duration-300">Ver Detalhes</button>
+</div>
+</article>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-deep-navy border-t border-secondary-container dark:border-secondary w-full py-20 px-margin-desktop flex flex-col md:flex-row justify-between gap-gutter max-w-max-width mx-auto">
+<div class="flex-1">
+<h2 class="font-headline-md text-headline-md text-primary dark:text-zen-white mb-6">Estátuas Oliveira</h2>
+<p class="font-body-md text-body-md text-on-surface dark:text-on-primary max-w-sm mb-8">Há mais de 25 anos no mercado nossa empresa se dedica a proporcionar o embelezamento de ambientes com arte em cimento e gesso.</p>
+<p class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray">© 2024 Estátuas Oliveira. Arte em Cimento e Gesso. Osório - RS.</p>
+</div>
+<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div>
+<h3 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-4">Contato</h3>
+<ul class="space-y-3">
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">Telefone: (51) 9999-9999</a></li>
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">E-mail: contato@estatuasoliveira.com.br</a></li>
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">Endereço: Rodovia RS-030, Osório-RS</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-4">Redes Sociais</h3>
+<ul class="space-y-3">
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">Instagram</a></li>
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">Facebook</a></li>
+<li><a class="font-body-md text-body-md text-secondary-fixed-variant dark:text-mist-gray hover:text-primary hover:underline transition-all opacity-80 hover:opacity-100" href="#">WhatsApp</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

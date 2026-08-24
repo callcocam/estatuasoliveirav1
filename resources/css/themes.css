@@ -1,0 +1,108 @@
+/*
+ * Temas do site — tokens semânticos extraídos dos DESIGN.md do redesign:
+ *
+ *  - stone:      stitch_est_tuas_oliveira_ui_redesign/serene_stone_silver/DESIGN.md
+ *  - terracotta: stitch_est_tuas_oliveira_ui_redesign/terracotta_earth/DESIGN.md
+ *
+ * Os tokens usam o prefixo `site-` para não colidir com os tokens shadcn do
+ * scaffolding (--primary, --background...). O seletor é `[data-theme=...]`
+ * (e não `:root[data-theme=...]`) de propósito: permite re-tematizar um
+ * subtree — usado no showcase para exibir os dois temas lado a lado e nos
+ * previews do ThemeSwitcher.
+ */
+
+[data-theme='stone'] {
+    --site-surface: #faf8fd;
+    --site-surface-dim: #dbd9de;
+    --site-surface-container-lowest: #ffffff;
+    --site-surface-container-low: #f5f3f7;
+    --site-surface-container: #efedf2;
+    --site-surface-container-high: #e9e7ec;
+    --site-surface-container-highest: #e3e2e6;
+    --site-on-surface: #1b1b1f;
+    --site-on-surface-variant: #44474f;
+    --site-inverse-surface: #2f3034;
+    --site-inverse-on-surface: #f2f0f4;
+    --site-outline: #757780;
+    --site-outline-variant: #c5c6d0;
+    --site-surface-tint: #485e8d;
+
+    --site-primary: #000619;
+    --site-on-primary: #ffffff;
+    --site-primary-container: #001d4a;
+    --site-on-primary-container: #d8e2ff;
+    --site-secondary: #5a5f62;
+    --site-on-secondary: #ffffff;
+    --site-secondary-container: #dce0e3;
+    --site-on-secondary-container: #5f6366;
+    --site-tertiary: #120300;
+    --site-on-tertiary: #ffffff;
+    --site-tertiary-container: #3c1100;
+    --site-on-tertiary-container: #ffdbcf;
+    --site-error: #ba1a1a;
+    --site-on-error: #ffffff;
+    --site-error-container: #ffdad6;
+    --site-on-error-container: #93000a;
+
+    /* Acento nomeado do tema: silver-leaf (Prata). */
+    --site-accent: #c0c0c0;
+
+    /*
+     * Shapes ("Soft and Architectural"): 4px em botões/inputs, 8px em cards;
+     * chips são retângulos quase retos (2px).
+     */
+    --site-radius-control: 0.25rem;
+    --site-radius-card: 0.5rem;
+    --site-radius-badge: 0.125rem;
+
+    /* "Ambient Shadow": suave, ampla, #000000 a 4%. */
+    --site-shadow: 0 10px 40px rgb(0 0 0 / 0.04);
+}
+
+[data-theme='terracotta'] {
+    --site-surface: #fcf9f2;
+    --site-surface-dim: #dcdad3;
+    --site-surface-container-lowest: #ffffff;
+    --site-surface-container-low: #f6f3ec;
+    --site-surface-container: #f0eee7;
+    --site-surface-container-high: #ebe8e1;
+    --site-surface-container-highest: #e5e2db;
+    --site-on-surface: #1c1c18;
+    --site-on-surface-variant: #54433f;
+    --site-inverse-surface: #31312c;
+    --site-inverse-on-surface: #f3f0ea;
+    --site-outline: #87736e;
+    --site-outline-variant: #dac1bb;
+    --site-surface-tint: #934936;
+
+    --site-primary: #531909;
+    --site-on-primary: #ffffff;
+    --site-primary-container: #702e1d;
+    --site-on-primary-container: #ffdbd0;
+    --site-secondary: #82542d;
+    --site-on-secondary: #ffffff;
+    --site-secondary-container: #fdbf90;
+    --site-on-secondary-container: #784c26;
+    --site-tertiary: #442500;
+    --site-on-tertiary: #ffffff;
+    --site-tertiary-container: #613907;
+    --site-on-tertiary-container: #ffddb8;
+    --site-error: #ba1a1a;
+    --site-on-error: #ffffff;
+    --site-error-container: #ffdad6;
+    --site-on-error-container: #93000a;
+
+    /* Acento nomeado do tema: sand-beige. */
+    --site-accent: #d9a066;
+
+    /*
+     * Shapes ("Soft-Rectangular"): 2px quase reto em botões/inputs, 8px em
+     * containers; badges/status usam pill completo.
+     */
+    --site-radius-control: 0.125rem;
+    --site-radius-card: 0.5rem;
+    --site-radius-badge: 9999px;
+
+    /* "Zen Shadow": única sombra permitida, difusa a 4%. */
+    --site-shadow: 0 10px 40px rgb(0 0 0 / 0.04);
+}

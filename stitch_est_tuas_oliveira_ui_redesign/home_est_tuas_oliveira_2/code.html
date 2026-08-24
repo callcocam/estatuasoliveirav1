@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estátuas Oliveira - Arte em Cimento e Gesso</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "sand-beige": "#D9A066",
+                "outline": "#87726e",
+                "aged-paper": "#E8E2D2",
+                "tertiary": "#613906",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#f7ba8b",
+                "on-primary-fixed-variant": "#763221",
+                "on-tertiary-container": "#ffc68f",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface-container-high": "#ebe8e1",
+                "terracotta": "#8E4432",
+                "primary": "#702e1d",
+                "on-secondary": "#ffffff",
+                "surface-variant": "#e5e2db",
+                "on-secondary-container": "#784c26",
+                "on-secondary-fixed": "#2f1500",
+                "clay-brown": "#5D4037",
+                "background": "#fcf9f2",
+                "error": "#ba1a1a",
+                "secondary": "#82542d",
+                "surface-tint": "#944936",
+                "tertiary-container": "#7c501d",
+                "secondary-fixed": "#ffdcc3",
+                "on-tertiary-fixed-variant": "#663d0b",
+                "surface-container": "#f1eee7",
+                "siena": "#A47148",
+                "primary-fixed": "#ffdad2",
+                "on-primary-fixed": "#3c0700",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#31312c",
+                "on-tertiary": "#ffffff",
+                "tertiary-fixed": "#ffdcbd",
+                "tertiary-fixed-dim": "#f7bb7e",
+                "inverse-on-surface": "#f3f0e9",
+                "on-tertiary-fixed": "#2c1600",
+                "on-surface": "#1c1c18",
+                "on-error-container": "#93000a",
+                "primary-container": "#8e4432",
+                "inverse-primary": "#ffb4a3",
+                "error-container": "#ffdad6",
+                "surface-container-highest": "#e5e2db",
+                "on-error": "#ffffff",
+                "secondary-container": "#fdbf90",
+                "on-background": "#1c1c18",
+                "linen": "#F4F1EA",
+                "on-secondary-fixed-variant": "#663d18",
+                "surface": "#fcf9f2",
+                "on-primary-container": "#ffc3b5",
+                "surface-container-low": "#f6f3ec",
+                "on-surface-variant": "#54433f",
+                "outline-variant": "#dac1bc",
+                "surface-bright": "#fcf9f2",
+                "surface-dim": "#dcdad3"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "section-gap": "104px",
+                "max-width": "1280px"
+        },
+        "fontFamily": {
+                "body-lg": [
+                        "Manrope"
+                ],
+                "headline-lg-mobile": [
+                        "EB Garamond"
+                ],
+                "headline-md": [
+                        "EB Garamond"
+                ],
+                "label-sm": [
+                        "Manrope"
+                ],
+                "headline-display": [
+                        "EB Garamond"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "EB Garamond"
+                ]
+        },
+        "fontSize": {
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-display": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .zen-shadow { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04); }
+        .glass-panel { background: rgba(253, 253, 253, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(220, 224, 227, 0.5); }
+    </style>
+</head>
+<body class="antialiased font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="bg-surface-container-lowest font-body-md text-body-md uppercase tracking-wider docked full-width top-0 shadow-sm opacity-4 fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-unit max-w-max-width mx-auto left-0 right-0">
+<div class="flex items-center gap-4">
+<a class="font-headline-md text-headline-md text-primary font-bold tracking-tight" href="#">Estátuas Oliveira</a>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Home</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low transition-all duration-300 px-2 py-1" href="#">História</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low transition-all duration-300 px-2 py-1" href="#">Galeria</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low transition-all duration-300 px-2 py-1" href="#">Lançamentos</a>
+<a class="text-secondary hover:text-primary transition-colors hover:bg-surface-container-low transition-all duration-300 px-2 py-1" href="#">Contato</a>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<button class="hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="hover:bg-surface-container-low p-2 rounded-full transition-colors hidden md:block">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="md:hidden hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="pt-24 pb-32">
+<!-- Hero Section -->
+<section class="relative w-full h-[80vh] md:h-[90vh] flex items-center justify-center overflow-hidden mb-32">
+<div class="absolute inset-0 z-0">
+<img alt="Grande estátua de Buda em bronze majestosa sob um céu claro com nuvens e árvores ao redor" class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-[10s] ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLuQPeGhZ7gRp-P8Ng3vVG_eKYtFKK8jdo3tMkiQrFf8CqxbIU9YVYIc9ybe817bgSCj0jlOm7hhAwETK4JWS0pwEA3tRg5OXxzWJmy_BQhY3UNan9HPz3tTBBypbDMNXlJ8EVe4yZA9J5PttWd1GF2G8zRXJvdOyonJZ6KvS3kVyCJOFPSFgtuEsfCl2uQlkMccY_zf0xI_F108gbkCTmFIL-qdxD6-eGJEFWCF4DsvO8hl2lgK0NtsTA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto flex flex-col items-center mt-32 md:mt-48 glass-panel p-8 md:p-16 rounded-xl zen-shadow">
+<span class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary-container mb-6 inline-block border-b border-primary-container/30 pb-2">Tradição &amp; Arte</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-display md:text-headline-display text-primary mb-6 drop-shadow-sm">Arte que Transforma Ambientes</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10">Há mais de 25 anos no mercado, dedicamo-nos a proporcionar o embelezamento de ambientes com peças únicas em cimento, mármore e gesso.</p>
+<a class="inline-flex items-center justify-center bg-primary text-on-primary font-body-md font-semibold px-8 py-4 uppercase tracking-wider hover:bg-surface-tint transition-colors duration-300" href="#galeria">Explorar Coleção</a>
+</div>
+</section>
+<!-- Categories Bento Grid -->
+<section class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop mb-32">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Nossas Especialidades</h2>
+<div class="w-16 h-px bg-secondary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter auto-rows-[300px] md:auto-rows-[400px]">
+<!-- Budas (Large) -->
+<a class="group relative overflow-hidden bg-surface-container-low rounded-lg md:col-span-2 row-span-1 block zen-shadow" href="#">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Estátua de Buda sorridente em cimento, cercada por plantas verdes vibrantes em um jardim zen iluminado pelo sol da manhã. Textura rústica detalhada." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMsVvy5xokxw9p4X4lu9kLDC5kDDsPqyaIDZjH9hz3puPE0IM4p6jhT0JulxpGwQQNSDhdXOwJ-9wxYR8jGhkx2vhXCRKAhdR4LssxUn5BG7_6vvny6jGv4T4sYoEcSQl5xt_BbAuYJqRxGvYGb6dX_t6YmQNtBKp-0stYDci88ra29hYIe-sTx7vbROFbtf1Y1H6ZLX1EPlRr_SrMzQWTQvpx5i6iwwMMDb7FFdt-vMzkQBH0JG0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<span class="inline-block px-3 py-1 bg-surface-container-lowest/20 backdrop-blur-md text-surface-container-lowest font-label-sm uppercase tracking-wider mb-3">Linha Zen</span>
+<h3 class="font-headline-md text-headline-md text-surface-container-lowest">Budas &amp; Divindades</h3>
+</div>
+</a>
+<!-- Vasos -->
+<a class="group relative overflow-hidden bg-surface-container-low rounded-lg block zen-shadow" href="#">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Vaso clássico de cimento com acabamento envelhecido, contendo flores coloridas, posicionado em um pátio de pedra elegante. Luz natural suave." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDrq1XKxRSjygaCTGNiOqrznT6Hk4MROnfeQ3_nZsiheMeLO-uE82608ZbuGVFu4e8AId830dS8eVPxIaY_kjSdNWpV6X508rMnhwvnFH4tHFHuJsRljzAPWTu7Yv7v4jtR88PRz4c47oA0Z26XkdSxDyRChvkhqPAxQngC9XNyVKSueVUbOA32A6d4ccpvKyy07SYFk15vGATuFfGtiulAZdmpA7cwn24MWcXB-S9nK2X8vTA4w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="font-headline-md text-headline-md text-surface-container-lowest">Vasos Clássicos</h3>
+</div>
+</a>
+<!-- Fontes -->
+<a class="group relative overflow-hidden bg-surface-container-low rounded-lg block zen-shadow" href="#">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Pequena fonte de água em pedra rústica jorrando água suavemente em um jardim tranquilo. Detalhes de musgo e umidade na pedra." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa1hh98i8ynmH-ihVVk_g50ymNhz2F3Cqc2Gjf385YleY8jew36pHnX1IO1hSRh-I4cY55bqokHU7LVLPqslKNouWnuPMQdCflIELh2o8D0ocVlxfZpuu1sz4UrdEMd6QcFTHRilRa36Mpvl4cQehcUMktVl7axUhCusPI_o5-lC_oImJowUZ1rbgkUrURZ2VhuMpoR38Mh4z9Hnq_TU_K6Mq01qca4sFcVY1OXIqCMoEbOWWo5ik"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="font-headline-md text-headline-md text-surface-container-lowest">Fontes de Água</h3>
+</div>
+</a>
+<!-- Decoração (Wide) -->
+<a class="group relative overflow-hidden bg-surface-container-low rounded-lg md:col-span-2 block zen-shadow" href="#">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Conjunto de pequenas estatuetas de gesso branco minimalistas sobre uma mesa de madeira clara, com fundo neutro e iluminação de estúdio suave e moderna." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApst8Kzhd0--_yMG_aEiuTYGQOz5-YevCbm6_zr7jOQcNoPrOm5FR_6jajjDJtw9y0MEjyoeT7j84t2G_qc5IvSLmI64qHvJ6T3E88rdJ4A1jo2drotAp9KXhbdtwvlln_RoYIj3HYpBOAtm6qbY_U4wad6VSaEskPTTZn1c9c4AMsd51AS6PwoEn5wDTA_r0TkMxQcEO4liEp2I54x0H6E0-pMrO2iJlR5ozIXs7F0ZbZLP4nf7I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="font-headline-md text-headline-md text-surface-container-lowest">Decoração Interna</h3>
+</div>
+</a>
+</div>
+</section>
+<!-- Lançamentos Showcase -->
+<section class="bg-surface-container-low py-24 mb-32" id="galeria">
+<div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2 block">Novidades</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Lançamentos Exclusivos</h2>
+</div>
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-primary border-b border-primary pb-1 hover:text-surface-tint transition-colors" href="#">Ver Galeria Completa</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter">
+<!-- Product 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-variant rounded-sm mb-6 zen-shadow">
+<img alt="Buda Ref 038" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:opacity-90" src="https://lh3.googleusercontent.com/aida/AEtjO1XI4wkSJ3gYbO4b93Evj2hZaKkZuQ9yRYx-U4Rf-e3PKT617E7sXTCWFrd7RGrZrz37CuAY-NY9srGHOKJEIKjKKRrxEINVms1g2VmoCbI3Parb3aa0WHz6aLKLFo53K-RvfhQJ32-biwbwQkrWkUd1v-hHo35OJ5UeYH4CK7vh6XYxe0tf7lc2qde6_u2Hik6xvgt76MqJgitJXZCUqaqtropDs0QTdFryP2z4v4hhPQf78pmIDJnWzg"/>
+<div class="absolute top-4 left-4">
+<span class="bg-surface-container-lowest text-primary font-label-sm px-2 py-1 uppercase tracking-wider text-[10px]">Novo</span>
+</div>
+</div>
+<div class="text-center">
+<h4 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-surface-tint transition-colors">Buda Rindo</h4>
+<p class="font-body-md text-body-md text-secondary">Ref: 038</p>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-variant rounded-sm mb-6 zen-shadow">
+<img alt="Buda Ref 036" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:opacity-90" src="https://lh3.googleusercontent.com/aida/AEtjO1WFjipd8ooQOILoK1J1G_wicmUiS2qIeR66rA5aDFcH2kvlPo1sImWmXELYAWtSD_T83GkniTPncWvE4kpKV9Pg-0ZQzRkZecMBFxcWKlSIFtwXrnIApca4v02qhU6xOr5fZbVjUJSyxJk9ISW_f9EcAb7UjZD9zSCRIrvhCFEaiq9jGdMhA6FSnaI5aXRlOSIu4cByMqmJYvy9o_2T75fvGa7eL74gKHYb8bwJksPBYua0xiEHv2TY"/>
+</div>
+<div class="text-center">
+<h4 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-surface-tint transition-colors">Buda Meditação</h4>
+<p class="font-body-md text-body-md text-secondary">Ref: 036</p>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-variant rounded-sm mb-6 zen-shadow">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:opacity-90" data-alt="Estátua de Buda em pose de lótus, feita de gesso com pintura envelhecida dourada, fundo liso cinza claro, estilo galeria de arte." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw_DSA74zZHYzCn1N5zj8BNlMer-syjsCfB4AIHVBG4_l-kVRW0XS4spvo0h6DAHgos6shxbrXVcUQAV7PN-djFSsGbZIpw-rVRWhW_PIHPLAHvRjm9Hr35uLWSqYAZ0B6gCEVIHeNk2iXNEyBFrfJt8iqSfKVLWbKPV69Mal1HPQjPftn0L4Fr2ka9Dbi-S9N0RfxybwCuBKIW_Y9zXXh-g_ntsEvejar8S9bt8nqbt4nGVKsCPk"/>
+</div>
+<div class="text-center">
+<h4 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-surface-tint transition-colors">Buda Dourado</h4>
+<p class="font-body-md text-body-md text-secondary">Ref: 035</p>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-variant rounded-sm mb-6 zen-shadow">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:opacity-90" data-alt="Cabeça de Buda detalhada esculpida em mármore branco, iluminada com luz dramática destacando as feições, fundo escuro elegante." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsxCogumwryA-uRE2HHlUQ1T0RTeeJASBlGqvfSKSXBscmzmrhPD3Q8IYttv3jNK3ePDak3sefGUeI0mFa2xxs-e6iieUn_nDg9OGP6ssI-BoyhTmu8ropeRWxxJagQHUYDO3iwCw9tA7PBpWOwHwuWYycAg4jMy9rp9x7AYlZu1iY7-jHFt2Etq6z6ifv9JlYLTiWDCDv2F9BVr8Kry46ly7CAGUMsJI4Z4frSvGVaxq4VKEGf4A"/>
+</div>
+<div class="text-center">
+<h4 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-surface-tint transition-colors">Cabeça Buda Mármore</h4>
+<p class="font-body-md text-body-md text-secondary">Ref: 034</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Mini Section -->
+<section class="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+<span class="material-symbols-outlined text-4xl text-primary-fixed-dim mb-6" style="font-variation-settings: 'FILL' 1;">eco</span>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Venha Conhecer</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mb-8">
+                Venham conhecer nossos produtos em meio a um lugar agradável ao ar livre com muitas árvores e aquários naturais. Fabricamos vários itens em cimento, mármore e gesso para decorar sua casa, sítio e jardim. Aguardamos a sua visita!
+            </p>
+<a class="inline-block border border-secondary text-primary font-label-sm uppercase tracking-widest px-8 py-3 hover:bg-surface-container-low transition-colors" href="#">Ver Localização</a>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low font-body-md text-body-md full-width bottom-0 border-t border-secondary-container py-20">
+<div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between gap-12">
+<div class="md:w-1/3">
+<a class="font-headline-md text-headline-md text-primary block mb-6" href="#">Estátuas Oliveira</a>
+<p class="text-on-surface-variant mb-6">Arte em Cimento e Gesso. Embelezando ambientes há mais de 25 anos.</p>
+<div class="flex flex-col gap-2 text-on-surface-variant">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">location_on</span> Rodovia RS-030, 2745, Osório-RS</span>
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">call</span> (51) 99973-2078</span>
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">mail</span> contato@estatuasoliveira.com.br</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8 md:w-1/2">
+<div>
+<h4 class="font-label-sm text-label-sm uppercase tracking-wider text-primary mb-4 font-bold">Navegação</h4>
+<ul class="flex flex-col gap-3">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">Home</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">História</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">Galeria</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">Contato</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm uppercase tracking-wider text-primary mb-4 font-bold">Redes Sociais</h4>
+<ul class="flex flex-col gap-3">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">Instagram</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">Facebook</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:underline" href="#">WhatsApp</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop mt-16 pt-8 border-t border-secondary-container flex flex-col md:flex-row justify-between items-center text-sm text-secondary">
+<p>© 2024 Estátuas Oliveira. Arte em Cimento e Gesso. Osório - RS.</p>
+<p class="mt-2 md:mt-0">Desenvolvido com sofisticação.</p>
+</div>
+</footer>
+</body></html>
