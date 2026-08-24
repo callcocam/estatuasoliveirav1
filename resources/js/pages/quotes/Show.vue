@@ -57,7 +57,7 @@ function formatDate(value: string | null): string {
     <div class="flex h-full flex-1 flex-col gap-6 p-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-semibold">
+                <h1 class="font-display text-2xl font-semibold tracking-tight">
                     {{ t('app.quotes.detail') }}
                 </h1>
                 <Badge>{{ quote.statusLabel }}</Badge>

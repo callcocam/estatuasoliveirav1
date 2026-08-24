@@ -85,6 +85,16 @@ return [
         'gallery_image' => 'Imagem :position de :total',
     ],
 
+    'share' => [
+        'whatsapp' => 'Compartilhar no WhatsApp',
+        'facebook' => 'Compartilhar no Facebook',
+        'instagram' => 'Copiar link e abrir o Instagram',
+        'copy' => 'Copiar link',
+        'copied' => 'Link copiado!',
+        'message' => ':title — :company · :tagline',
+        'contact' => 'Fale conosco: :phone',
+    ],
+
     'gallery' => [
         'title' => 'Galeria',
         'subtitle' => 'Um passeio visual pelo nosso ateliê e jardim',

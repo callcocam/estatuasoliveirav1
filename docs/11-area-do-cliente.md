@@ -32,4 +32,13 @@ Pint + Larastan + `php artisan test --compact` + `npm run build && npm run lint`
 
 ## Registro de execução
 
-_(preencher ao executar)_
+**Executado em 2026-08-24.**
+
+1. **Auditoria de acesso** — `tests/Feature/Admin/AdminAccessTest.php` ampliado com dataset `admin get routes` (dashboard, categorias, produtos, sliders, orçamentos, mensagens, usuários, configurações): Customer → 403 em todas; convidado → redirect login em todas; + `admin.media.store` (POST) → 403 p/ Customer. Manager × subgrupo `:admin` já estava coberto (mantido, sem duplicar).
+2. **Escopo de dados** — já integralmente coberto por `tests/Feature/Quotes/CustomerQuotesTest.php` (lista só os próprios, exclui soft-deleted, `quotes.show` alheio → 404, unverified → verification.notice). Controller confere `user_id` com `abort_unless(..., 404)`. Nada a adicionar.
+3. **Sidebar do cliente** — `AppSidebar.vue` reescrito: itens Meus orçamentos (Customer) ou Painel (admin/manager, já que settings é compartilhado), Perfil, Segurança, Aparência (reusa chaves `app.settings.layout.nav.*`); footer com "Voltar ao site" (`home()`) + `NavUser` (logout). Removidos `footerNavItems` do starter e os arquivos órfãos `NavFooter.vue`, `AppHeader.vue`, `AppHeaderLayout.vue`.
+4. **Identidade visual** — `AppLogo.vue` agora usa `/images/logo.png` + nome da empresa via `useCompany()` (prop `site`/settings, como o site); ícone Laravel do starter removido. Títulos das páginas de quotes com `font-display` (EB Garamond). Sem mudanças de cor — claro/escuro preservado.
+5. **Settings** — as 3 páginas compartilham `AppLayout`+`SettingsLayout` para todos os papéis; divergência tratada no próprio `AppSidebar` role-aware (sem duplicar página). Testes existentes de Profile/Security/Appearance passam.
+6. **Traduções** — `lang/pt_BR/app/nav.php`: removidas `repository`/`documentation` (starter), adicionadas `admin_panel` e `back_to_site`. O projeto mantém apenas `lang/pt_BR` (fallback `en` é só do framework — convenção existente).
+
+Encerramento: Pint ✓, Larastan ✓ (0 erros), `php artisan test --compact` ✓ (222 passed), `npm run build` ✓, `npm run lint` ✓. Regra registrada em `.ai/rules/feature-admin.md` (separação AppSidebar × AdminSidebar + matriz de acesso).

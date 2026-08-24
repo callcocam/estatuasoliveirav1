@@ -39,6 +39,7 @@ export interface SiteProductDetail {
     id: string;
     name: string;
     slug: string;
+    url: string;
     reference: string | null;
     description: string | null;
     widthCm: number | null;

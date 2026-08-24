@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import { useCompany } from '@/composables/useCompany';
 
-const name = usePage().props.name;
+const { company } = useCompany();
 </script>
 
 <template>
-    <div
-        class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
-    >
-        <AppLogoIcon class="size-5 fill-current text-white dark:text-black" />
-    </div>
+    <img
+        src="/images/logo.png"
+        :alt="company.name"
+        class="aspect-square size-8 shrink-0 rounded-md object-contain"
+    />
     <div class="ml-1 grid flex-1 text-left text-sm">
-        <span class="mb-0.5 truncate leading-tight font-semibold">{{
-            name
-        }}</span>
+        <span
+            class="mb-0.5 truncate font-display leading-tight font-semibold"
+            >{{ company.name }}</span
+        >
     </div>
 </template>

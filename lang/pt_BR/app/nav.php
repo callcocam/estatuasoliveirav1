@@ -4,8 +4,8 @@ return [
 
     'items' => [
         'quotes' => 'Meus orçamentos',
-        'repository' => 'Repositório',
-        'documentation' => 'Documentação',
+        'admin_panel' => 'Painel',
+        'back_to_site' => 'Voltar ao site',
     ],
 
     'sidebar' => [

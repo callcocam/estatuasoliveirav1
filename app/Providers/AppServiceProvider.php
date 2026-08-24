@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Ai\TextGenerator;
+use App\Services\Ai\TextGeneratorFactory;
 use App\Support\Translation\MergingFileLoader;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerTranslationLoader();
+
+        $this->app->bind(TextGenerator::class, fn (): TextGenerator => TextGeneratorFactory::make());
     }
 
     /**

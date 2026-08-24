@@ -15,6 +15,7 @@ it('shows a published product with its media', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('site/products/Show')
             ->where('product.slug', 'buda-016')
+            ->where('product.url', route('products.show', $product))
             ->has('product.images', 2));
 });
 

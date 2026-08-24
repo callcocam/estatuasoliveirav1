@@ -24,6 +24,9 @@ Route::prefix('admin')
             ->name('categories.restore');
         Route::resource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
+        Route::post('products/generate-description', [ProductController::class, 'generateDescription'])
+            ->middleware('throttle:10,1')
+            ->name('products.generate-description');
         Route::post('products/{product}/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
         Route::post('products/{product}/restore', [ProductController::class, 'restore'])
             ->withTrashed()

@@ -2,13 +2,30 @@
 
 use App\Models\User;
 
-test('guests are redirected to the login page', function () {
-    $this->get(route('admin.dashboard'))->assertRedirect(route('login'));
-});
+dataset('admin get routes', [
+    'admin.dashboard',
+    'admin.categories.index',
+    'admin.products.index',
+    'admin.sliders.index',
+    'admin.quotes.index',
+    'admin.messages.index',
+    'admin.users.index',
+    'admin.settings.edit',
+]);
 
-test('customers cannot access the admin panel', function () {
+test('guests are redirected to the login page', function (string $routeName) {
+    $this->get(route($routeName))->assertRedirect(route('login'));
+})->with('admin get routes');
+
+test('customers cannot access any admin module', function (string $routeName) {
     $this->actingAs(User::factory()->create())
-        ->get(route('admin.dashboard'))
+        ->get(route($routeName))
+        ->assertForbidden();
+})->with('admin get routes');
+
+test('customers cannot upload media through the admin endpoint', function () {
+    $this->actingAs(User::factory()->create())
+        ->post(route('admin.media.store'))
         ->assertForbidden();
 });
 

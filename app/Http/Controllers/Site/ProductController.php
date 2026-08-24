@@ -64,6 +64,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
+                'url' => route('products.show', $product),
                 'reference' => $product->reference,
                 'description' => $product->description,
                 'widthCm' => $product->width_cm,

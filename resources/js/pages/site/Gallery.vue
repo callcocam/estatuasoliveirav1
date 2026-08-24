@@ -2,6 +2,7 @@
 import { InfiniteScroll, Link } from '@inertiajs/vue3';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
+import ShareButtons from '@/components/site/ShareButtons.vue';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { show as productShow } from '@/routes/products';
@@ -23,6 +24,14 @@ function handleKeydown(event: KeyboardEvent): void {
 
 onMounted(() => window.addEventListener('keydown', handleKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
+
+/**
+ * URL absoluta do produto vinculado à imagem — o lightbox só renderiza no
+ * cliente (após clique), então window está sempre disponível aqui.
+ */
+function productUrl(slug: string): string {
+    return `${window.location.origin}${productShow(slug).url}`;
+}
 </script>
 
 <template>
@@ -117,18 +126,26 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
                 />
                 <figcaption
                     v-if="lightboxImage.productName"
-                    class="mt-4 flex items-center justify-between gap-4 text-site-inverse-on-surface"
+                    class="mt-4 flex flex-wrap items-center justify-between gap-4 text-site-inverse-on-surface"
                 >
                     <span class="font-display text-lg">{{
                         lightboxImage.productName
                     }}</span>
-                    <Link
+                    <div
                         v-if="lightboxImage.productSlug"
-                        :href="productShow(lightboxImage.productSlug)"
-                        class="text-sm underline underline-offset-4"
+                        class="flex items-center gap-4"
                     >
-                        {{ t('app.site.gallery.view_product') }}
-                    </Link>
+                        <ShareButtons
+                            :url="productUrl(lightboxImage.productSlug)"
+                            :title="lightboxImage.productName"
+                        />
+                        <Link
+                            :href="productShow(lightboxImage.productSlug)"
+                            class="text-sm underline underline-offset-4"
+                        >
+                            {{ t('app.site.gallery.view_product') }}
+                        </Link>
+                    </div>
                 </figcaption>
             </figure>
         </div>

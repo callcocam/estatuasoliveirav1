@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\PublishStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\GenerateProductDescriptionRequest;
 use App\Http\Requests\Admin\ProductRequest;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
+use App\Services\Ai\ProductDescriptionGenerator;
+use App\Services\Ai\TextGenerationFailedException;
 use App\Support\UniqueSlug;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -126,6 +131,21 @@ class ProductController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.products.updated')]);
 
         return back();
+    }
+
+    public function generateDescription(
+        GenerateProductDescriptionRequest $request,
+        ProductDescriptionGenerator $generator,
+    ): JsonResponse {
+        try {
+            $description = $generator->generate($request->validated());
+        } catch (TextGenerationFailedException) {
+            throw ValidationException::withMessages([
+                'description' => __('app.admin.products.ai.failed'),
+            ]);
+        }
+
+        return response()->json(['description' => $description]);
     }
 
     public function destroy(Product $product): RedirectResponse

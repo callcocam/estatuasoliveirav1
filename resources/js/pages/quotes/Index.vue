@@ -44,7 +44,9 @@ function formatDate(value: string | null): string {
     <Head :title="t('app.quotes.title')" />
 
     <div class="flex h-full flex-1 flex-col gap-6 p-4">
-        <h1 class="text-2xl font-semibold">{{ t('app.quotes.title') }}</h1>
+        <h1 class="font-display text-2xl font-semibold tracking-tight">
+            {{ t('app.quotes.title') }}
+        </h1>
 
         <div
             v-if="quotes.data.length === 0"

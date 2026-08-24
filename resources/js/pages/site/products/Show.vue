@@ -2,6 +2,7 @@
 import { Deferred, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import ProductCard from '@/components/site/ProductCard.vue';
+import ShareButtons from '@/components/site/ShareButtons.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
@@ -190,6 +191,12 @@ const whatsappQuoteMessage = computed(
                             />
                         </div>
                     </div>
+
+                    <ShareButtons
+                        class="mt-6 text-site-on-surface-variant"
+                        :url="product.url"
+                        :title="product.name"
+                    />
                 </div>
             </div>
 

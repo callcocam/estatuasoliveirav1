@@ -30,7 +30,7 @@
     --site-primary: #000619;
     --site-on-primary: #ffffff;
     --site-primary-container: #001d4a;
-    --site-on-primary-container: #d8e2ff;
+    --site-on-primary-container: #ffffff;
     --site-secondary: #5a5f62;
     --site-on-secondary: #ffffff;
     --site-secondary-container: #dce0e3;
@@ -78,7 +78,7 @@
     --site-primary: #531909;
     --site-on-primary: #ffffff;
     --site-primary-container: #702e1d;
-    --site-on-primary-container: #ffdbd0;
+    --site-on-primary-container: #ffffff;
     --site-secondary: #82542d;
     --site-on-secondary: #ffffff;
     --site-secondary-container: #fdbf90;
@@ -139,7 +139,7 @@
     --site-primary: #adc6ff;
     --site-on-primary: #04305f; /* ~9:1 sobre primary */
     --site-primary-container: #284777;
-    --site-on-primary-container: #d8e2ff;
+    --site-on-primary-container: #ffffff;
     --site-secondary: #c2c7ce;
     --site-on-secondary: #2c3137;
     --site-secondary-container: #42474e;
@@ -181,7 +181,7 @@
     --site-primary: #ffb5a0;
     --site-on-primary: #571f0e; /* ~9:1 sobre primary */
     --site-primary-container: #702e1d;
-    --site-on-primary-container: #ffdbd0;
+    --site-on-primary-container: #ffffff;
     --site-secondary: #efbd94;
     --site-on-secondary: #462a10;
     --site-secondary-container: #653f1d;
