@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Plus } from '@lucide/vue';
+import { Plus, RotateCcw } from '@lucide/vue';
 import { ref } from 'vue';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     create as quoteCreate,
     index as quotesIndex,
+    restore as quoteRestore,
     show as quoteShow,
 } from '@/routes/admin/quotes';
 import type { Paginated } from '@/types/admin';
@@ -31,6 +32,7 @@ type QuoteRow = {
     total: string;
     itemsCount: number;
     createdAt: string | null;
+    deleted: boolean;
 };
 
 const props = defineProps<{
@@ -85,6 +87,9 @@ function formatDate(value: string | null): string {
                 :value="option.value"
             >
                 {{ option.label }}
+            </SelectItem>
+            <SelectItem value="trashed">
+                {{ t('app.admin.common.filter_trashed') }}
             </SelectItem>
         </SelectContent>
     </Select>
@@ -143,11 +148,34 @@ function formatDate(value: string | null): string {
                         >
                             {{ quote.statusLabel }}
                         </Badge>
+                        <Badge
+                            v-if="quote.deleted"
+                            variant="destructive"
+                            class="ml-1"
+                        >
+                            {{ t('app.admin.common.deleted_badge') }}
+                        </Badge>
                     </td>
                     <td class="px-4 py-3">{{ quote.itemsCount }}</td>
                     <td class="px-4 py-3">R$ {{ quote.total }}</td>
                     <td class="px-4 py-3 text-right">
-                        <Button variant="outline" size="sm" as-child>
+                        <Button
+                            v-if="quote.deleted"
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            @click="
+                                router.post(
+                                    quoteRestore(quote.id).url,
+                                    {},
+                                    { preserveScroll: true },
+                                )
+                            "
+                        >
+                            <RotateCcw />
+                            {{ t('app.admin.common.restore') }}
+                        </Button>
+                        <Button v-else variant="outline" size="sm" as-child>
                             <Link :href="quoteShow(quote.id).url">{{
                                 t('app.admin.common.edit')
                             }}</Link>

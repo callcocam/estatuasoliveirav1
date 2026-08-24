@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,11 +16,12 @@ use Illuminate\Support\Facades\Cache;
  * @property string|null $value
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 #[Fillable(['group', 'key', 'value'])]
 class Setting extends Model
 {
-    use HasUlids;
+    use HasUlids, SoftDeletes;
 
     /**
      * Bootstrap the model and its traits.

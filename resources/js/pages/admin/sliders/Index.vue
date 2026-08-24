@@ -1,17 +1,33 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from '@lucide/vue';
+import {
+    ArrowDown,
+    ArrowUp,
+    Pencil,
+    Plus,
+    RotateCcw,
+    Trash2,
+} from '@lucide/vue';
 import { ref } from 'vue';
 import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     create as sliderCreate,
     destroy as sliderDestroy,
     edit as sliderEdit,
+    index as slidersIndex,
     reorder as sliderReorder,
+    restore as sliderRestore,
 } from '@/routes/admin/sliders';
 
 defineOptions({ layout: AdminLayout });
@@ -23,15 +39,26 @@ type SliderRow = {
     status: string;
     sortOrder: number;
     image: string | null;
+    deleted: boolean;
 };
 
 const props = defineProps<{
     sliders: SliderRow[];
+    filters: { filter: string | null };
 }>();
 
 const { t } = useT();
 
+const filter = ref(props.filters.filter ?? 'all');
 const deleting = ref<SliderRow | null>(null);
+
+function applyFilters() {
+    router.get(
+        slidersIndex().url,
+        { filter: filter.value !== 'all' ? filter.value : undefined },
+        { preserveState: true, preserveScroll: true },
+    );
+}
 
 function move(index: number, delta: number) {
     const ids = props.sliders.map((slider) => slider.id);
@@ -72,6 +99,20 @@ function confirmDelete() {
             </Link>
         </Button>
     </div>
+
+    <Select v-model="filter" @update:model-value="applyFilters">
+        <SelectTrigger class="w-44">
+            <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+            <SelectItem value="all">
+                {{ t('app.admin.common.filter_all') }}
+            </SelectItem>
+            <SelectItem value="trashed">
+                {{ t('app.admin.common.filter_trashed') }}
+            </SelectItem>
+        </SelectContent>
+    </Select>
 
     <div class="overflow-x-auto rounded-lg border">
         <table class="w-full text-sm">
@@ -140,48 +181,76 @@ function confirmDelete() {
                         >
                             {{ t(`app.admin.status.${slider.status}`) }}
                         </Badge>
+                        <Badge
+                            v-if="slider.deleted"
+                            variant="destructive"
+                            class="ml-1"
+                        >
+                            {{ t('app.admin.common.deleted_badge') }}
+                        </Badge>
                     </td>
                     <td class="px-4 py-3">
                         <div class="flex justify-end gap-1">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                :disabled="index === 0"
-                                :aria-label="t('app.admin.common.move_up')"
-                                @click="move(index, -1)"
-                            >
-                                <ArrowUp />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                :disabled="index === sliders.length - 1"
-                                :aria-label="t('app.admin.common.move_down')"
-                                @click="move(index, 1)"
-                            >
-                                <ArrowDown />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                as-child
-                                :aria-label="t('app.admin.common.edit')"
-                            >
-                                <Link :href="sliderEdit(slider.id).url">
-                                    <Pencil />
-                                </Link>
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                :aria-label="t('app.admin.common.delete')"
-                                @click="deleting = slider"
-                            >
-                                <Trash2 />
-                            </Button>
+                            <template v-if="slider.deleted">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :aria-label="t('app.admin.common.restore')"
+                                    @click="
+                                        router.post(
+                                            sliderRestore(slider.id).url,
+                                            {},
+                                            { preserveScroll: true },
+                                        )
+                                    "
+                                >
+                                    <RotateCcw />
+                                </Button>
+                            </template>
+                            <template v-else>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :disabled="index === 0"
+                                    :aria-label="t('app.admin.common.move_up')"
+                                    @click="move(index, -1)"
+                                >
+                                    <ArrowUp />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :disabled="index === sliders.length - 1"
+                                    :aria-label="
+                                        t('app.admin.common.move_down')
+                                    "
+                                    @click="move(index, 1)"
+                                >
+                                    <ArrowDown />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    as-child
+                                    :aria-label="t('app.admin.common.edit')"
+                                >
+                                    <Link :href="sliderEdit(slider.id).url">
+                                        <Pencil />
+                                    </Link>
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="icon"
+                                    :aria-label="t('app.admin.common.delete')"
+                                    @click="deleting = slider"
+                                >
+                                    <Trash2 />
+                                </Button>
+                            </template>
                         </div>
                     </td>
                 </tr>

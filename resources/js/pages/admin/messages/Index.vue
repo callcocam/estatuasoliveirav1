@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import { RotateCcw } from '@lucide/vue';
 import { ref } from 'vue';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +16,7 @@ import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     index as messagesIndex,
+    restore as messageRestore,
     show as messageShow,
 } from '@/routes/admin/messages';
 import type { Paginated } from '@/types/admin';
@@ -28,6 +30,7 @@ type MessageRow = {
     subject: string | null;
     read: boolean;
     createdAt: string | null;
+    deleted: boolean;
 };
 
 const props = defineProps<{
@@ -72,6 +75,9 @@ function formatDate(value: string | null): string {
                 }}</SelectItem>
                 <SelectItem value="read">{{
                     t('app.admin.messages.read')
+                }}</SelectItem>
+                <SelectItem value="trashed">{{
+                    t('app.admin.common.filter_trashed')
                 }}</SelectItem>
             </SelectContent>
         </Select>
@@ -133,9 +139,32 @@ function formatDate(value: string | null): string {
                                     : t('app.admin.messages.unread')
                             }}
                         </Badge>
+                        <Badge
+                            v-if="message.deleted"
+                            variant="destructive"
+                            class="ml-1"
+                        >
+                            {{ t('app.admin.common.deleted_badge') }}
+                        </Badge>
                     </td>
                     <td class="px-4 py-3 text-right">
-                        <Button variant="outline" size="sm" as-child>
+                        <Button
+                            v-if="message.deleted"
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            @click="
+                                router.post(
+                                    messageRestore(message.id).url,
+                                    {},
+                                    { preserveScroll: true },
+                                )
+                            "
+                        >
+                            <RotateCcw />
+                            {{ t('app.admin.common.restore') }}
+                        </Button>
+                        <Button v-else variant="outline" size="sm" as-child>
                             <Link :href="messageShow(message.id).url">{{
                                 t('app.admin.common.edit')
                             }}</Link>

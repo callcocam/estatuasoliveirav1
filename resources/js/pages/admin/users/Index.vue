@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Form, Head, router, usePage } from '@inertiajs/vue3';
-import { KeyRound, Pencil, Plus, Trash2 } from '@lucide/vue';
+import { KeyRound, Pencil, Plus, RotateCcw, Trash2 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
@@ -28,6 +28,7 @@ import {
     destroy as userDestroy,
     index as usersIndex,
     resetLink as userResetLink,
+    restore as userRestore,
     store as userStore,
     update as userUpdate,
 } from '@/routes/admin/users';
@@ -43,11 +44,12 @@ type UserRow = {
     role: string;
     roleLabel: string;
     createdAt: string | null;
+    deleted: boolean;
 };
 
 const props = defineProps<{
     users: Paginated<UserRow>;
-    filters: { search: string | null };
+    filters: { search: string | null; filter: string | null };
 }>();
 
 const page = usePage();
@@ -56,6 +58,7 @@ const { t } = useT();
 const currentUserId = computed(() => String(page.props.auth.user?.id ?? ''));
 
 const search = ref(props.filters.search ?? '');
+const filter = ref(props.filters.filter ?? 'all');
 const formOpen = ref(false);
 const editing = ref<UserRow | null>(null);
 const roleValue = ref('customer');
@@ -64,7 +67,10 @@ const deleting = ref<UserRow | null>(null);
 function applyFilters() {
     router.get(
         usersIndex().url,
-        { search: search.value || undefined },
+        {
+            search: search.value || undefined,
+            filter: filter.value !== 'all' ? filter.value : undefined,
+        },
         { preserveState: true, preserveScroll: true },
     );
 }
@@ -104,13 +110,28 @@ function confirmDelete() {
         </Button>
     </div>
 
-    <Input
-        v-model="search"
-        type="search"
-        :placeholder="t('app.admin.common.search_placeholder')"
-        class="max-w-xs"
-        @keydown.enter="applyFilters"
-    />
+    <div class="flex items-center gap-3">
+        <Input
+            v-model="search"
+            type="search"
+            :placeholder="t('app.admin.common.search_placeholder')"
+            class="max-w-xs"
+            @keydown.enter="applyFilters"
+        />
+        <Select v-model="filter" @update:model-value="applyFilters">
+            <SelectTrigger class="w-44">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">
+                    {{ t('app.admin.common.filter_all') }}
+                </SelectItem>
+                <SelectItem value="trashed">
+                    {{ t('app.admin.common.filter_trashed') }}
+                </SelectItem>
+            </SelectContent>
+        </Select>
+    </div>
 
     <div class="overflow-x-auto rounded-lg border">
         <table class="w-full text-sm">
@@ -155,45 +176,71 @@ function confirmDelete() {
                         >
                             {{ user.roleLabel }}
                         </Badge>
+                        <Badge
+                            v-if="user.deleted"
+                            variant="destructive"
+                            class="ml-1"
+                        >
+                            {{ t('app.admin.common.deleted_badge') }}
+                        </Badge>
                     </td>
                     <td class="px-4 py-3">
                         <div class="flex justify-end gap-1">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                :aria-label="
-                                    t('app.admin.users.send_reset_link')
-                                "
-                                @click="
-                                    router.post(
-                                        userResetLink(user.id).url,
-                                        {},
-                                        { preserveScroll: true },
-                                    )
-                                "
-                            >
-                                <KeyRound />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                :aria-label="t('app.admin.common.edit')"
-                                @click="openEdit(user)"
-                            >
-                                <Pencil />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                :disabled="user.id === currentUserId"
-                                :aria-label="t('app.admin.common.delete')"
-                                @click="deleting = user"
-                            >
-                                <Trash2 />
-                            </Button>
+                            <template v-if="user.deleted">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :aria-label="t('app.admin.common.restore')"
+                                    @click="
+                                        router.post(
+                                            userRestore(user.id).url,
+                                            {},
+                                            { preserveScroll: true },
+                                        )
+                                    "
+                                >
+                                    <RotateCcw />
+                                </Button>
+                            </template>
+                            <template v-else>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :aria-label="
+                                        t('app.admin.users.send_reset_link')
+                                    "
+                                    @click="
+                                        router.post(
+                                            userResetLink(user.id).url,
+                                            {},
+                                            { preserveScroll: true },
+                                        )
+                                    "
+                                >
+                                    <KeyRound />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    :aria-label="t('app.admin.common.edit')"
+                                    @click="openEdit(user)"
+                                >
+                                    <Pencil />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="icon"
+                                    :disabled="user.id === currentUserId"
+                                    :aria-label="t('app.admin.common.delete')"
+                                    @click="deleting = user"
+                                >
+                                    <Trash2 />
+                                </Button>
+                            </template>
                         </div>
                     </td>
                 </tr>

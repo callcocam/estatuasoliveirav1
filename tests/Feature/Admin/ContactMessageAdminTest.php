@@ -44,5 +44,29 @@ test('deletes a message', function () {
         ->delete(route('admin.messages.destroy', $message))
         ->assertRedirect(route('admin.messages.index'));
 
-    expect(ContactMessage::query()->count())->toBe(0);
+    expect(ContactMessage::query()->count())->toBe(0)
+        ->and(ContactMessage::withTrashed()->count())->toBe(1);
+});
+
+test('lists only trashed messages with the trashed filter', function () {
+    $trashed = ContactMessage::factory()->create();
+    $trashed->delete();
+    ContactMessage::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.messages.index', ['filter' => 'trashed']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/messages/Index')
+            ->has('messages.data', 1)
+            ->where('messages.data.0.id', $trashed->id)
+            ->where('messages.data.0.deleted', true));
+});
+
+test('restores a trashed message', function () {
+    $message = ContactMessage::factory()->create();
+    $message->delete();
+
+    $this->actingAs($this->admin)->post(route('admin.messages.restore', $message));
+
+    expect($message->refresh()->trashed())->toBeFalse();
 });

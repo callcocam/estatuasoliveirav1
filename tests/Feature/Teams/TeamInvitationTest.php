@@ -166,7 +166,7 @@ test('team invitations can be cancelled by owners', function () {
 
     $response->assertRedirect(route('teams.edit', $team));
 
-    $this->assertDatabaseMissing('team_invitations', [
+    $this->assertSoftDeleted('team_invitations', [
         'id' => $invitation->id,
     ]);
 });
@@ -215,7 +215,7 @@ test('team invitations can be declined by the invited user', function () {
 
     $response->assertRedirect(route('dashboard'));
 
-    $this->assertDatabaseMissing('team_invitations', [
+    $this->assertSoftDeleted('team_invitations', [
         'id' => $invitation->id,
     ]);
 });

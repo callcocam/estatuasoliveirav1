@@ -88,3 +88,38 @@ test('sends a password reset link', function () {
 
     Notification::assertSentTo($user, ResetPassword::class);
 });
+
+test('lists only trashed users with the trashed filter', function () {
+    $trashed = User::factory()->create(['name' => 'Usuário Excluído']);
+    $trashed->delete();
+    User::factory()->create(['name' => 'Usuário Ativo']);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.users.index', ['filter' => 'trashed']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/users/Index')
+            ->has('users.data', 1)
+            ->where('users.data.0.name', 'Usuário Excluído')
+            ->where('users.data.0.deleted', true));
+});
+
+test('hides trashed users from the default listing', function () {
+    $trashed = User::factory()->create();
+    $trashed->delete();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.users.index'))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/users/Index')
+            ->has('users.data', 1)
+            ->where('users.data.0.id', $this->admin->id));
+});
+
+test('restores a trashed user', function () {
+    $user = User::factory()->create();
+    $user->delete();
+
+    $this->actingAs($this->admin)->post(route('admin.users.restore', $user));
+
+    expect($user->refresh()->trashed())->toBeFalse();
+});

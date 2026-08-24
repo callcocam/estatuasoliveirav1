@@ -10,4 +10,6 @@ Before planning or editing, find the row whose globs match the file's path and r
 | lang/**,resources/js/** | .ai/rules/js.md |
 | app/Services/LegacyImport/** | .ai/rules/legacy-import.md |
 | database/migrations/** | .ai/rules/migrations.md |
+| app/Models/** | .ai/rules/models.md |
 | resources/js/pages/site/** | .ai/rules/site.md |
+| vps-deployment/** | .ai/rules/vps-deployment.md |

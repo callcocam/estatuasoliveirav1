@@ -7,5 +7,5 @@ Schedule::call(function () {
     TeamInvitation::query()
         ->whereNotNull('expires_at')
         ->where('expires_at', '<', now())
-        ->delete();
+        ->forceDelete();
 })->daily()->description('Delete expired team invitations');

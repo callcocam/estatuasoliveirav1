@@ -16,6 +16,9 @@ class ContactMessageController extends Controller
         $filter = (string) $request->string('filter');
 
         $messages = ContactMessage::query()
+            ->withTrashed()
+            ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
+            ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
             ->when($filter === 'unread', fn ($query) => $query->unread())
             ->when($filter === 'read', fn ($query) => $query->whereNotNull('read_at'))
             ->latest()
@@ -28,6 +31,7 @@ class ContactMessageController extends Controller
                 'subject' => $message->subject,
                 'read' => $message->isRead(),
                 'createdAt' => $message->created_at?->toIso8601String(),
+                'deleted' => $message->trashed(),
             ]);
 
         return Inertia::render('admin/messages/Index', [
@@ -68,5 +72,14 @@ class ContactMessageController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.messages.deleted')]);
 
         return to_route('admin.messages.index');
+    }
+
+    public function restore(ContactMessage $message): RedirectResponse
+    {
+        $message->restore();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.messages.restored')]);
+
+        return back();
     }
 }

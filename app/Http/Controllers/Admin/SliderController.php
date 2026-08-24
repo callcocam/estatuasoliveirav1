@@ -12,10 +12,15 @@ use Inertia\Response;
 
 class SliderController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $filter = (string) $request->string('filter');
+
         return Inertia::render('admin/sliders/Index', [
             'sliders' => Slider::query()
+                ->withTrashed()
+                ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
+                ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
                 ->with('media')
                 ->orderBy('sort_order')
                 ->get()
@@ -26,7 +31,9 @@ class SliderController extends Controller
                     'status' => $slider->status->value,
                     'sortOrder' => $slider->sort_order,
                     'image' => $slider->coverMedia()?->url(),
+                    'deleted' => $slider->trashed(),
                 ]),
+            'filters' => ['filter' => $filter !== '' ? $filter : null],
         ]);
     }
 
@@ -83,6 +90,15 @@ class SliderController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.sliders.deleted')]);
 
         return to_route('admin.sliders.index');
+    }
+
+    public function restore(Slider $slider): RedirectResponse
+    {
+        $slider->restore();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.sliders.restored')]);
+
+        return back();
     }
 
     public function reorder(Request $request): RedirectResponse

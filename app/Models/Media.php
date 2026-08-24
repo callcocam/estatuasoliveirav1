@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
  * @property array<string, mixed>|null $custom_properties
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read Model $mediable
  */
 #[Fillable([
@@ -40,7 +42,7 @@ use Illuminate\Support\Facades\Storage;
 class Media extends Model
 {
     /** @use HasFactory<MediaFactory> */
-    use HasFactory, HasUlids;
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The table associated with the model.

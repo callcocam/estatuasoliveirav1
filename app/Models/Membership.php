@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -16,13 +17,14 @@ use Illuminate\Support\Carbon;
  * @property TeamRole $role
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read Team $team
  * @property-read User $user
  */
 #[Fillable(['team_id', 'user_id', 'role'])]
 class Membership extends Pivot
 {
-    use HasUlids;
+    use HasUlids, SoftDeletes;
 
     /**
      * The table associated with the model.

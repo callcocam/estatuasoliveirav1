@@ -26,6 +26,7 @@ trait HasTeams
     {
         return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')
             ->withPivot(['role'])
+            ->wherePivotNull('deleted_at')
             ->withTimestamps();
     }
 

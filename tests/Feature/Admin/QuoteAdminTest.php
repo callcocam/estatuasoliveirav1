@@ -74,3 +74,39 @@ test('changes the quote status', function () {
 
     expect($quote->refresh()->status)->toBe(QuoteStatus::Answered);
 });
+
+test('lists only trashed quotes with the trashed filter', function () {
+    $trashed = Quote::factory()->create();
+    $trashed->delete();
+    Quote::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.quotes.index', ['status' => 'trashed']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/quotes/Index')
+            ->has('quotes.data', 1)
+            ->where('quotes.data.0.id', $trashed->id)
+            ->where('quotes.data.0.deleted', true));
+});
+
+test('hides trashed quotes from the default listing', function () {
+    $trashed = Quote::factory()->create();
+    $trashed->delete();
+    $active = Quote::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.quotes.index'))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/quotes/Index')
+            ->has('quotes.data', 1)
+            ->where('quotes.data.0.id', $active->id));
+});
+
+test('restores a trashed quote', function () {
+    $quote = Quote::factory()->create();
+    $quote->delete();
+
+    $this->actingAs($this->admin)->post(route('admin.quotes.restore', $quote));
+
+    expect($quote->refresh()->trashed())->toBeFalse();
+});

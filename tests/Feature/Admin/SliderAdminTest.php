@@ -53,6 +53,29 @@ test('updates and deletes a slider', function () {
     expect($slider->refresh()->trashed())->toBeTrue();
 });
 
+test('lists only trashed sliders with the trashed filter', function () {
+    $trashed = Slider::factory()->create();
+    $trashed->delete();
+    Slider::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.sliders.index', ['filter' => 'trashed']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/sliders/Index')
+            ->has('sliders', 1)
+            ->where('sliders.0.id', $trashed->id)
+            ->where('sliders.0.deleted', true));
+});
+
+test('restores a trashed slider', function () {
+    $slider = Slider::factory()->create();
+    $slider->delete();
+
+    $this->actingAs($this->admin)->post(route('admin.sliders.restore', $slider));
+
+    expect($slider->refresh()->trashed())->toBeFalse();
+});
+
 test('reorders sliders', function () {
     $first = Slider::factory()->create(['sort_order' => 0]);
     $second = Slider::factory()->create(['sort_order' => 1]);

@@ -16,8 +16,12 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         $search = (string) $request->string('search');
+        $filter = (string) $request->string('filter');
 
         $users = User::query()
+            ->withTrashed()
+            ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
+            ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
             ->when($search !== '', fn ($query) => $query
                 ->where(fn ($searchQuery) => $searchQuery
                     ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
@@ -33,11 +37,15 @@ class UserController extends Controller
                 'role' => $user->role->value,
                 'roleLabel' => $user->role->label(),
                 'createdAt' => $user->created_at?->toIso8601String(),
+                'deleted' => $user->trashed(),
             ]);
 
         return Inertia::render('admin/users/Index', [
             'users' => $users,
-            'filters' => ['search' => $search !== '' ? $search : null],
+            'filters' => [
+                'search' => $search !== '' ? $search : null,
+                'filter' => $filter !== '' ? $filter : null,
+            ],
         ]);
     }
 
@@ -73,6 +81,15 @@ class UserController extends Controller
         $user->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.users.deleted')]);
+
+        return back();
+    }
+
+    public function restore(User $user): RedirectResponse
+    {
+        $user->restore();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.users.restored')]);
 
         return back();
     }

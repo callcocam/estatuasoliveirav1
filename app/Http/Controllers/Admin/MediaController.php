@@ -90,7 +90,7 @@ class MediaController extends Controller
     {
         Storage::disk($media->disk)->delete($media->path);
 
-        $media->delete();
+        $media->forceDelete();
 
         return back();
     }

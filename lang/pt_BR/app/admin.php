@@ -38,6 +38,7 @@ return [
         'confirm_delete_description' => 'Tem certeza? Esta ação pode ser desfeita apenas por restauração, quando disponível.',
         'search_placeholder' => 'Buscar…',
         'filter_all' => 'Todos',
+        'filter_trashed' => 'Excluídos',
         'none' => '—',
         'back' => 'Voltar',
         'saving' => 'Salvando…',
@@ -133,6 +134,7 @@ return [
         'created' => 'Slider criado. Agora adicione a imagem.',
         'updated' => 'Slider atualizado.',
         'deleted' => 'Slider excluído.',
+        'restored' => 'Slider restaurado.',
     ],
 
     'quotes' => [
@@ -154,6 +156,7 @@ return [
         'created' => 'Orçamento criado.',
         'status_updated' => 'Status do orçamento atualizado.',
         'deleted' => 'Orçamento excluído.',
+        'restored' => 'Orçamento restaurado.',
     ],
 
     'messages' => [
@@ -167,6 +170,7 @@ return [
         'mark_read' => 'Marcar como lida',
         'mark_unread' => 'Marcar como não lida',
         'deleted' => 'Mensagem excluída.',
+        'restored' => 'Mensagem restaurada.',
     ],
 
     'users' => [
@@ -185,8 +189,11 @@ return [
         'created' => 'Usuário criado.',
         'updated' => 'Usuário atualizado.',
         'deleted' => 'Usuário excluído.',
+        'restored' => 'Usuário restaurado.',
         'cannot_delete_self' => 'Você não pode excluir a sua própria conta.',
         'reset_link_sent' => 'Link de redefinição de senha enviado.',
+        'pruned' => ':count usuário(s) sem orçamento excluído(s) (soft delete).',
+        'prune_dry_run' => ':count usuário(s) sem orçamento seriam excluídos (dry-run).',
     ],
 
     'settings' => [

@@ -31,12 +31,21 @@ Route::prefix('admin')
         Route::resource('products', ProductController::class)->except(['show']);
 
         Route::post('sliders/reorder', [SliderController::class, 'reorder'])->name('sliders.reorder');
+        Route::post('sliders/{slider}/restore', [SliderController::class, 'restore'])
+            ->withTrashed()
+            ->name('sliders.restore');
         Route::resource('sliders', SliderController::class)->except(['show']);
 
         Route::patch('quotes/{quote}/status', [QuoteController::class, 'updateStatus'])->name('quotes.status');
+        Route::post('quotes/{quote}/restore', [QuoteController::class, 'restore'])
+            ->withTrashed()
+            ->name('quotes.restore');
         Route::resource('quotes', QuoteController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 
         Route::patch('messages/{message}/read', [ContactMessageController::class, 'toggleRead'])->name('messages.read');
+        Route::post('messages/{message}/restore', [ContactMessageController::class, 'restore'])
+            ->withTrashed()
+            ->name('messages.restore');
         Route::get('messages', [ContactMessageController::class, 'index'])->name('messages.index');
         Route::get('messages/{message}', [ContactMessageController::class, 'show'])->name('messages.show');
         Route::delete('messages/{message}', [ContactMessageController::class, 'destroy'])->name('messages.destroy');
@@ -48,6 +57,9 @@ Route::prefix('admin')
 
         Route::middleware(EnsureUserIsAdmin::class.':admin')->group(function () {
             Route::post('users/{user}/reset-link', [UserController::class, 'sendResetLink'])->name('users.reset-link');
+            Route::post('users/{user}/restore', [UserController::class, 'restore'])
+                ->withTrashed()
+                ->name('users.restore');
             Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
 
             Route::get('settings', [SiteSettingsController::class, 'edit'])->name('settings.edit');

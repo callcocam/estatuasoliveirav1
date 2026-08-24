@@ -21,9 +21,14 @@ class QuoteController extends Controller
         $status = (string) $request->string('status');
 
         $quotes = Quote::query()
+            ->withTrashed()
             ->with('user')
             ->withCount('items')
-            ->when($status !== '', fn ($query) => $query->where('status', $status))
+            ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
+            ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
+                ->whereNull('deleted_at')
+                ->where('status', $status))
+            ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
             ->latest()
             ->paginate(15)
             ->withQueryString()
@@ -35,6 +40,7 @@ class QuoteController extends Controller
                 'total' => $quote->total,
                 'itemsCount' => $quote->items_count,
                 'createdAt' => $quote->created_at?->toIso8601String(),
+                'deleted' => $quote->trashed(),
             ]);
 
         return Inertia::render('admin/quotes/Index', [
@@ -148,6 +154,15 @@ class QuoteController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.quotes.deleted')]);
 
         return to_route('admin.quotes.index');
+    }
+
+    public function restore(Quote $quote): RedirectResponse
+    {
+        $quote->restore();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.quotes.restored')]);
+
+        return back();
     }
 
     /**
