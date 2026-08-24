@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\QuoteController;
@@ -17,6 +18,7 @@ Route::prefix('admin')
     ->middleware(['auth', 'verified', EnsureUserIsAdmin::class])
     ->group(function () {
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('ajuda', HelpController::class)->name('help');
 
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
         Route::post('categories/{category}/restore', [CategoryController::class, 'restore'])

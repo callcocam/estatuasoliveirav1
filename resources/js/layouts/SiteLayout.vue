@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import CookieConsentBanner from '@/components/site/CookieConsentBanner.vue';
 import SiteFooter from '@/components/site/SiteFooter.vue';
 import SiteHeader from '@/components/site/SiteHeader.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
@@ -39,5 +40,6 @@ const fullTitle = computed(() => `${props.title} · ${company.value.name}`);
         </main>
         <SiteFooter />
         <WhatsAppButton floating />
+        <CookieConsentBanner />
     </div>
 </template>

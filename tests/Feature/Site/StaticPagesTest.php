@@ -29,6 +29,50 @@ it('renders the terms page with settings content', function () {
             ->where('content', 'Conteúdo dos termos.'));
 });
 
+it('renders the terms page with default legal sections when no custom content exists', function () {
+    $this->get(route('terms'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('site/Terms')
+            ->where('content', null)
+            ->where('legal.title', 'Termos de Uso')
+            ->has('legal.sections', 9));
+});
+
+it('renders the privacy page with default legal sections', function () {
+    $this->get(route('privacy'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('site/Privacy')
+            ->where('content', null)
+            ->where('legal.title', 'Política de Privacidade')
+            ->has('legal.sections', 12));
+});
+
+it('renders the privacy page with settings content override', function () {
+    Setting::set('content_privacy', 'Política personalizada.');
+
+    $this->get(route('privacy'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('site/Privacy')
+            ->where('content', 'Política personalizada.'));
+});
+
+it('redirects the legacy terms URL to the new terms page', function () {
+    $this->get('/termos-e-politica')
+        ->assertMovedPermanently()
+        ->assertRedirect('/termos-de-uso');
+});
+
+it('has translated texts for the cookie consent banner', function () {
+    app()->setLocale('pt_BR');
+
+    foreach (['title', 'text', 'privacy_link', 'accept', 'essential_only'] as $key) {
+        expect(__("app.site.cookies.{$key}"))->not->toBe("app.site.cookies.{$key}");
+    }
+});
+
 it('renders the public 404 page in the site theme', function () {
     $this->get('/pagina-que-nao-existe')
         ->assertNotFound()

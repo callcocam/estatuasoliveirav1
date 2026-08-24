@@ -13,6 +13,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/js/components/AppSidebar.vue,resources/js/components/admin/AdminSidebar.vue,tests/Feature/Admin/AdminAccessTest.php | .ai/rules/feature-admin.md |
 | app/Actions/Fortify/**,app/Models/User.php | .ai/rules/fortify-models.md |
 | ** | .ai/rules/general.md |
+| app/Support/LegalContent.php,lang/pt_BR/app/site.php,resources/js/components/site/LegalPage.vue | .ai/rules/js-components-site.md |
 | lang/**,resources/js/** | .ai/rules/js.md |
 | app/Services/LegacyImport/** | .ai/rules/legacy-import.md |
 | database/migrations/** | .ai/rules/migrations.md |

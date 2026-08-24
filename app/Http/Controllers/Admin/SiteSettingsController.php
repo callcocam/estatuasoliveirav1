@@ -33,6 +33,7 @@ class SiteSettingsController extends Controller
         'address_state' => 'address',
         'address_zip' => 'address',
         'content_terms' => 'content',
+        'content_privacy' => 'content',
         SiteTheme::SETTING_KEY => 'theme',
     ];
 

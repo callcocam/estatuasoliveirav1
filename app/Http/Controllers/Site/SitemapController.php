@@ -33,6 +33,7 @@ class SitemapController extends Controller
             ['loc' => route('gallery'), 'priority' => '0.6'],
             ['loc' => route('contact'), 'priority' => '0.6'],
             ['loc' => route('terms'), 'priority' => '0.3'],
+            ['loc' => route('privacy'), 'priority' => '0.3'],
         ]);
 
         $productUrls = Product::query()

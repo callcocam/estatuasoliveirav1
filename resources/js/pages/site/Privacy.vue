@@ -13,7 +13,7 @@ const { t } = useT();
 
 <template>
     <LegalPage
-        :meta-title="t('app.site.meta.terms_title')"
+        :meta-title="t('app.site.meta.privacy_title')"
         :content="content"
         :legal="legal"
     />

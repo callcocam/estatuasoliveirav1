@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
-import { about, contact, gallery, home, login, terms } from '@/routes';
+import { about, contact, gallery, home, login, privacy, terms } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
 
 const { t } = useT();
@@ -16,6 +16,7 @@ const links = computed(() => [
     { label: t('app.site.nav.gallery'), href: gallery() },
     { label: t('app.site.nav.contact'), href: contact() },
     { label: t('app.site.nav.terms'), href: terms() },
+    { label: t('app.site.nav.privacy'), href: privacy() },
 ]);
 
 const year = new Date().getFullYear();

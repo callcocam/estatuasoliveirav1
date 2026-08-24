@@ -210,18 +210,36 @@ const themeValue = ref(props.values.site_default_theme ?? 'stone');
             <CardHeader>
                 <CardTitle>{{ t('app.admin.settings.content') }}</CardTitle>
             </CardHeader>
-            <CardContent class="grid gap-2">
-                <Label for="content-terms">{{
-                    t('app.admin.settings.fields.content_terms')
-                }}</Label>
-                <textarea
-                    id="content-terms"
-                    name="content_terms"
-                    rows="10"
-                    class="w-full rounded-md border border-input bg-transparent px-3 py-2 font-mono text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    :value="values.content_terms ?? ''"
-                ></textarea>
-                <InputError :message="errors.content_terms" />
+            <CardContent class="grid gap-4">
+                <p class="text-sm text-muted-foreground">
+                    {{ t('app.admin.settings.content_hint') }}
+                </p>
+                <div class="grid gap-2">
+                    <Label for="content-terms">{{
+                        t('app.admin.settings.fields.content_terms')
+                    }}</Label>
+                    <textarea
+                        id="content-terms"
+                        name="content_terms"
+                        rows="10"
+                        class="w-full rounded-md border border-input bg-transparent px-3 py-2 font-mono text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        :value="values.content_terms ?? ''"
+                    ></textarea>
+                    <InputError :message="errors.content_terms" />
+                </div>
+                <div class="grid gap-2">
+                    <Label for="content-privacy">{{
+                        t('app.admin.settings.fields.content_privacy')
+                    }}</Label>
+                    <textarea
+                        id="content-privacy"
+                        name="content_privacy"
+                        rows="10"
+                        class="w-full rounded-md border border-input bg-transparent px-3 py-2 font-mono text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        :value="values.content_privacy ?? ''"
+                    ></textarea>
+                    <InputError :message="errors.content_privacy" />
+                </div>
             </CardContent>
         </Card>
 

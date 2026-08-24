@@ -16,6 +16,7 @@ return [
         'users' => 'Usuários',
         'settings' => 'Configurações do site',
         'view_site' => 'Ver site',
+        'help' => 'Ajuda',
         'admin_panel' => 'Painel administrativo',
     ],
 
@@ -226,10 +227,12 @@ return [
             'address_city' => 'Cidade',
             'address_state' => 'UF',
             'address_zip' => 'CEP',
-            'content_terms' => 'Termos e política de privacidade',
+            'content_terms' => 'Termos de uso',
+            'content_privacy' => 'Política de privacidade',
             'site_default_theme' => 'Tema padrão do site',
             'logo' => 'Logo',
         ],
+        'content_hint' => 'Se deixado em branco, o site exibe o texto padrão já preparado conforme a legislação brasileira (LGPD).',
         'theme_hint' => 'Tema aplicado aos visitantes que ainda não escolheram um tema.',
         'saved' => 'Configurações salvas.',
     ],
@@ -243,5 +246,52 @@ return [
         'cover' => 'Capa',
         'renamed' => ':renamed imagem(ns) renomeada(s) para o slug do produto, :skipped já corretas, :missing sem arquivo físico.',
         'rename_dry_run' => ':renamed imagem(ns) seriam renomeadas, :skipped já corretas, :missing sem arquivo físico (dry-run).',
+    ],
+
+    'help' => [
+        'title' => 'Ajuda',
+        'intro' => 'Guia rápido do painel administrativo: o passo a passo das principais tarefas, do cadastro de categorias e produtos até as configurações do site.',
+        'sections' => [
+            [
+                'title' => 'Primeiros passos',
+                'body' => "O menu lateral dá acesso a todos os módulos do painel: Catálogo (categorias, produtos e sliders), Atendimento (orçamentos e mensagens) e Administração (usuários e configurações — visíveis apenas para administradores; gerentes cuidam do conteúdo).\nO botão \"Ver site\" no rodapé do menu abre o site como o visitante vê. Use-o para conferir o resultado após qualquer alteração.",
+            ],
+            [
+                'title' => 'Categorias — como organizar o catálogo',
+                'body' => "As categorias agrupam os produtos no site (ex.: Budas, Fontes, Vasos).\n1. Acesse Catálogo → Categorias e clique em Criar.\n2. Informe o nome — o endereço (slug) é gerado automaticamente.\n3. Use as setas ou arraste para reordenar: a ordem definida aqui é a mesma exibida no site.\nUma categoria excluída pode ser restaurada pelo filtro \"Excluídos\". Prefira criar poucas categorias claras: isso facilita a navegação do cliente.",
+            ],
+            [
+                'title' => 'Produtos — cadastro passo a passo',
+                'body' => "1. Acesse Catálogo → Produtos e clique em Criar.\n2. Preencha o nome do produto — o endereço da página é gerado automaticamente.\n3. Escolha a categoria e preencha os demais campos do formulário (dimensões, detalhes etc.).\n4. Escreva a descrição ou use o botão de gerar descrição com IA (veja a seção abaixo).\n5. Envie as fotos do produto (veja a seção de fotos).\n6. Defina o status: Rascunho (não aparece no site), Publicado (visível no site) ou Arquivado.\n7. Marque \"Destaque\" para exibir o produto na página inicial.\n8. Salve. Para criar um produto parecido, use a ação Duplicar na listagem — ela cria uma cópia em rascunho para você ajustar.",
+            ],
+            [
+                'title' => 'Produtos — fotos',
+                'body' => "Na tela do produto, arraste as imagens para a área de envio ou clique para selecionar (JPEG, PNG ou WebP, máx. 5 MB por imagem).\n– Arraste para reordenar as fotos.\n– Marque uma foto como Capa: ela é a imagem principal exibida no catálogo e nas redes sociais.\n– Preencha o texto alternativo de cada foto: além de acessibilidade, ele ajuda o produto a ser encontrado no Google.",
+            ],
+            [
+                'title' => 'Produtos — descrição com IA',
+                'body' => "O botão de gerar descrição cria automaticamente um texto de venda a partir do nome, da categoria e dos dados preenchidos do produto.\n1. Preencha primeiro o nome e a categoria (quanto mais campos preenchidos, melhor o resultado).\n2. Clique em gerar e aguarde alguns segundos.\n3. Revise o texto gerado e ajuste o que quiser antes de salvar — a IA é um ponto de partida, não o texto final.\nHá um limite de 10 gerações por minuto.",
+            ],
+            [
+                'title' => 'Sliders — banners da página inicial',
+                'body' => "Os sliders são os banners rotativos do topo da página inicial.\n1. Acesse Catálogo → Sliders e clique em Criar.\n2. Envie a imagem e preencha os textos do banner.\n3. Arraste ou use as setas para definir a ordem de exibição.\nMantenha poucos banners, com imagens de boa qualidade.",
+            ],
+            [
+                'title' => 'Orçamentos',
+                'body' => "Em Atendimento → Orçamentos você acompanha os pedidos feitos pelos clientes no site.\n– Abra um orçamento para ver os itens e os dados do cliente.\n– Atualize o status conforme a negociação avança.\n– Também é possível registrar um orçamento manualmente (ex.: pedido feito pelo WhatsApp) pelo botão Criar.",
+            ],
+            [
+                'title' => 'Mensagens',
+                'body' => 'Em Atendimento → Mensagens ficam as mensagens enviadas pelo formulário de contato do site. Abra a mensagem para ler e marque como lida após responder ao cliente (a resposta é feita por fora, por e-mail ou WhatsApp).',
+            ],
+            [
+                'title' => 'Configurações do site (somente administradores)',
+                'body' => "Em Administração → Configurações você define as informações exibidas no site:\n– dados da empresa (nome, CNPJ, sobre);\n– telefone, WhatsApp (usado no botão flutuante do site) e e-mail;\n– endereço completo;\n– textos de Termos de Uso e Política de Privacidade (em branco, o site usa o texto padrão conforme a LGPD);\n– tema padrão e logo do site.",
+            ],
+            [
+                'title' => 'Excluir e restaurar',
+                'body' => 'A maioria dos registros (categorias, produtos, sliders, orçamentos, mensagens e usuários) não é apagada de vez: eles vão para a lixeira e podem ser restaurados pelo filtro "Excluídos" da própria listagem.',
+            ],
+        ],
     ],
 ];

@@ -4,6 +4,7 @@ use App\Models\User;
 
 dataset('admin get routes', [
     'admin.dashboard',
+    'admin.help',
     'admin.categories.index',
     'admin.products.index',
     'admin.sliders.index',
@@ -35,6 +36,18 @@ test('managers can access content modules', function () {
     $this->actingAs($manager)->get(route('admin.dashboard'))->assertOk();
     $this->actingAs($manager)->get(route('admin.products.index'))->assertOk();
     $this->actingAs($manager)->get(route('admin.categories.index'))->assertOk();
+});
+
+test('managers can read the help page with its guide sections', function () {
+    $manager = User::factory()->manager()->create();
+
+    $this->actingAs($manager)
+        ->get(route('admin.help'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/Help')
+            ->has('intro')
+            ->has('sections', 10));
 });
 
 test('managers cannot access users or settings', function () {

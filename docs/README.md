@@ -22,8 +22,8 @@ Cada arquivo em `docs/` é **autocontido** — foi escrito para ser executado em
 | 9 | [09-auth-com-cara-do-site.md](09-auth-com-cara-do-site.md) | 3, 8 | Páginas de auth com a identidade visual do site | ⬜ Pendente |
 | 10 | [10-tema-escuro.md](10-tema-escuro.md) | 3 | Variante escura dos dois temas + toggle claro/escuro/sistema | ⬜ Pendente |
 | 11 | [11-area-do-cliente.md](11-area-do-cliente.md) | 5, 8 | Área do cliente enxuta + auditoria de permissões não-admin | ⬜ Pendente |
-| 12 | [12-botoes-compartilhamento.md](12-botoes-compartilhamento.md) | 4 | Compartilhar produto (Web Share API + WhatsApp/FB/X/copiar link) | ⬜ Pendente |
-| 13 | [13-ia-descricao-produtos.md](13-ia-descricao-produtos.md) | 5 | Botão "Gerar descrição" com IA (Gemini free por padrão, troca p/ pago via .env) | ⬜ Pendente |
+| 12 | [12-botoes-compartilhamento.md](12-botoes-compartilhamento.md) | 4 | Compartilhar produto (WhatsApp/Facebook/Instagram/copiar link) | ✅ Concluído (2026-08-24) |
+| 13 | [13-ia-descricao-produtos.md](13-ia-descricao-produtos.md) | 5 | Botão "Gerar descrição" com IA (Gemini free por padrão, troca p/ pago via .env) | ✅ Concluído (2026-08-24) |
 
 Os planos 1, 3 podem rodar **em paralelo** (chats simultâneos). O plano 4 e 5 podem rodar em paralelo entre si depois que 1 e 3 terminarem.
 

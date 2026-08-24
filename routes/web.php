@@ -5,6 +5,7 @@ use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\GalleryController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\PrivacyController;
 use App\Http\Controllers\Site\ProductController;
 use App\Http\Controllers\Site\SitemapController;
 use App\Http\Controllers\Site\TermsController;
@@ -19,10 +20,12 @@ Route::get('produtos/{product:slug}', [ProductController::class, 'show'])->name(
 Route::get('galeria', GalleryController::class)->name('gallery');
 Route::get('contato', [ContactController::class, 'show'])->name('contact');
 Route::post('contato', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
-Route::get('termos-e-politica', TermsController::class)->name('terms');
+Route::get('termos-de-uso', TermsController::class)->name('terms');
+Route::get('politica-de-privacidade', PrivacyController::class)->name('privacy');
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
 // Redirects 301 das URLs do site legado (estatuasoliveira.com.br).
+Route::redirect('termos-e-politica', '/termos-de-uso', 301);
 Route::redirect('historia', '/nossa-historia', 301);
 Route::redirect('estatuas', '/produtos', 301);
 Route::redirect('lancamentos', '/produtos', 301);

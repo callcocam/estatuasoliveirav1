@@ -30,6 +30,7 @@ class SiteSettingsRequest extends FormRequest
             'address_state' => ['nullable', 'string', 'max:2'],
             'address_zip' => ['nullable', 'string', 'max:20'],
             'content_terms' => ['nullable', 'string', 'max:50000'],
+            'content_privacy' => ['nullable', 'string', 'max:50000'],
             'site_default_theme' => ['required', Rule::enum(SiteTheme::class)],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,webp,svg', 'max:2048'],
         ];

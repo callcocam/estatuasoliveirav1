@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import {
+    CircleHelp,
     Cog,
     ExternalLink,
     FolderTree,
@@ -28,7 +29,7 @@ import {
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { useT } from '@/composables/useT';
 import { home } from '@/routes';
-import { dashboard } from '@/routes/admin';
+import { dashboard, help } from '@/routes/admin';
 import { index as categoriesIndex } from '@/routes/admin/categories';
 import { index as messagesIndex } from '@/routes/admin/messages';
 import { index as productsIndex } from '@/routes/admin/products';
@@ -167,6 +168,18 @@ const groups = computed<{ label: string; items: NavItem[] }[]>(() => {
 
         <SidebarFooter>
             <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        as-child
+                        :is-active="isCurrentUrl(help().url)"
+                        :tooltip="t('app.admin.nav.help')"
+                    >
+                        <Link :href="help().url">
+                            <CircleHelp />
+                            <span>{{ t('app.admin.nav.help') }}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         as-child
