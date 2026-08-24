@@ -7,7 +7,7 @@ import { about, contact, gallery, home, login, privacy, terms } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
 
 const { t } = useT();
-const { company, whatsappUrl } = useCompany();
+const { company, whatsappUrl, whatsappUrlWithMessage } = useCompany();
 
 const links = computed(() => [
     { label: t('app.site.nav.home'), href: home() },
@@ -74,7 +74,7 @@ const year = new Date().getFullYear();
                     </li>
                     <li v-if="whatsappUrl">
                         <a
-                            :href="whatsappUrl"
+                            :href="whatsappUrlWithMessage ?? whatsappUrl"
                             target="_blank"
                             rel="noopener"
                             class="hover:text-site-primary"

@@ -12,7 +12,7 @@ defineProps<{
 }>();
 
 const { t } = useT();
-const { company } = useCompany();
+const { company, whatsappUrlWithMessage } = useCompany();
 </script>
 
 <template>
@@ -61,6 +61,32 @@ const { company } = useCompany();
                 </Link>
                 <ThemeSwitcher />
             </div>
+
+            <footer
+                class="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-xs text-site-on-surface-variant"
+            >
+                <span>{{ company.name }}</span>
+                <a
+                    v-if="company.phone"
+                    :href="`tel:${company.phone.replace(/\D/g, '')}`"
+                    class="transition-colors hover:text-site-primary"
+                    >{{ company.phone }}</a
+                >
+                <a
+                    v-if="company.email"
+                    :href="`mailto:${company.email}`"
+                    class="transition-colors hover:text-site-primary"
+                    >{{ company.email }}</a
+                >
+                <a
+                    v-if="whatsappUrlWithMessage"
+                    :href="whatsappUrlWithMessage"
+                    target="_blank"
+                    rel="noopener"
+                    class="transition-colors hover:text-site-primary"
+                    >WhatsApp</a
+                >
+            </footer>
         </div>
     </div>
 </template>

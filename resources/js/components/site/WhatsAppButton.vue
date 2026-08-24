@@ -11,6 +11,8 @@ import { useT } from '@/composables/useT';
  *
  * - `floating`: vira o botão fixo (FAB) na lateral inferior direita da tela.
  * - `message`: texto pré-preenchido da conversa (ex.: orçamento de produto).
+ *   Sem `message`, usa app.site.whatsapp.default_message, que identifica que
+ *   o cliente chegou pelo site.
  * - `label`: texto do botão inline (padrão: app.site.whatsapp.button).
  */
 const props = defineProps<{
@@ -20,7 +22,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useT();
-const { whatsappUrl } = useCompany();
+const { whatsappUrl, whatsappUrlWithMessage } = useCompany();
 
 const href = computed<string | null>(() => {
     if (!whatsappUrl.value) {
@@ -28,7 +30,7 @@ const href = computed<string | null>(() => {
     }
 
     if (!props.message) {
-        return whatsappUrl.value;
+        return whatsappUrlWithMessage.value;
     }
 
     return `${whatsappUrl.value}?text=${encodeURIComponent(props.message)}`;

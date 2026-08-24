@@ -2,7 +2,30 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
 import { initializeFlashToast } from '@/lib/flashToast';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+/**
+ * Prefer the company name shared by the backend (settings table, via the
+ * initial Inertia page payload) so every tab title carries the site identity.
+ */
+function resolveAppName(): string {
+    if (typeof document !== 'undefined') {
+        try {
+            const page = JSON.parse(
+                document.getElementById('app')?.dataset.page ?? 'null',
+            );
+            const siteName = page?.props?.site?.name;
+
+            if (typeof siteName === 'string' && siteName !== '') {
+                return siteName;
+            }
+        } catch {
+            // Fall through to the env-based name below.
+        }
+    }
+
+    return import.meta.env.VITE_APP_NAME || 'Estátuas Oliveira';
+}
+
+const appName = resolveAppName();
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

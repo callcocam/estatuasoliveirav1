@@ -13,7 +13,6 @@ return [
         'open_menu' => 'Abrir menu',
         'close_menu' => 'Fechar menu',
         'tagline' => 'Estátuas, vasos e fontes artesanais',
-        'quote_button' => 'Orçamento',
     ],
 
     'auth' => [
@@ -132,6 +131,13 @@ return [
         'whatsapp_button' => 'Chamar no WhatsApp',
         'mail_subject' => 'Novo contato pelo site: :name',
         'mail_heading' => 'Nova mensagem de contato',
+        'confirmation_subject' => 'Recebemos sua mensagem — :company',
+        'confirmation_intro' => 'Recebemos sua mensagem e retornaremos em breve. Aqui está uma cópia do que você nos enviou:',
+        'confirmation_whatsapp' => 'Se preferir agilizar o atendimento, chame a gente no WhatsApp:',
+        'confirmation_whatsapp_action' => 'Chamar no WhatsApp',
+        'product_label' => ':name (Ref. :reference)',
+        'product_subject' => 'Orçamento — :product',
+        'product_message' => "Olá! Gostaria de solicitar um orçamento desta peça:\n\n:product\n:url",
     ],
 
     'legal' => [
@@ -239,6 +245,8 @@ return [
     'whatsapp' => [
         'button' => 'Chamar no WhatsApp',
         'aria_label' => 'Conversar no WhatsApp',
+        'default_message' => "Olá! Vim pelo site da :company (:url) e gostaria de mais informações.",
+        'product_message' => "Olá! Vi esta peça no site da :company e gostaria de consultar disponibilidade e valores:\n\n:product\n:url",
     ],
 
     'cookies' => [

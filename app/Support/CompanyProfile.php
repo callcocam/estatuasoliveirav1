@@ -29,9 +29,46 @@ class CompanyProfile
     }
 
     /**
+     * Company display name configured in the site settings.
+     */
+    public static function name(): string
+    {
+        return Setting::get('company_name', 'Estátuas Oliveira');
+    }
+
+    /**
+     * Absolute brand logo URL, safe for email clients (which cannot resolve relative paths).
+     */
+    public static function absoluteLogoUrl(): string
+    {
+        $url = self::logoUrl();
+
+        return str_starts_with($url, 'http') ? $url : url($url);
+    }
+
+    /**
+     * Build a wa.me link for the configured WhatsApp number, optionally with a prefilled text.
+     * Mirrors the frontend builder in resources/js/composables/useCompany.ts.
+     */
+    public static function whatsappUrl(?string $text = null): ?string
+    {
+        $digits = preg_replace('/\D/', '', (string) Setting::get('contact_whatsapp'));
+
+        if ($digits === '' || $digits === null) {
+            return null;
+        }
+
+        $url = 'https://wa.me/'.(str_starts_with($digits, '55') ? $digits : "55{$digits}");
+
+        return $text === null || $text === ''
+            ? $url
+            : $url.'?text='.rawurlencode($text);
+    }
+
+    /**
      * Build the public company profile shared with the site pages.
      *
-     * @return array{name: string, about: string|null, phone: string|null, whatsapp: string|null, email: string|null, address: string|null, logoUrl: string}
+     * @return array{name: string, about: string|null, phone: string|null, whatsapp: string|null, email: string|null, address: string|null, logoUrl: string, url: string}
      */
     public static function toArray(): array
     {
@@ -43,13 +80,14 @@ class CompanyProfile
         ]);
 
         return [
-            'name' => Setting::get('company_name', 'Estátuas Oliveira'),
+            'name' => self::name(),
             'about' => Setting::get('company_about'),
             'phone' => Setting::get('contact_phone'),
             'whatsapp' => Setting::get('contact_whatsapp'),
             'email' => Setting::get('contact_email'),
             'address' => $addressParts === [] ? null : implode(' · ', $addressParts),
             'logoUrl' => self::logoUrl(),
+            'url' => url('/'),
         ];
     }
 }

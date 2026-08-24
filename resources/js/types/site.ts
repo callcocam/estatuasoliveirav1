@@ -6,6 +6,7 @@ export interface SiteCompany {
     email: string | null;
     address: string | null;
     logoUrl: string;
+    url: string;
 }
 
 export interface SiteSlider {

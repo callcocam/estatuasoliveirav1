@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useCompany } from '@/composables/useCompany';
@@ -7,8 +8,20 @@ import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { store } from '@/routes/contact';
 
+const props = defineProps<{
+    prefill?: { subject: string; message: string } | null;
+}>();
+
 const { t } = useT();
 const { company } = useCompany();
+
+const subject = ref(props.prefill?.subject ?? '');
+const message = ref(props.prefill?.message ?? '');
+
+function clearPrefilledFields(): void {
+    subject.value = '';
+    message.value = '';
+}
 
 const inputClasses =
     'w-full rounded-site border border-site-outline-variant bg-site-surface-container-lowest px-4 py-2.5 text-sm text-site-on-surface placeholder:text-site-on-surface-variant focus:border-site-primary focus:ring-1 focus:ring-site-primary focus:outline-none';
@@ -29,13 +42,8 @@ const inputClasses =
                 <!-- Formulário -->
                 <Form
                     v-bind="store.form()"
-                    :reset-on-success="[
-                        'name',
-                        'email',
-                        'phone',
-                        'subject',
-                        'message',
-                    ]"
+                    :reset-on-success="['name', 'email', 'phone']"
+                    @success="clearPrefilledFields"
                     v-slot="{ errors, processing }"
                     class="grid gap-5"
                 >
@@ -111,6 +119,7 @@ const inputClasses =
                             </label>
                             <input
                                 id="subject"
+                                v-model="subject"
                                 name="subject"
                                 type="text"
                                 :class="inputClasses"
@@ -133,6 +142,7 @@ const inputClasses =
                         </label>
                         <textarea
                             id="message"
+                            v-model="message"
                             name="message"
                             rows="6"
                             required
@@ -198,6 +208,7 @@ const inputClasses =
                             </li>
                         </ul>
                         <WhatsAppButton
+                            :message="prefill?.message"
                             :label="t('app.site.contact.whatsapp_button')"
                             class="mt-5"
                         />

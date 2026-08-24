@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { useT } from '@/composables/useT';
 import type { SiteCompany } from '@/types/site';
 
 /**
@@ -8,6 +9,7 @@ import type { SiteCompany } from '@/types/site';
  */
 export function useCompany() {
     const page = usePage();
+    const { t } = useT();
 
     const company = computed<SiteCompany>(
         () =>
@@ -19,6 +21,7 @@ export function useCompany() {
                 email: null,
                 address: null,
                 logoUrl: '/images/logo.png',
+                url: '/',
             },
     );
 
@@ -32,5 +35,22 @@ export function useCompany() {
         return `https://wa.me/${digits.startsWith('55') ? digits : `55${digits}`}`;
     });
 
-    return { company, whatsappUrl };
+    /**
+     * WhatsApp link with a prefilled greeting identifying the site
+     * (company name + URL), for header/footer/direct contact links.
+     */
+    const whatsappUrlWithMessage = computed<string | null>(() => {
+        if (!whatsappUrl.value) {
+            return null;
+        }
+
+        const message = t('app.site.whatsapp.default_message', {
+            company: company.value.name,
+            url: company.value.url,
+        });
+
+        return `${whatsappUrl.value}?text=${encodeURIComponent(message)}`;
+    });
+
+    return { company, whatsappUrl, whatsappUrlWithMessage };
 }

@@ -115,4 +115,21 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | Tema visual dos emails markdown (resources/views/vendor/mail/html/themes).
+    | O tema "estatuas" aplica o acento da marca aos botões e links.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'estatuas',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

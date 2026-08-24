@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import ProductCard from '@/components/site/ProductCard.vue';
 import ShareButtons from '@/components/site/ShareButtons.vue';
 import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
+import { useCompany } from '@/composables/useCompany';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { contact } from '@/routes';
@@ -16,15 +17,19 @@ const props = defineProps<{
 }>();
 
 const { t } = useT();
+const { company } = useCompany();
 
 const activeImageIndex = ref(0);
 const activeImage = computed(
     () => props.product.images[activeImageIndex.value] ?? null,
 );
 
-const whatsappQuoteMessage = computed(
-    () =>
-        `${props.product.name}${props.product.reference ? ` (Ref. ${props.product.reference})` : ''}`,
+const whatsappQuoteMessage = computed(() =>
+    t('app.site.whatsapp.product_message', {
+        company: company.value.name,
+        product: `${props.product.name}${props.product.reference ? ` (Ref. ${props.product.reference})` : ''}`,
+        url: props.product.url,
+    }),
 );
 </script>
 
@@ -180,7 +185,11 @@ const whatsappQuoteMessage = computed(
                         </p>
                         <div class="mt-5 flex flex-wrap gap-3">
                             <Link
-                                :href="contact()"
+                                :href="
+                                    contact({
+                                        query: { produto: product.slug },
+                                    })
+                                "
                                 class="rounded-site bg-site-surface px-6 py-2.5 text-sm font-medium text-site-primary transition-colors hover:bg-site-surface-container"
                             >
                                 {{ t('app.site.product.quote_button') }}
