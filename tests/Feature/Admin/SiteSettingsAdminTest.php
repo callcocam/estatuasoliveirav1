@@ -21,6 +21,24 @@ test('shows the settings form with current values', function () {
             ->has('themes', 2));
 });
 
+test('prefills the legal textareas with the default texts when empty', function () {
+    $this->actingAs($this->admin)
+        ->get(route('admin.settings.edit'))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/settings/Site')
+            ->where('values.content_terms', fn ($value) => str_contains((string) $value, '1. Sobre o site e nossos serviços'))
+            ->where('values.content_privacy', fn ($value) => str_contains((string) $value, 'LGPD')));
+});
+
+test('keeps custom legal texts instead of the defaults', function () {
+    Setting::set('content_terms', 'Meus termos personalizados.', 'content');
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.settings.edit'))
+        ->assertInertia(fn ($page) => $page
+            ->where('values.content_terms', 'Meus termos personalizados.'));
+});
+
 test('saves settings including the default site theme', function () {
     $this->actingAs($this->admin)->post(route('admin.settings.update'), [
         'company_name' => 'Estátuas Oliveira',

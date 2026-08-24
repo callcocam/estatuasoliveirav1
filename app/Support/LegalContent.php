@@ -10,6 +10,22 @@ class LegalContent
      *
      * @return array{title: string, intro: string, updated: string, sections: list<array{title: string, body: string}>}
      */
+    /**
+     * Render the default legal content of a page as formatted plain text,
+     * ready to be edited in the admin settings textareas.
+     */
+    public static function plainText(string $page): string
+    {
+        $legal = self::for($page);
+
+        $sections = array_map(
+            fn (array $section): string => $section['title']."\n\n".$section['body'],
+            $legal['sections'],
+        );
+
+        return implode("\n\n", [$legal['intro'], ...$sections]);
+    }
+
     public static function for(string $page): array
     {
         $company = CompanyProfile::toArray();

@@ -232,7 +232,7 @@ return [
             'site_default_theme' => 'Tema padrão do site',
             'logo' => 'Logo',
         ],
-        'content_hint' => 'Se deixado em branco, o site exibe o texto padrão já preparado conforme a legislação brasileira (LGPD).',
+        'content_hint' => 'Os textos abaixo já vêm preenchidos com o padrão preparado conforme a legislação brasileira (LGPD). Edite como quiser: ao salvar, o site passa a exibir exatamente o texto editado.',
         'theme_hint' => 'Tema aplicado aos visitantes que ainda não escolheram um tema.',
         'saved' => 'Configurações salvas.',
     ],

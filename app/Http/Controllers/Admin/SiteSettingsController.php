@@ -6,6 +6,7 @@ use App\Enums\SiteTheme;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SiteSettingsRequest;
 use App\Models\Setting;
+use App\Support\LegalContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -46,6 +47,8 @@ class SiteSettingsController extends Controller
         }
 
         $values[SiteTheme::SETTING_KEY] ??= SiteTheme::Stone->value;
+        $values['content_terms'] = $values['content_terms'] ?: LegalContent::plainText('terms');
+        $values['content_privacy'] = $values['content_privacy'] ?: LegalContent::plainText('privacy');
 
         $logoPath = Setting::get('branding_logo_path');
 

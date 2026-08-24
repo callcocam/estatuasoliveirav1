@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 
 export interface LegalContent {
@@ -8,11 +9,26 @@ export interface LegalContent {
     sections: { title: string; body: string }[];
 }
 
-defineProps<{
+const props = defineProps<{
     metaTitle: string;
     content: string | null;
     legal: LegalContent;
 }>();
+
+/**
+ * Blocos do texto personalizado separados por linha em branco.
+ * Blocos de uma única linha iniciados por numeração ("1. …") viram títulos.
+ */
+const contentBlocks = computed(() =>
+    (props.content ?? '')
+        .split(/\n\s*\n/)
+        .map((block) => block.trim())
+        .filter((block) => block !== '')
+        .map((block) => ({
+            text: block,
+            heading: !block.includes('\n') && /^\d+[.)]\s/.test(block),
+        })),
+);
 </script>
 
 <template>
@@ -29,7 +45,17 @@ defineProps<{
                 v-if="content"
                 class="mt-10 leading-relaxed text-site-on-surface"
             >
-                <p class="whitespace-pre-line">{{ content }}</p>
+                <template v-for="(block, index) in contentBlocks" :key="index">
+                    <h2
+                        v-if="block.heading"
+                        class="mt-8 font-display text-xl text-site-primary"
+                    >
+                        {{ block.text }}
+                    </h2>
+                    <p v-else class="mt-3 whitespace-pre-line">
+                        {{ block.text }}
+                    </p>
+                </template>
             </div>
 
             <div v-else class="mt-10 leading-relaxed text-site-on-surface">
