@@ -68,7 +68,7 @@ class MediaImporter extends LegacyImporter
             }
 
             $media = new Media([
-                'collection' => $row['assets'] === 'cover' ? 'cover' : 'gallery',
+                'collection' => 'default',
                 'disk' => 'public',
                 'path' => $path,
                 'file_name' => $fileName,
@@ -77,6 +77,7 @@ class MediaImporter extends LegacyImporter
                 'sort_order' => $row['assets'] === 'cover' ? 0 : 1,
                 'custom_properties' => array_filter([
                     'legacy_dir' => $row['dir'],
+                    'legacy_assets' => $row['assets'],
                     'width' => is_numeric($row['width']) ? (int) $row['width'] : null,
                     'height' => is_numeric($row['height']) ? (int) $row['height'] : null,
                 ]) ?: null,

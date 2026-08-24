@@ -57,10 +57,16 @@ test('converte featured, medida legada e estoque dos produtos', function () {
 test('migra files como media com morph novo e logo da empresa como setting', function () {
     runLegacyImport();
 
-    $cover = Media::query()->where('collection', 'cover')->firstOrFail();
+    $cover = Media::query()
+        ->where('mediable_type', Product::class)
+        ->where('sort_order', 0)
+        ->firstOrFail();
 
-    expect($cover->mediable_type)->toBe(Product::class)
+    // A collection precisa ser 'default' para o coverMedia()/site enxergarem a imagem.
+    expect($cover->collection)->toBe('default')
+        ->and($cover->mediable_type)->toBe(Product::class)
         ->and($cover->mediable)->toBeInstanceOf(Product::class)
+        ->and($cover->mediable->coverMedia())->not->toBeNull()
         ->and($cover->path)->toStartWith('products/')
         ->and($cover->path)->not->toContain('storage/')
         ->and($cover->mime_type)->toBe('image/jpeg');
