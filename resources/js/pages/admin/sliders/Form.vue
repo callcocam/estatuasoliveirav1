@@ -145,7 +145,7 @@ const statusValue = ref(props.slider?.status ?? 'draft');
                             t('app.admin.sliders.fields.status')
                         }}</Label>
                         <Select v-model="statusValue" name="status">
-                            <SelectTrigger>
+                            <SelectTrigger class="w-full">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

@@ -49,4 +49,10 @@ Pint + Larastan + `php artisan test --compact` + `npm run build && npm run lint`
 
 ## Registro de execução
 
-_(preencher ao executar)_
+Executado em 2026-08-24.
+
+- **Backend**: `config/ai.php` (AI_DRIVER, timeout 20s, blocos por provider); `app/Services/Ai/` com contrato `TextGenerator`, base `Drivers/HttpTextDriver` (erro de conexão/HTTP/resposta vazia → `TextGenerationFailedException`), drivers `GeminiDriver`, `OpenAiCompatibleDriver` (groq + openai), `OllamaDriver`, `AnthropicDriver`, `TextGeneratorFactory` (bind do contrato no `AppServiceProvider`) e `ProductDescriptionGenerator` (prompt pt-BR só com fatos informados). Rota `POST admin/products/generate-description` (`throttle:10,1`) + `GenerateProductDescriptionRequest`; falha do provider → 422 com `app.admin.products.ai.failed`.
+- **Frontend**: botão Sparkles "Gerar descrição" no `Form.vue` via `useHttp` (Inertia v3), lendo os campos atuais do `<form>` (FormData) + categoria do ref; textarea `description` virou controlado (`v-model`) para receber o resultado; confirmação antes de sobrescrever; erro inline via `InputError`. Rota tipada via Wayfinder (`generateDescription`).
+- **Traduções**: `app.admin.products.ai.*` em `lang/pt_BR/app/admin.php` (projeto mantém apenas pt_BR — sem espelho `en`, decisão do plano 11). `.env.example` ganhou bloco comentado de variáveis de IA.
+- **Testes**: `tests/Feature/Services/AiDriverTest.php` (request+parse dos 5 drivers, erro HTTP, resposta vazia, prompt só com fatos) e `tests/Feature/Admin/ProductDescriptionAiTest.php` (geração ok, validação, 403 customer, 422 provider, throttle 429). Obs.: `preventStrayRequests` **não** era padrão da suíte — aplicado via `beforeEach` nos testes novos.
+- Verificação: Pint ok, Larastan ok, `php artisan test --compact` 235 passed, `npm run build`, `npm run lint` e `npm run types:check` ok. `record-rule` gravado em `.ai/rules/ai.md`.

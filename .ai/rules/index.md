@@ -5,8 +5,10 @@ Before planning or editing, find the row whose globs match the file's path and r
 | Applies to | Rule file |
 | --- | --- |
 | app/Http/Controllers/Admin/**,resources/js/pages/admin/** | .ai/rules/admin.md |
+| app/Services/Ai/** | .ai/rules/ai.md |
 | app/Services/LegacyImport/**,storage/app/public/** | .ai/rules/app-public.md |
 | app/Http/Middleware/HandleInertiaRequests.php,resources/js/types/auth.ts,resources/js/components/site/SiteUserMenu.vue | .ai/rules/components-site.md |
+| app/Support/CompanyProfile.php,resources/views/app.blade.php,resources/js/composables/useCompany.ts | .ai/rules/composables.md |
 | resources/js/**,app/Http/Middleware/**,resources/css/** | .ai/rules/css.md |
 | resources/js/components/AppSidebar.vue,resources/js/components/admin/AdminSidebar.vue,tests/Feature/Admin/AdminAccessTest.php | .ai/rules/feature-admin.md |
 | app/Actions/Fortify/**,app/Models/User.php | .ai/rules/fortify-models.md |

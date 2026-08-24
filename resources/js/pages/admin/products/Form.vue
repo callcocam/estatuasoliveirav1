@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { Form, Head, Link, useHttp } from '@inertiajs/vue3';
+import { Sparkles } from '@lucide/vue';
 import { ref } from 'vue';
 import MediaUploader from '@/components/admin/MediaUploader.vue';
 import type { MediaItem } from '@/components/admin/MediaUploader.vue';
@@ -19,6 +20,7 @@ import {
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
+    generateDescription as generateDescriptionRoute,
     index as productsIndex,
     store as productStore,
     update as productUpdate,
@@ -54,6 +56,69 @@ const { t } = useT();
 const statusValue = ref(props.product?.status ?? 'draft');
 const categoryValue = ref(props.product?.categoryId ?? 'none');
 const featured = ref(props.product?.featured ?? false);
+const description = ref(props.product?.description ?? '');
+
+/**
+ * Geração de descrição por IA: envia os campos atuais do form (lidos do
+ * próprio <form>, já que os inputs são não-controlados) para o endpoint
+ * admin e preenche o textarea com o resultado.
+ */
+const aiError = ref<string | null>(null);
+
+const aiHttp = useHttp({
+    name: '',
+    category: null as string | null,
+    reference: null as string | null,
+    width_cm: null as string | null,
+    height_cm: null as string | null,
+    weight_kg: null as string | null,
+});
+
+function generateDescription(event: MouseEvent): void {
+    if (
+        description.value.trim() !== '' &&
+        !window.confirm(t('app.admin.products.ai.confirm_overwrite'))
+    ) {
+        return;
+    }
+
+    const formElement = (event.currentTarget as HTMLElement).closest('form');
+    const data = formElement ? new FormData(formElement) : new FormData();
+    const field = (name: string): string | null => {
+        const value = data.get(name);
+
+        return typeof value === 'string' && value.trim() !== '' ? value : null;
+    };
+
+    aiHttp.name = field('name') ?? '';
+    aiHttp.category =
+        categoryValue.value === 'none'
+            ? null
+            : (props.categories.find(
+                  (category) => category.id === categoryValue.value,
+              )?.name ?? null);
+    aiHttp.reference = field('reference');
+    aiHttp.width_cm = field('width_cm');
+    aiHttp.height_cm = field('height_cm');
+    aiHttp.weight_kg = field('weight_kg');
+
+    aiError.value = null;
+
+    aiHttp.post(generateDescriptionRoute.url(), {
+        onSuccess: (response) => {
+            description.value =
+                (response as { description?: string }).description ?? '';
+        },
+        onError: () => {
+            const errors = aiHttp.errors as Record<string, string | undefined>;
+
+            aiError.value =
+                errors.name ??
+                errors.description ??
+                t('app.admin.products.ai.failed');
+        },
+    });
+}
 </script>
 
 <template>
@@ -126,7 +191,7 @@ const featured = ref(props.product?.featured ?? false);
                                 t('app.admin.products.fields.category')
                             }}</Label>
                             <Select v-model="categoryValue">
-                                <SelectTrigger>
+                                <SelectTrigger class="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -157,17 +222,33 @@ const featured = ref(props.product?.featured ?? false);
                         </div>
                     </div>
                     <div class="grid gap-2">
-                        <Label for="product-description">{{
-                            t('app.admin.products.fields.description')
-                        }}</Label>
+                        <div class="flex items-center justify-between gap-2">
+                            <Label for="product-description">{{
+                                t('app.admin.products.fields.description')
+                            }}</Label>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                :disabled="aiHttp.processing"
+                                @click="generateDescription"
+                            >
+                                <Sparkles class="size-4" />
+                                {{
+                                    aiHttp.processing
+                                        ? t('app.admin.products.ai.generating')
+                                        : t('app.admin.products.ai.generate')
+                                }}
+                            </Button>
+                        </div>
                         <textarea
                             id="product-description"
                             name="description"
                             rows="6"
                             class="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                            :value="product?.description ?? ''"
+                            v-model="description"
                         ></textarea>
-                        <InputError :message="errors.description" />
+                        <InputError :message="aiError ?? errors.description" />
                     </div>
                     <div class="grid gap-4 sm:grid-cols-3">
                         <div class="grid gap-2">
@@ -244,7 +325,7 @@ const featured = ref(props.product?.featured ?? false);
                             t('app.admin.products.fields.status')
                         }}</Label>
                         <Select v-model="statusValue" name="status">
-                            <SelectTrigger>
+                            <SelectTrigger class="w-full">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

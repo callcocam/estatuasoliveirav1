@@ -6,7 +6,7 @@ const { company } = useCompany();
 
 <template>
     <img
-        src="/images/logo.png"
+        :src="company.logoUrl"
         :alt="company.name"
         class="aspect-square size-8 shrink-0 rounded-md object-contain"
     />

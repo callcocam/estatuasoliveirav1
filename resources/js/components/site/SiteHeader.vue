@@ -125,7 +125,7 @@ const phoneHref = computed(() =>
         >
             <Link :href="home()" class="flex min-w-0 items-center gap-3">
                 <img
-                    src="/images/logo.png"
+                    :src="company.logoUrl"
                     :alt="company.name"
                     class="h-10 w-auto shrink-0 md:h-11"
                 />

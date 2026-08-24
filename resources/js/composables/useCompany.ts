@@ -18,6 +18,7 @@ export function useCompany() {
                 whatsapp: null,
                 email: null,
                 address: null,
+                logoUrl: '/images/logo.png',
             },
     );
 

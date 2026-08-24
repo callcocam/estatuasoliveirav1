@@ -345,7 +345,7 @@ function restore(category: Category) {
                 <div class="grid gap-2">
                     <Label>{{ t('app.admin.categories.fields.status') }}</Label>
                     <Select v-model="statusValue" name="status">
-                        <SelectTrigger>
+                        <SelectTrigger class="w-full">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

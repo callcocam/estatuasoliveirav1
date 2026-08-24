@@ -5,6 +5,7 @@ export interface SiteCompany {
     whatsapp: string | null;
     email: string | null;
     address: string | null;
+    logoUrl: string;
 }
 
 export interface SiteSlider {

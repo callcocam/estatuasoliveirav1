@@ -30,7 +30,7 @@ const { company } = useCompany();
                             class="flex flex-col items-center gap-2"
                         >
                             <img
-                                src="/images/logo.png"
+                                :src="company.logoUrl"
                                 :alt="company.name"
                                 class="h-12 w-auto"
                             />

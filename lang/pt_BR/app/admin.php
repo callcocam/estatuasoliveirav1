@@ -115,6 +115,12 @@ return [
         'restored' => 'Produto restaurado.',
         'duplicated' => 'Produto duplicado como rascunho.',
         'copy_name' => ':name (cópia)',
+        'ai' => [
+            'generate' => 'Gerar descrição',
+            'generating' => 'Gerando…',
+            'confirm_overwrite' => 'Substituir a descrição atual pela gerada por IA?',
+            'failed' => 'Não foi possível gerar a descrição, tente novamente.',
+        ],
     ],
 
     'sliders' => [

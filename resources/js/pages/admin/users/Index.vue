@@ -334,7 +334,7 @@ function confirmDelete() {
                 <div class="grid gap-2">
                     <Label>{{ t('app.admin.users.fields.role') }}</Label>
                     <Select v-model="roleValue" name="role">
-                        <SelectTrigger>
+                        <SelectTrigger class="w-full">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

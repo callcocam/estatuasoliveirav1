@@ -4,6 +4,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Slider;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('renders the home page with published content', function () {
@@ -32,4 +33,30 @@ it('shares the company profile from settings', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->where('site.name', 'Estátuas Oliveira Teste'));
+});
+
+it('renders the browser tab favicon links', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('<link rel="icon" href="/favicon.ico" sizes="48x48">', false)
+        ->assertSee('<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">', false)
+        ->assertSee('<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">', false)
+        ->assertSee('<link rel="apple-touch-icon" href="/apple-touch-icon.png">', false);
+});
+
+it('uses the branding icon uploaded in the settings across the system', function () {
+    Setting::set('branding_logo_path', 'branding/icon.png', 'branding');
+    $iconUrl = Storage::disk('public')->url('branding/icon.png');
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('<link rel="icon" href="'.$iconUrl.'">', false)
+        ->assertSee('<link rel="apple-touch-icon" href="'.$iconUrl.'">', false)
+        ->assertInertia(fn (Assert $page) => $page->where('site.logoUrl', $iconUrl));
+});
+
+it('falls back to the static logo when no branding icon is uploaded', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->where('site.logoUrl', '/images/logo.png'));
 });

@@ -11,7 +11,11 @@ class ProductDescriptionGenerator
      * the admin form. Only informed facts reach the prompt so the model does
      * not invent measurements or materials.
      *
-     * @param  array{name: string, category?: string|null, reference?: string|null, width_cm?: int|string|null, height_cm?: int|string|null, weight_kg?: float|string|null}  $attributes
+     * Expected keys: name (required), category, reference, width_cm,
+     * height_cm and weight_kg — the validated payload of
+     * GenerateProductDescriptionRequest.
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function generate(array $attributes): string
     {
@@ -19,17 +23,23 @@ class ProductDescriptionGenerator
     }
 
     /**
-     * @param  array{name: string, category?: string|null, reference?: string|null, width_cm?: int|string|null, height_cm?: int|string|null, weight_kg?: float|string|null}  $attributes
+     * @param  array<string, mixed>  $attributes
      */
     private function buildPrompt(array $attributes): string
     {
+        $fact = function (string $key, string $label, string $suffix = '') use ($attributes): ?string {
+            $value = trim((string) ($attributes[$key] ?? ''));
+
+            return $value === '' ? null : "{$label}: {$value}{$suffix}";
+        };
+
         $facts = array_filter([
-            'Nome do produto: '.$attributes['name'],
-            filled($attributes['category'] ?? null) ? 'Categoria: '.$attributes['category'] : null,
-            filled($attributes['reference'] ?? null) ? 'Referência: '.$attributes['reference'] : null,
-            filled($attributes['width_cm'] ?? null) ? "Largura: {$attributes['width_cm']} cm" : null,
-            filled($attributes['height_cm'] ?? null) ? "Altura: {$attributes['height_cm']} cm" : null,
-            filled($attributes['weight_kg'] ?? null) ? "Peso: {$attributes['weight_kg']} kg" : null,
+            'Nome do produto: '.trim((string) ($attributes['name'] ?? '')),
+            $fact('category', 'Categoria'),
+            $fact('reference', 'Referência'),
+            $fact('width_cm', 'Largura', ' cm'),
+            $fact('height_cm', 'Altura', ' cm'),
+            $fact('weight_kg', 'Peso', ' kg'),
         ]);
 
         $factList = implode("\n", $facts);

@@ -230,7 +230,7 @@ function submit() {
                     <div class="grid gap-2">
                         <Label>{{ t('app.admin.quotes.customer') }}</Label>
                         <Select v-model="userValue">
-                            <SelectTrigger>
+                            <SelectTrigger class="w-full">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
