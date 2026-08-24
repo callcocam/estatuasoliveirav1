@@ -20,7 +20,7 @@ services:
       # a rota em conflito ("Router defined multiple times") → o site dá 404.
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-global"
-      - "traefik.http.routers.estatuasoliveira-${APP_SLUG:-production}-app.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.estatuasoliveira-${APP_SLUG:-production}-app.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)"
       - "traefik.http.routers.estatuasoliveira-${APP_SLUG:-production}-app.entrypoints=websecure"
       - "traefik.http.routers.estatuasoliveira-${APP_SLUG:-production}-app.tls=true"
       - "traefik.http.routers.estatuasoliveira-${APP_SLUG:-production}-app.tls.certresolver=letsencrypt"
