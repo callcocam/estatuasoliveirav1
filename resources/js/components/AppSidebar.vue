@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from '@lucide/vue';
+import { Link } from '@inertiajs/vue3';
+import { BookOpen, FileText, FolderGit2 } from '@lucide/vue';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import TeamSwitcher from '@/components/TeamSwitcher.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -17,21 +16,16 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useT } from '@/composables/useT';
-import { dashboard } from '@/routes';
+import { index as quotesIndex } from '@/routes/quotes';
 import type { NavItem } from '@/types';
 
-const page = usePage();
 const { t } = useT();
-
-const dashboardUrl = computed(() =>
-    page.props.currentTeam ? dashboard(page.props.currentTeam.slug).url : '/',
-);
 
 const mainNavItems = computed<NavItem[]>(() => [
     {
-        title: t('app.nav.items.dashboard'),
-        href: dashboardUrl.value,
-        icon: LayoutGrid,
+        title: t('app.nav.items.quotes'),
+        href: quotesIndex(),
+        icon: FileText,
     },
 ]);
 
@@ -55,15 +49,10 @@ const footerNavItems = computed<NavItem[]>(() => [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboardUrl">
+                        <Link :href="quotesIndex()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <TeamSwitcher />
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarHeader>

@@ -1,12 +1,8 @@
 <?php
 
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\TeamInvitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse;
 
@@ -16,28 +12,7 @@ test('login screen can be rendered', function () {
     $response->assertOk();
 });
 
-test('login screen includes team invitation context', function () {
-    $owner = User::factory()->create();
-    $team = Team::factory()->create(['name' => 'Laravel Team']);
-    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
-
-    $invitation = TeamInvitation::factory()->create([
-        'team_id' => $team->id,
-        'email' => 'invited@example.com',
-        'invited_by' => $owner->id,
-    ]);
-
-    $response = $this->get(route('login', ['invitation' => $invitation->code]));
-
-    $response->assertOk();
-    $response->assertInertia(fn (Assert $page) => $page
-        ->component('auth/Login')
-        ->where('teamInvitation.code', $invitation->code)
-        ->where('teamInvitation.teamName', 'Laravel Team'),
-    );
-});
-
-test('users can authenticate using the login screen', function () {
+test('customers are redirected to their quotes after login', function () {
     $user = User::factory()->create();
 
     $response = $this->post(route('login.store'), [
@@ -46,10 +21,34 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect(route('quotes.index', absolute: false));
 });
 
-test('passkey login response redirects to the current team dashboard', function () {
+test('admins are redirected to the admin panel after login', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $admin->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('admin.dashboard', absolute: false));
+});
+
+test('managers are redirected to the admin panel after login', function () {
+    $manager = User::factory()->manager()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $manager->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('admin.dashboard', absolute: false));
+});
+
+test('passkey login response redirects based on the user role', function () {
     $user = User::factory()->create();
 
     $request = Request::create(route('login', absolute: false), 'GET', server: [
@@ -60,7 +59,7 @@ test('passkey login response redirects to the current team dashboard', function 
 
     $jsonResponse = app(PasskeyLoginResponse::class)->toResponse($request);
 
-    expect($jsonResponse->getData()->redirect)->toBe(route('dashboard', ['current_team' => $user->personalTeam()->slug]));
+    expect($jsonResponse->getData()->redirect)->toBe(route('quotes.index'));
 });
 
 test('users with two factor enabled are redirected to two factor challenge', function () {

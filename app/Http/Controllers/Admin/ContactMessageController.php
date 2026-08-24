@@ -14,6 +14,7 @@ class ContactMessageController extends Controller
     public function index(Request $request): Response
     {
         $filter = (string) $request->string('filter');
+        $search = (string) $request->string('search');
 
         $messages = ContactMessage::query()
             ->withTrashed()
@@ -21,6 +22,11 @@ class ContactMessageController extends Controller
             ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
             ->when($filter === 'unread', fn ($query) => $query->unread())
             ->when($filter === 'read', fn ($query) => $query->whereNotNull('read_at'))
+            ->when($search !== '', fn ($query) => $query
+                ->where(fn ($searchQuery) => $searchQuery
+                    ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%'.mb_strtolower($search).'%'])
+                    ->orWhereRaw('LOWER(subject) LIKE ?', ['%'.mb_strtolower($search).'%'])))
             ->latest()
             ->paginate(15)
             ->withQueryString()
@@ -36,7 +42,10 @@ class ContactMessageController extends Controller
 
         return Inertia::render('admin/messages/Index', [
             'messages' => $messages,
-            'filters' => ['filter' => $filter !== '' ? $filter : null],
+            'filters' => [
+                'filter' => $filter !== '' ? $filter : null,
+                'search' => $search !== '' ? $search : null,
+            ],
         ]);
     }
 

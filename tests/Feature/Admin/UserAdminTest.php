@@ -123,3 +123,15 @@ test('restores a trashed user', function () {
 
     expect($user->refresh()->trashed())->toBeFalse();
 });
+
+test('filters users by role', function () {
+    User::factory()->create(['role' => 'customer', 'name' => 'Cliente Um']);
+    User::factory()->manager()->create(['name' => 'Gerente Um']);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.users.index', ['role' => 'customer']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/users/Index')
+            ->has('users.data', 1)
+            ->where('users.data.0.name', 'Cliente Um'));
+});

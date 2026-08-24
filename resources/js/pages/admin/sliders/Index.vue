@@ -12,6 +12,7 @@ import { ref } from 'vue';
 import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -44,18 +45,22 @@ type SliderRow = {
 
 const props = defineProps<{
     sliders: SliderRow[];
-    filters: { filter: string | null };
+    filters: { filter: string | null; search: string | null };
 }>();
 
 const { t } = useT();
 
 const filter = ref(props.filters.filter ?? 'all');
+const search = ref(props.filters.search ?? '');
 const deleting = ref<SliderRow | null>(null);
 
 function applyFilters() {
     router.get(
         slidersIndex().url,
-        { filter: filter.value !== 'all' ? filter.value : undefined },
+        {
+            filter: filter.value !== 'all' ? filter.value : undefined,
+            search: search.value || undefined,
+        },
         { preserveState: true, preserveScroll: true },
     );
 }
@@ -100,19 +105,37 @@ function confirmDelete() {
         </Button>
     </div>
 
-    <Select v-model="filter" @update:model-value="applyFilters">
-        <SelectTrigger class="w-44">
-            <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-            <SelectItem value="all">
-                {{ t('app.admin.common.filter_all') }}
-            </SelectItem>
-            <SelectItem value="trashed">
-                {{ t('app.admin.common.filter_trashed') }}
-            </SelectItem>
-        </SelectContent>
-    </Select>
+    <div class="flex items-center gap-3">
+        <Input
+            v-model="search"
+            type="search"
+            :placeholder="t('app.admin.common.search_placeholder')"
+            class="max-w-xs"
+            @keydown.enter="applyFilters"
+        />
+        <Select v-model="filter" @update:model-value="applyFilters">
+            <SelectTrigger class="w-44">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">
+                    {{ t('app.admin.common.filter_all') }}
+                </SelectItem>
+                <SelectItem value="draft">
+                    {{ t('app.admin.status.draft') }}
+                </SelectItem>
+                <SelectItem value="published">
+                    {{ t('app.admin.status.published') }}
+                </SelectItem>
+                <SelectItem value="archived">
+                    {{ t('app.admin.status.archived') }}
+                </SelectItem>
+                <SelectItem value="trashed">
+                    {{ t('app.admin.common.filter_trashed') }}
+                </SelectItem>
+            </SelectContent>
+        </Select>
+    </div>
 
     <div class="overflow-x-auto rounded-lg border">
         <table class="w-full text-sm">

@@ -67,8 +67,7 @@
      * trocados em runtime pelo atributo data-theme no <html>.
      * Somente estas utilities (site-*) podem colorir componentes do site.
      */
-    --font-display:
-        'EB Garamond', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-display: 'EB Garamond', ui-serif, Georgia, 'Times New Roman', serif;
     --font-site:
         'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -107,6 +106,14 @@
     --color-site-error-container: var(--site-error-container);
     --color-site-on-error-container: var(--site-on-error-container);
     --color-site-accent: var(--site-accent);
+
+    /*
+     * Verde de marca do WhatsApp — fixo (não muda por tema), usado só pelo
+     * componente site/WhatsAppButton.vue.
+     */
+    --color-site-whatsapp: #25d366;
+    --color-site-whatsapp-hover: #1da851;
+    --color-site-on-whatsapp: #ffffff;
 
     --radius-site: var(--site-radius-control);
     --radius-site-card: var(--site-radius-card);

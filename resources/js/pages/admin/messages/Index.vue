@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -35,17 +36,21 @@ type MessageRow = {
 
 const props = defineProps<{
     messages: Paginated<MessageRow>;
-    filters: { filter: string | null };
+    filters: { filter: string | null; search: string | null };
 }>();
 
 const { t } = useT();
 
 const filter = ref(props.filters.filter ?? 'all');
+const search = ref(props.filters.search ?? '');
 
 function applyFilters() {
     router.get(
         messagesIndex().url,
-        { filter: filter.value !== 'all' ? filter.value : undefined },
+        {
+            filter: filter.value !== 'all' ? filter.value : undefined,
+            search: search.value || undefined,
+        },
         { preserveState: true, preserveScroll: true },
     );
 }
@@ -62,25 +67,34 @@ function formatDate(value: string | null): string {
         <h1 class="text-2xl font-semibold">
             {{ t('app.admin.messages.title') }}
         </h1>
-        <Select v-model="filter" @update:model-value="applyFilters">
-            <SelectTrigger class="w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">{{
-                    t('app.admin.common.filter_all')
-                }}</SelectItem>
-                <SelectItem value="unread">{{
-                    t('app.admin.messages.unread')
-                }}</SelectItem>
-                <SelectItem value="read">{{
-                    t('app.admin.messages.read')
-                }}</SelectItem>
-                <SelectItem value="trashed">{{
-                    t('app.admin.common.filter_trashed')
-                }}</SelectItem>
-            </SelectContent>
-        </Select>
+        <div class="flex items-center gap-3">
+            <Input
+                v-model="search"
+                type="search"
+                :placeholder="t('app.admin.messages.search_placeholder')"
+                class="max-w-xs"
+                @keydown.enter="applyFilters"
+            />
+            <Select v-model="filter" @update:model-value="applyFilters">
+                <SelectTrigger class="w-44">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">{{
+                        t('app.admin.common.filter_all')
+                    }}</SelectItem>
+                    <SelectItem value="unread">{{
+                        t('app.admin.messages.unread')
+                    }}</SelectItem>
+                    <SelectItem value="read">{{
+                        t('app.admin.messages.read')
+                    }}</SelectItem>
+                    <SelectItem value="trashed">{{
+                        t('app.admin.common.filter_trashed')
+                    }}</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
     </div>
 
     <div class="overflow-x-auto rounded-lg border">

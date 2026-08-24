@@ -86,3 +86,16 @@ test('reorders sliders', function () {
     expect($second->refresh()->sort_order)->toBe(0)
         ->and($first->refresh()->sort_order)->toBe(1);
 });
+
+test('filters sliders by status and search', function () {
+    Slider::factory()->create(['title' => 'Promo Verao', 'status' => 'published']);
+    Slider::factory()->create(['title' => 'Rascunho Inverno', 'status' => 'draft']);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.sliders.index', ['filter' => 'draft']))
+        ->assertInertia(fn ($page) => $page->has('sliders', 1));
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.sliders.index', ['search' => 'promo']))
+        ->assertInertia(fn ($page) => $page->has('sliders', 1));
+});

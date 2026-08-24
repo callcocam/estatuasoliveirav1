@@ -19,16 +19,23 @@ class QuoteController extends Controller
     public function index(Request $request): Response
     {
         $status = (string) $request->string('status');
+        $search = (string) $request->string('search');
 
         $quotes = Quote::query()
             ->withTrashed()
-            ->with('user')
+            ->with(['user' => fn ($query) => $query->withTrashed()])
             ->withCount('items')
             ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
             ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
                 ->whereNull('deleted_at')
                 ->where('status', $status))
             ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
+            ->when($search !== '', fn ($query) => $query
+                ->whereHas('user', fn ($userQuery) => $userQuery
+                    ->withTrashed()
+                    ->where(fn ($searchQuery) => $searchQuery
+                        ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
+                        ->orWhereRaw('LOWER(email) LIKE ?', ['%'.mb_strtolower($search).'%']))))
             ->latest()
             ->paginate(15)
             ->withQueryString()
@@ -46,7 +53,10 @@ class QuoteController extends Controller
         return Inertia::render('admin/quotes/Index', [
             'quotes' => $quotes,
             'statuses' => $this->statusOptions(),
-            'filters' => ['status' => $status !== '' ? $status : null],
+            'filters' => [
+                'status' => $status !== '' ? $status : null,
+                'search' => $search !== '' ? $search : null,
+            ],
         ]);
     }
 

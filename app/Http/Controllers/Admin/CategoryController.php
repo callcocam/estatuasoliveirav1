@@ -13,11 +13,21 @@ use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $search = (string) $request->string('search');
+        $status = (string) $request->string('status');
+
         return Inertia::render('admin/categories/Index', [
             'categories' => Category::query()
                 ->withTrashed()
+                ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
+                ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
+                    ->whereNull('deleted_at')
+                    ->where('status', $status))
+                ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
+                ->when($search !== '', fn ($query) => $query
+                    ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%']))
                 ->withCount('products')
                 ->orderBy('sort_order')
                 ->orderBy('name')
@@ -32,6 +42,10 @@ class CategoryController extends Controller
                     'productsCount' => $category->products_count,
                     'deleted' => $category->trashed(),
                 ]),
+            'filters' => [
+                'search' => $search !== '' ? $search : null,
+                'status' => $status !== '' ? $status : null,
+            ],
         ]);
     }
 

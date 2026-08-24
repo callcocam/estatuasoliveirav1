@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -38,17 +39,21 @@ type QuoteRow = {
 const props = defineProps<{
     quotes: Paginated<QuoteRow>;
     statuses: { value: string; label: string }[];
-    filters: { status: string | null };
+    filters: { status: string | null; search: string | null };
 }>();
 
 const { t } = useT();
 
 const status = ref(props.filters.status ?? 'all');
+const search = ref(props.filters.search ?? '');
 
 function applyFilters() {
     router.get(
         quotesIndex().url,
-        { status: status.value !== 'all' ? status.value : undefined },
+        {
+            status: status.value !== 'all' ? status.value : undefined,
+            search: search.value || undefined,
+        },
         { preserveState: true, preserveScroll: true },
     );
 }
@@ -73,26 +78,35 @@ function formatDate(value: string | null): string {
         </Button>
     </div>
 
-    <Select v-model="status" @update:model-value="applyFilters">
-        <SelectTrigger class="w-52">
-            <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-            <SelectItem value="all">{{
-                t('app.admin.common.filter_all')
-            }}</SelectItem>
-            <SelectItem
-                v-for="option in statuses"
-                :key="option.value"
-                :value="option.value"
-            >
-                {{ option.label }}
-            </SelectItem>
-            <SelectItem value="trashed">
-                {{ t('app.admin.common.filter_trashed') }}
-            </SelectItem>
-        </SelectContent>
-    </Select>
+    <div class="flex items-center gap-3">
+        <Input
+            v-model="search"
+            type="search"
+            :placeholder="t('app.admin.quotes.search_placeholder')"
+            class="max-w-xs"
+            @keydown.enter="applyFilters"
+        />
+        <Select v-model="status" @update:model-value="applyFilters">
+            <SelectTrigger class="w-52">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">{{
+                    t('app.admin.common.filter_all')
+                }}</SelectItem>
+                <SelectItem
+                    v-for="option in statuses"
+                    :key="option.value"
+                    :value="option.value"
+                >
+                    {{ option.label }}
+                </SelectItem>
+                <SelectItem value="trashed">
+                    {{ t('app.admin.common.filter_trashed') }}
+                </SelectItem>
+            </SelectContent>
+        </Select>
+    </div>
 
     <div class="overflow-x-auto rounded-lg border">
         <table class="w-full text-sm">

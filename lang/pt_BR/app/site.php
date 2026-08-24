@@ -117,6 +117,11 @@ return [
         'placeholder' => 'O conteúdo desta página está sendo preparado. Em caso de dúvidas, entre em contato conosco.',
     ],
 
+    'whatsapp' => [
+        'button' => 'Chamar no WhatsApp',
+        'aria_label' => 'Conversar no WhatsApp',
+    ],
+
     'footer' => [
         'tagline' => 'Estátuas, vasos, fontes e decorações em cimento, mármore e gesso.',
         'navigation' => 'Navegação',

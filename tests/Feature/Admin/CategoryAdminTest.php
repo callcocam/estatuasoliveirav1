@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->admin = User::factory()->admin()->create();
 });
 
-test('lists categories including trashed ones', function () {
+test('lists only active categories by default', function () {
     Category::factory()->create(['name' => 'Fontes']);
     Category::factory()->create(['name' => 'Vasos'])->delete();
 
@@ -15,7 +15,25 @@ test('lists categories including trashed ones', function () {
         ->get(route('admin.categories.index'))
         ->assertInertia(fn ($page) => $page
             ->component('admin/categories/Index')
-            ->has('categories', 2));
+            ->has('categories', 1));
+});
+
+test('filters categories by trashed, status and search', function () {
+    Category::factory()->create(['name' => 'Fontes', 'status' => 'published']);
+    Category::factory()->create(['name' => 'Estatuas', 'status' => 'draft']);
+    Category::factory()->create(['name' => 'Vasos'])->delete();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.categories.index', ['status' => 'trashed']))
+        ->assertInertia(fn ($page) => $page->has('categories', 1));
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.categories.index', ['status' => 'draft']))
+        ->assertInertia(fn ($page) => $page->has('categories', 1));
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.categories.index', ['search' => 'font']))
+        ->assertInertia(fn ($page) => $page->has('categories', 1));
 });
 
 test('creates a category generating a unique slug', function () {

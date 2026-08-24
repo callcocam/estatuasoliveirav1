@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Support\Translation\MergingFileLoader;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -18,7 +17,7 @@ test('dot notation resolves keys from group subdirectory files', function () {
 test('json translations keep working alongside the merging loader', function () {
     app()->setLocale('pt_BR');
 
-    expect(__('Team created.'))->toBe('Equipe criada.');
+    expect(__('Profile updated.'))->toBe('Perfil atualizado.');
 });
 
 test('placeholders are interpolated in merged group keys', function () {
@@ -28,11 +27,15 @@ test('placeholders are interpolated in merged group keys', function () {
         ->toBe('O campo nome é obrigatório.');
 });
 
-test('translations and locale are shared as inertia props', function () {
-    $user = User::factory()->create();
+test('whatsapp button labels are translated', function () {
+    app()->setLocale('pt_BR');
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
+    expect(__('app.site.whatsapp.button'))->not->toBe('app.site.whatsapp.button')
+        ->and(__('app.site.whatsapp.aria_label'))->not->toBe('app.site.whatsapp.aria_label');
+});
+
+test('translations and locale are shared as inertia props', function () {
+    $this->get(route('home'))
         ->assertInertia(fn (Assert $page) => $page
             ->has('translations.app')
             ->has('translations.auth')

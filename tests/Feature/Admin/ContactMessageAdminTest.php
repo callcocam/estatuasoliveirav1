@@ -70,3 +70,15 @@ test('restores a trashed message', function () {
 
     expect($message->refresh()->trashed())->toBeFalse();
 });
+
+test('filters messages by search', function () {
+    ContactMessage::factory()->create(['name' => 'Carlos Souza']);
+    ContactMessage::factory()->create(['name' => 'Ana Lima']);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.messages.index', ['search' => 'carlos']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/messages/Index')
+            ->has('messages.data', 1)
+            ->where('messages.data.0.name', 'Carlos Souza'));
+});

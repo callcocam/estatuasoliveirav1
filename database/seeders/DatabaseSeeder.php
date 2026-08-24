@@ -15,9 +15,5 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             AdminUserSeeder::class,
         ]);
-
-        if (app()->environment('local')) {
-            $this->call(DemoSeeder::class);
-        }
     }
 }

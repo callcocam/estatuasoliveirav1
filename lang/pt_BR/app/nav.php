@@ -3,7 +3,7 @@
 return [
 
     'items' => [
-        'dashboard' => 'Painel',
+        'quotes' => 'Meus orçamentos',
         'repository' => 'Repositório',
         'documentation' => 'Documentação',
     ],
@@ -24,7 +24,8 @@ return [
     ],
 
     'breadcrumbs' => [
-        'dashboard' => 'Painel',
+        'quotes' => 'Meus orçamentos',
+        'quote_detail' => 'Orçamento',
     ],
 
 ];

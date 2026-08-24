@@ -15,8 +15,6 @@ return new class extends Migration
         'media',
         'settings',
         'quote_items',
-        'team_members',
-        'team_invitations',
     ];
 
     /**

@@ -15,12 +15,18 @@ class SliderController extends Controller
     public function index(Request $request): Response
     {
         $filter = (string) $request->string('filter');
+        $search = (string) $request->string('search');
 
         return Inertia::render('admin/sliders/Index', [
             'sliders' => Slider::query()
                 ->withTrashed()
                 ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
-                ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
+                ->when($filter !== 'trashed' && $filter !== '', fn ($query) => $query
+                    ->whereNull('deleted_at')
+                    ->where('status', $filter))
+                ->when($filter === '', fn ($query) => $query->whereNull('deleted_at'))
+                ->when($search !== '', fn ($query) => $query
+                    ->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($search).'%']))
                 ->with('media')
                 ->orderBy('sort_order')
                 ->get()
@@ -33,7 +39,10 @@ class SliderController extends Controller
                     'image' => $slider->coverMedia()?->url(),
                     'deleted' => $slider->trashed(),
                 ]),
-            'filters' => ['filter' => $filter !== '' ? $filter : null],
+            'filters' => [
+                'filter' => $filter !== '' ? $filter : null,
+                'search' => $search !== '' ? $search : null,
+            ],
         ]);
     }
 

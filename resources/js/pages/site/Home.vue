@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import ProductCard from '@/components/site/ProductCard.vue';
 import SectionHeading from '@/components/site/SectionHeading.vue';
-import { useCompany } from '@/composables/useCompany';
+import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useT } from '@/composables/useT';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { about, contact } from '@/routes';
 import { index as productsIndex } from '@/routes/products';
-import type { SiteCategorySummary, SiteProductCard, SiteSlider } from '@/types/site';
+import type {
+    SiteCategorySummary,
+    SiteProductCard,
+    SiteSlider,
+} from '@/types/site';
 import { Link } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -17,7 +21,6 @@ const props = defineProps<{
 }>();
 
 const { t } = useT();
-const { whatsappUrl } = useCompany();
 
 const currentSlide = ref(0);
 let slideTimer: ReturnType<typeof setInterval> | undefined;
@@ -27,7 +30,8 @@ const activeSlider = computed(() => props.sliders[currentSlide.value] ?? null);
 onMounted(() => {
     if (props.sliders.length > 1) {
         slideTimer = setInterval(() => {
-            currentSlide.value = (currentSlide.value + 1) % props.sliders.length;
+            currentSlide.value =
+                (currentSlide.value + 1) % props.sliders.length;
         }, 6000);
     }
 });
@@ -40,9 +44,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <SiteLayout :title="t('app.site.meta.home_title')" :description="t('app.site.meta.home_description')" :og-image="sliders[0]?.image">
+    <SiteLayout
+        :title="t('app.site.meta.home_title')"
+        :description="t('app.site.meta.home_description')"
+        :og-image="sliders[0]?.image"
+    >
         <!-- Hero -->
-        <section class="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[85vh]">
+        <section
+            class="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[85vh]"
+        >
             <template v-for="(slider, index) in sliders" :key="slider.id">
                 <img
                     v-if="slider.image"
@@ -54,16 +64,25 @@ onBeforeUnmount(() => {
                     ]"
                 />
             </template>
-            <div class="absolute inset-0 bg-gradient-to-t from-site-inverse-surface/70 via-site-inverse-surface/30 to-transparent" />
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-site-inverse-surface/70 via-site-inverse-surface/30 to-transparent"
+            />
 
             <div class="relative z-10 mx-auto max-w-3xl px-4 py-24 text-center">
-                <h1 class="font-display text-4xl leading-tight text-site-inverse-on-surface drop-shadow-sm md:text-6xl">
+                <h1
+                    class="font-display text-4xl leading-tight text-site-inverse-on-surface drop-shadow-sm md:text-6xl"
+                >
                     {{ activeSlider?.title ?? t('app.site.meta.home_title') }}
                 </h1>
-                <p v-if="activeSlider?.subtitle || activeSlider?.description" class="mt-5 text-lg text-site-inverse-on-surface/90">
+                <p
+                    v-if="activeSlider?.subtitle || activeSlider?.description"
+                    class="mt-5 text-lg text-site-inverse-on-surface/90"
+                >
                     {{ activeSlider?.subtitle ?? activeSlider?.description }}
                 </p>
-                <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
+                <div
+                    class="mt-9 flex flex-wrap items-center justify-center gap-4"
+                >
                     <Link
                         :href="productsIndex()"
                         class="rounded-site bg-site-primary px-7 py-3 text-sm font-medium text-site-on-primary shadow-md transition-transform hover:scale-[1.02]"
@@ -79,7 +98,10 @@ onBeforeUnmount(() => {
                 </div>
             </div>
 
-            <div v-if="sliders.length > 1" class="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+            <div
+                v-if="sliders.length > 1"
+                class="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2"
+            >
                 <button
                     v-for="(slider, index) in sliders"
                     :key="slider.id"
@@ -87,7 +109,9 @@ onBeforeUnmount(() => {
                     :aria-label="slider.title"
                     :class="[
                         'h-2 rounded-full transition-all',
-                        index === currentSlide ? 'w-8 bg-site-inverse-on-surface' : 'w-2 bg-site-inverse-on-surface/50',
+                        index === currentSlide
+                            ? 'w-8 bg-site-inverse-on-surface'
+                            : 'w-2 bg-site-inverse-on-surface/50',
                     ]"
                     @click="currentSlide = index"
                 />
@@ -96,24 +120,48 @@ onBeforeUnmount(() => {
 
         <!-- Institucional -->
         <section class="mx-auto max-w-4xl px-4 py-20 text-center md:py-28">
-            <p class="text-xs font-semibold tracking-[0.2em] text-site-tertiary uppercase">{{ t('app.site.home.legacy_title') }}</p>
-            <p class="mt-6 font-display text-2xl leading-relaxed text-site-on-surface md:text-3xl">
+            <p
+                class="text-xs font-semibold tracking-[0.2em] text-site-tertiary uppercase"
+            >
+                {{ t('app.site.home.legacy_title') }}
+            </p>
+            <p
+                class="mt-6 font-display text-2xl leading-relaxed text-site-on-surface md:text-3xl"
+            >
                 {{ t('app.site.home.legacy_text') }}
             </p>
-            <Link :href="about()" class="mt-8 inline-block text-sm font-medium text-site-primary underline underline-offset-8">
+            <Link
+                :href="about()"
+                class="mt-8 inline-block text-sm font-medium text-site-primary underline underline-offset-8"
+            >
                 {{ t('app.site.home.legacy_link') }}
             </Link>
         </section>
 
         <!-- Destaques -->
-        <section v-if="featuredProducts.length" class="bg-site-surface-container-low py-20 md:py-24">
+        <section
+            v-if="featuredProducts.length"
+            class="bg-site-surface-container-low py-20 md:py-24"
+        >
             <div class="mx-auto max-w-6xl px-4 md:px-6">
-                <SectionHeading :title="t('app.site.home.featured_title')" :subtitle="t('app.site.home.featured_subtitle')" />
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    <ProductCard v-for="product in featuredProducts" :key="product.id" :product="product" />
+                <SectionHeading
+                    :title="t('app.site.home.featured_title')"
+                    :subtitle="t('app.site.home.featured_subtitle')"
+                />
+                <div
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                >
+                    <ProductCard
+                        v-for="product in featuredProducts"
+                        :key="product.id"
+                        :product="product"
+                    />
                 </div>
                 <div class="mt-10 text-center">
-                    <Link :href="productsIndex()" class="text-sm font-medium text-site-primary underline underline-offset-8">
+                    <Link
+                        :href="productsIndex()"
+                        class="text-sm font-medium text-site-primary underline underline-offset-8"
+                    >
                         {{ t('app.site.home.featured_link') }}
                     </Link>
                 </div>
@@ -121,18 +169,33 @@ onBeforeUnmount(() => {
         </section>
 
         <!-- Categorias -->
-        <section v-if="categories.length" class="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-24">
-            <SectionHeading :title="t('app.site.home.categories_title')" :subtitle="t('app.site.home.categories_subtitle')" />
+        <section
+            v-if="categories.length"
+            class="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-24"
+        >
+            <SectionHeading
+                :title="t('app.site.home.categories_title')"
+                :subtitle="t('app.site.home.categories_subtitle')"
+            />
             <div class="flex flex-wrap gap-3">
                 <Link
                     v-for="category in categories"
                     :key="category.slug"
-                    :href="productsIndex({ query: { categoria: category.slug } })"
+                    :href="
+                        productsIndex({ query: { categoria: category.slug } })
+                    "
                     class="rounded-site-badge border border-site-outline-variant bg-site-surface-container-lowest px-5 py-3 text-sm text-site-on-surface transition-colors hover:border-site-primary hover:text-site-primary"
                 >
                     {{ category.name }}
-                    <span v-if="category.productsCount" class="ml-2 text-xs text-site-on-surface-variant">
-                        {{ t('app.site.home.categories_count', { count: category.productsCount }) }}
+                    <span
+                        v-if="category.productsCount"
+                        class="ml-2 text-xs text-site-on-surface-variant"
+                    >
+                        {{
+                            t('app.site.home.categories_count', {
+                                count: category.productsCount,
+                            })
+                        }}
                     </span>
                 </Link>
             </div>
@@ -141,24 +204,27 @@ onBeforeUnmount(() => {
         <!-- CTA -->
         <section class="bg-site-tertiary-container py-20 md:py-24">
             <div class="mx-auto max-w-3xl px-4 text-center">
-                <h2 class="font-display text-3xl text-site-on-tertiary-container md:text-4xl">{{ t('app.site.home.cta_title') }}</h2>
-                <p class="mt-4 text-base text-site-on-tertiary-container/90">{{ t('app.site.home.cta_text') }}</p>
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <h2
+                    class="font-display text-3xl text-site-on-tertiary-container md:text-4xl"
+                >
+                    {{ t('app.site.home.cta_title') }}
+                </h2>
+                <p class="mt-4 text-base text-site-on-tertiary-container/90">
+                    {{ t('app.site.home.cta_text') }}
+                </p>
+                <div
+                    class="mt-8 flex flex-wrap items-center justify-center gap-4"
+                >
                     <Link
                         :href="contact()"
                         class="rounded-site bg-site-surface px-7 py-3 text-sm font-medium text-site-primary shadow-md transition-colors hover:bg-site-surface-container"
                     >
                         {{ t('app.site.home.cta_button') }}
                     </Link>
-                    <a
-                        v-if="whatsappUrl"
-                        :href="whatsappUrl"
-                        target="_blank"
-                        rel="noopener"
-                        class="rounded-site border border-site-on-tertiary-container/40 px-7 py-3 text-sm font-medium text-site-on-tertiary-container transition-colors hover:bg-site-on-tertiary-container/10"
-                    >
-                        {{ t('app.site.home.cta_whatsapp') }}
-                    </a>
+                    <WhatsAppButton
+                        :label="t('app.site.home.cta_whatsapp')"
+                        class="px-7 py-3"
+                    />
                 </div>
             </div>
         </section>

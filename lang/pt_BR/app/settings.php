@@ -9,7 +9,6 @@ return [
         'nav' => [
             'profile' => 'Perfil',
             'security' => 'Segurança',
-            'teams' => 'Equipes',
             'appearance' => 'Aparência',
         ],
     ],

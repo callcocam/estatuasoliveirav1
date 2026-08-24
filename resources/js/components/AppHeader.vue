@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from '@lucide/vue';
+import { BookOpen, FileText, Folder, Menu, Search } from '@lucide/vue';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import TeamSwitcher from '@/components/TeamSwitcher.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,7 +36,7 @@ import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
 import { useT } from '@/composables/useT';
 import { toUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { index as quotesIndex } from '@/routes/quotes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 
 type Props = {
@@ -53,18 +52,14 @@ const { t } = useT();
 const auth = computed(() => page.props.auth);
 const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
 
-const dashboardUrl = computed(() =>
-    page.props.currentTeam ? dashboard(page.props.currentTeam.slug).url : '/',
-);
-
 const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 const mainNavItems = computed<NavItem[]>(() => [
     {
-        title: t('app.nav.items.dashboard'),
-        href: dashboardUrl.value,
-        icon: LayoutGrid,
+        title: t('app.nav.items.quotes'),
+        href: quotesIndex().url,
+        icon: FileText,
     },
 ]);
 
@@ -156,7 +151,7 @@ const rightNavItems = computed<NavItem[]>(() => [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboardUrl" class="flex items-center gap-x-2">
+                <Link :href="quotesIndex()" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
@@ -278,8 +273,6 @@ const rightNavItems = computed<NavItem[]>(() => [
                             <UserMenuContent :user="auth.user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
-
-                    <TeamSwitcher :in-header="true" />
                 </div>
             </div>
         </div>

@@ -10,7 +10,6 @@ import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
-import { index as teams } from '@/routes/teams';
 import type { NavItem } from '@/types';
 
 const { t } = useT();
@@ -23,10 +22,6 @@ const sidebarNavItems = computed<NavItem[]>(() => [
     {
         title: t('app.settings.layout.nav.security'),
         href: editSecurity(),
-    },
-    {
-        title: t('app.settings.layout.nav.teams'),
-        href: teams(),
     },
     {
         title: t('app.settings.layout.nav.appearance'),

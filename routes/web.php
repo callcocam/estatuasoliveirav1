@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Customer\QuoteController;
 use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\GalleryController;
@@ -8,8 +8,8 @@ use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\ProductController;
 use App\Http\Controllers\Site\SitemapController;
 use App\Http\Controllers\Site\TermsController;
-use App\Http\Controllers\Teams\TeamInvitationController;
-use App\Http\Middleware\EnsureTeamMembership;
+use App\Support\RoleRedirect;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -22,15 +22,11 @@ Route::post('contato', [ContactController::class, 'store'])->name('contact.store
 Route::get('termos-e-politica', TermsController::class)->name('terms');
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
-Route::prefix('{current_team}')
-    ->middleware(['auth', 'verified', EnsureTeamMembership::class])
-    ->group(function () {
-        Route::get('dashboard', DashboardController::class)->name('dashboard');
-    });
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', fn (Request $request) => redirect(RoleRedirect::pathFor($request->user())))->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::post('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
-    Route::delete('invitations/{invitation}', [TeamInvitationController::class, 'decline'])->name('invitations.decline');
+    Route::get('meus-orcamentos', [QuoteController::class, 'index'])->name('quotes.index');
+    Route::get('meus-orcamentos/{quote}', [QuoteController::class, 'show'])->name('quotes.show');
 });
 
 require __DIR__.'/admin.php';

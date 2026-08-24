@@ -32,6 +32,7 @@ import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     destroy as categoryDestroy,
+    index as categoriesIndex,
     reorder as categoryReorder,
     restore as categoryRestore,
     store as categoryStore,
@@ -53,14 +54,28 @@ type Category = {
 
 const props = defineProps<{
     categories: Category[];
+    filters: { search: string | null; status: string | null };
 }>();
 
 const { t } = useT();
 
+const search = ref(props.filters.search ?? '');
+const status = ref(props.filters.status ?? 'all');
 const formOpen = ref(false);
 const editing = ref<Category | null>(null);
 const statusValue = ref('published');
 const deleting = ref<Category | null>(null);
+
+function applyFilters() {
+    router.get(
+        categoriesIndex().url,
+        {
+            search: search.value || undefined,
+            status: status.value !== 'all' ? status.value : undefined,
+        },
+        { preserveState: true, preserveScroll: true },
+    );
+}
 
 function openCreate() {
     editing.value = null;
@@ -119,6 +134,38 @@ function restore(category: Category) {
             <Plus />
             {{ t('app.admin.categories.new') }}
         </Button>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <Input
+            v-model="search"
+            type="search"
+            :placeholder="t('app.admin.common.search_placeholder')"
+            class="max-w-xs"
+            @keydown.enter="applyFilters"
+        />
+        <Select v-model="status" @update:model-value="applyFilters">
+            <SelectTrigger class="w-44">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">
+                    {{ t('app.admin.common.filter_all') }}
+                </SelectItem>
+                <SelectItem value="draft">
+                    {{ t('app.admin.status.draft') }}
+                </SelectItem>
+                <SelectItem value="published">
+                    {{ t('app.admin.status.published') }}
+                </SelectItem>
+                <SelectItem value="archived">
+                    {{ t('app.admin.status.archived') }}
+                </SelectItem>
+                <SelectItem value="trashed">
+                    {{ t('app.admin.common.filter_trashed') }}
+                </SelectItem>
+            </SelectContent>
+        </Select>
     </div>
 
     <div class="overflow-x-auto rounded-lg border">

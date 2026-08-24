@@ -3,7 +3,6 @@ import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasskeyVerify from '@/components/PasskeyVerify.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import TeamInvitationAlert from '@/components/TeamInvitationAlert.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -15,7 +14,6 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import type { TeamInvitationContext } from '@/types';
 
 defineOptions({ layout: AuthLayout });
 
@@ -27,7 +25,6 @@ setLayoutProps({
 defineProps<{
     status?: string;
     canResetPassword: boolean;
-    teamInvitation?: TeamInvitationContext | null;
 }>();
 
 const { t } = useT();
@@ -42,12 +39,6 @@ const { t } = useT();
     >
         {{ status }}
     </div>
-
-    <TeamInvitationAlert
-        v-if="teamInvitation"
-        :invitation="teamInvitation"
-        :action="t('app.auth.login.invitation_action') as 'Log in'"
-    />
 
     <PasskeyVerify />
 
@@ -122,13 +113,7 @@ const { t } = useT();
         <div class="text-center text-sm text-muted-foreground">
             {{ t('app.auth.login.no_account') }}
             <TextLink
-                :href="
-                    register({
-                        query: {
-                            invitation: teamInvitation?.code,
-                        },
-                    })
-                "
+                :href="register()"
                 :tabindex="5"
                 data-test="register-link"
             >

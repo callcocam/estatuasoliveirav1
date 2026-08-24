@@ -49,7 +49,12 @@ type UserRow = {
 
 const props = defineProps<{
     users: Paginated<UserRow>;
-    filters: { search: string | null; filter: string | null };
+    roles: { value: string; label: string }[];
+    filters: {
+        search: string | null;
+        filter: string | null;
+        role: string | null;
+    };
 }>();
 
 const page = usePage();
@@ -59,6 +64,7 @@ const currentUserId = computed(() => String(page.props.auth.user?.id ?? ''));
 
 const search = ref(props.filters.search ?? '');
 const filter = ref(props.filters.filter ?? 'all');
+const role = ref(props.filters.role ?? 'all');
 const formOpen = ref(false);
 const editing = ref<UserRow | null>(null);
 const roleValue = ref('customer');
@@ -70,6 +76,7 @@ function applyFilters() {
         {
             search: search.value || undefined,
             filter: filter.value !== 'all' ? filter.value : undefined,
+            role: role.value !== 'all' ? role.value : undefined,
         },
         { preserveState: true, preserveScroll: true },
     );
@@ -118,6 +125,23 @@ function confirmDelete() {
             class="max-w-xs"
             @keydown.enter="applyFilters"
         />
+        <Select v-model="role" @update:model-value="applyFilters">
+            <SelectTrigger class="w-44">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">
+                    {{ t('app.admin.users.filter_all_roles') }}
+                </SelectItem>
+                <SelectItem
+                    v-for="option in roles"
+                    :key="option.value"
+                    :value="option.value"
+                >
+                    {{ option.label }}
+                </SelectItem>
+            </SelectContent>
+        </Select>
         <Select v-model="filter" @update:model-value="applyFilters">
             <SelectTrigger class="w-44">
                 <SelectValue />

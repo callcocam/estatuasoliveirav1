@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
@@ -17,11 +18,13 @@ class UserController extends Controller
     {
         $search = (string) $request->string('search');
         $filter = (string) $request->string('filter');
+        $role = (string) $request->string('role');
 
         $users = User::query()
             ->withTrashed()
             ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
             ->when($filter !== 'trashed', fn ($query) => $query->whereNull('deleted_at'))
+            ->when($role !== '', fn ($query) => $query->where('role', $role))
             ->when($search !== '', fn ($query) => $query
                 ->where(fn ($searchQuery) => $searchQuery
                     ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
@@ -42,11 +45,24 @@ class UserController extends Controller
 
         return Inertia::render('admin/users/Index', [
             'users' => $users,
+            'roles' => $this->roleOptions(),
             'filters' => [
                 'search' => $search !== '' ? $search : null,
                 'filter' => $filter !== '' ? $filter : null,
+                'role' => $role !== '' ? $role : null,
             ],
         ]);
+    }
+
+    /**
+     * @return list<array{value: string, label: string}>
+     */
+    private function roleOptions(): array
+    {
+        return array_map(fn (UserRole $role): array => [
+            'value' => $role->value,
+            'label' => $role->label(),
+        ], UserRole::cases());
     }
 
     public function store(UserRequest $request): RedirectResponse

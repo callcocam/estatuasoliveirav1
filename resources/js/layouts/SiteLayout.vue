@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SiteFooter from '@/components/site/SiteFooter.vue';
 import SiteHeader from '@/components/site/SiteHeader.vue';
+import WhatsAppButton from '@/components/site/WhatsAppButton.vue';
 import { useCompany } from '@/composables/useCompany';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -20,16 +21,23 @@ const fullTitle = computed(() => `${props.title} · ${company.value.name}`);
     <Head :title="title">
         <meta v-if="description" name="description" :content="description" />
         <meta property="og:title" :content="fullTitle" />
-        <meta v-if="description" property="og:description" :content="description" />
+        <meta
+            v-if="description"
+            property="og:description"
+            :content="description"
+        />
         <meta property="og:type" content="website" />
         <meta v-if="ogImage" property="og:image" :content="ogImage" />
     </Head>
 
-    <div class="flex min-h-screen flex-col bg-site-surface font-site text-site-on-surface antialiased">
+    <div
+        class="flex min-h-screen flex-col bg-site-surface font-site text-site-on-surface antialiased"
+    >
         <SiteHeader />
         <main class="flex-1">
             <slot />
         </main>
         <SiteFooter />
+        <WhatsAppButton floating />
     </div>
 </template>

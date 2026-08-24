@@ -110,3 +110,15 @@ test('restores a trashed quote', function () {
 
     expect($quote->refresh()->trashed())->toBeFalse();
 });
+
+test('filters quotes by customer search', function () {
+    Quote::factory()->for(User::factory()->create(['name' => 'Maria Silva']))->create();
+    Quote::factory()->for(User::factory()->create(['name' => 'Joana Prado']))->create();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.quotes.index', ['search' => 'maria']))
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/quotes/Index')
+            ->has('quotes.data', 1)
+            ->where('quotes.data.0.userName', 'Maria Silva'));
+});

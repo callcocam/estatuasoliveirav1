@@ -2,7 +2,6 @@
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import TeamInvitationAlert from '@/components/TeamInvitationAlert.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,11 +11,9 @@ import { useT } from '@/composables/useT';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
-import type { TeamInvitationContext } from '@/types';
 
 defineProps<{
     passwordRules: string;
-    teamInvitation?: TeamInvitationContext | null;
 }>();
 
 defineOptions({ layout: AuthLayout });
@@ -31,12 +28,6 @@ const { t } = useT();
 
 <template>
     <Head :title="t('app.auth.register.head_title')" />
-
-    <TeamInvitationAlert
-        v-if="teamInvitation"
-        :invitation="teamInvitation"
-        :action="t('app.auth.register.invitation_action') as 'Register'"
-    />
 
     <Form
         v-bind="store.form()"
@@ -125,18 +116,10 @@ const { t } = useT();
         <div class="text-center text-sm text-muted-foreground">
             {{ t('app.auth.register.already_registered') }}
             <TextLink
-                :href="
-                    teamInvitation
-                        ? login.url({
-                              query: {
-                                  invitation: teamInvitation.code,
-                              },
-                          })
-                        : login()
-                "
+                :href="login()"
                 class="underline underline-offset-4"
                 :tabindex="6"
-                data-test="team-invitation-login-link"
+                data-test="login-link"
             >
                 {{ t('app.auth.register.log_in') }}
             </TextLink>
