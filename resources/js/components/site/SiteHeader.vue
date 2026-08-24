@@ -113,7 +113,7 @@ const phoneHref = computed(() =>
                         >{{ company.address }}</span
                     >
                     <SiteAppearanceToggle compact />
-                    <ThemeSwitcher compact />
+                    <!-- <ThemeSwitcher compact /> -->
                     <SiteUserMenu topbar />
                 </div>
             </div>
