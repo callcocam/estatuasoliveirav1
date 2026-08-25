@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\PublishStatus;
+use App\Http\Controllers\Concerns\InteractsWithDeferredIndex;
+use App\Http\Controllers\Concerns\InteractsWithResourceAbilities;
+use App\Http\Controllers\Concerns\InteractsWithTrashedFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\GenerateProductDescriptionRequest;
-use App\Http\Requests\Admin\ProductRequest;
+use App\Http\Requests\Admin\ProductStoreRequest;
+use App\Http\Requests\Admin\ProductUpdateRequest;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
@@ -15,6 +19,7 @@ use App\Support\UniqueSlug;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -23,63 +28,43 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
+    use InteractsWithDeferredIndex;
+    use InteractsWithResourceAbilities;
+    use InteractsWithTrashedFilter;
+
     public function index(Request $request): Response
     {
-        $status = (string) $request->string('status');
-        $categoryId = (string) $request->string('category');
-        $search = (string) $request->string('search');
+        $this->authorize('viewAny', Product::class);
 
-        $products = Product::query()
-            ->withTrashed()
-            ->with(['media', 'category'])
-            ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
-            ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
-                ->whereNull('deleted_at')
-                ->where('status', $status))
-            ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
-            ->when($categoryId !== '', fn ($query) => $query->where('category_id', $categoryId))
-            ->when($search !== '', fn ($query) => $query
-                ->where(fn ($searchQuery) => $searchQuery
-                    ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
-                    ->orWhereRaw('LOWER(reference) LIKE ?', ['%'.mb_strtolower($search).'%'])))
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->paginate(15)
-            ->withQueryString()
-            ->through(fn (Product $product): array => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'reference' => $product->reference,
-                'categoryName' => $product->category?->name,
-                'status' => $product->status->value,
-                'statusLabel' => $product->status->label(),
-                'featured' => $product->featured,
-                'stock' => $product->stock,
-                'image' => $product->coverMedia()?->url(),
-                'deleted' => $product->trashed(),
-            ]);
-
-        return Inertia::render('admin/products/Index', [
-            'products' => $products,
-            'categories' => $this->categoryOptions(),
-            'filters' => [
-                'status' => $status !== '' ? $status : null,
-                'category' => $categoryId !== '' ? $categoryId : null,
-                'search' => $search !== '' ? $search : null,
+        return $this->renderDeferredIndex(
+            'admin/products/Index',
+            'products',
+            fn (): LengthAwarePaginator => $this->productsPaginator($request),
+            [
+                'categories' => $this->categoryOptions(),
+                'filters' => [
+                    'search' => (string) $request->string('search'),
+                    'status' => (string) $request->string('status'),
+                    'category' => (string) $request->string('category'),
+                    'trashed' => $this->resolveTrashedFilter($request),
+                    'per_page' => (string) $this->resolvePerPage($request),
+                ],
+                'can' => $this->resolveResourceAbilities(Product::class),
             ],
-        ]);
+        );
     }
 
     public function create(): Response
     {
+        $this->authorize('create', Product::class);
+
         return Inertia::render('admin/products/Form', [
             'product' => null,
             'categories' => $this->categoryOptions(),
         ]);
     }
 
-    public function store(ProductRequest $request): RedirectResponse
+    public function store(ProductStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $data['slug'] = UniqueSlug::for(Product::class, $data['slug'] ?: $data['name']);
@@ -93,6 +78,8 @@ class ProductController extends Controller
 
     public function edit(Product $product): Response
     {
+        $this->authorize('update', $product);
+
         $product->load('media');
 
         return Inertia::render('admin/products/Form', [
@@ -121,7 +108,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(ProductRequest $request, Product $product): RedirectResponse
+    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
         $data = $request->validated();
         $data['slug'] = UniqueSlug::for(Product::class, $data['slug'] ?: $data['name'], $product->id);
@@ -137,6 +124,8 @@ class ProductController extends Controller
         GenerateProductDescriptionRequest $request,
         ProductDescriptionGenerator $generator,
     ): JsonResponse {
+        $this->authorize('create', Product::class);
+
         try {
             $description = $generator->generate($request->validated());
         } catch (TextGenerationFailedException) {
@@ -148,8 +137,27 @@ class ProductController extends Controller
         return response()->json(['description' => $description]);
     }
 
+    /**
+     * Soft delete on the first call; permanently delete (with media files)
+     * when the product is already trashed.
+     */
     public function destroy(Product $product): RedirectResponse
     {
+        $this->authorize('delete', $product);
+
+        if ($product->trashed()) {
+            foreach ($product->media as $media) {
+                Storage::disk($media->disk)->delete($media->path);
+                $media->forceDelete();
+            }
+
+            $product->forceDelete();
+
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.products.force_deleted')]);
+
+            return to_route('admin.products.index', ['trashed' => 'only']);
+        }
+
         $product->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.products.deleted')]);
@@ -159,6 +167,8 @@ class ProductController extends Controller
 
     public function restore(Product $product): RedirectResponse
     {
+        $this->authorize('delete', $product);
+
         $product->restore();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.products.restored')]);
@@ -168,6 +178,8 @@ class ProductController extends Controller
 
     public function duplicate(Product $product): RedirectResponse
     {
+        $this->authorize('create', Product::class);
+
         $copy = $product->replicate(['slug']);
         $copy->name = __('app.admin.products.copy_name', ['name' => $product->name]);
         $copy->slug = UniqueSlug::for(Product::class, $copy->name);
@@ -197,6 +209,43 @@ class ProductController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.products.duplicated')]);
 
         return to_route('admin.products.edit', $copy);
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, array<string, mixed>>
+     */
+    private function productsPaginator(Request $request): LengthAwarePaginator
+    {
+        $status = (string) $request->string('status');
+        $categoryId = (string) $request->string('category');
+        $search = (string) $request->string('search');
+        $trashed = $this->resolveTrashedFilter($request);
+
+        return $this->applyTrashedToQuery(Product::query(), $trashed)
+            ->with(['media', 'category'])
+            ->when($status !== '', fn ($query) => $query->where('status', $status))
+            ->when($categoryId !== '', fn ($query) => $query->where('category_id', $categoryId))
+            ->when($search !== '', fn ($query) => $query
+                ->where(fn ($searchQuery) => $searchQuery
+                    ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
+                    ->orWhereRaw('LOWER(reference) LIKE ?', ['%'.mb_strtolower($search).'%'])))
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->paginate($this->resolvePerPage($request))
+            ->withQueryString()
+            ->through(fn (Product $product): array => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'reference' => $product->reference,
+                'categoryName' => $product->category?->name,
+                'status' => $product->status->value,
+                'statusLabel' => $product->status->label(),
+                'featured' => $product->featured,
+                'stock' => $product->stock,
+                'image' => $product->coverMedia()?->url(),
+                'deleted' => $product->trashed(),
+            ]);
     }
 
     /**

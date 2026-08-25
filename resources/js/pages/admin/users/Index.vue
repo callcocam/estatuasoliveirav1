@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Form, Head, router, usePage } from '@inertiajs/vue3';
-import { KeyRound, Pencil, Plus, RotateCcw, Trash2 } from '@lucide/vue';
+import { KeyRound, Pencil, Plus } from '@lucide/vue';
 import { computed, ref } from 'vue';
-import AdminPagination from '@/components/admin/AdminPagination.vue';
-import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
+import DeleteButton from '@/components/admin/DeleteButton.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
+import RestoreButton from '@/components/admin/RestoreButton.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useDeferredPaginator } from '@/composables/useDeferredPaginator';
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
@@ -32,29 +35,20 @@ import {
     store as userStore,
     update as userUpdate,
 } from '@/routes/admin/users';
-import type { Paginated } from '@/types/admin';
+import type { Paginated, ResourceAbilities, UserRow } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
-type UserRow = {
-    id: string;
-    name: string;
-    email: string;
-    phone: string | null;
-    role: string;
-    roleLabel: string;
-    createdAt: string | null;
-    deleted: boolean;
-};
-
 const props = defineProps<{
-    users: Paginated<UserRow>;
+    users?: Paginated<UserRow>;
     roles: { value: string; label: string }[];
     filters: {
-        search: string | null;
-        filter: string | null;
-        role: string | null;
+        search: string;
+        role: string;
+        trashed: string;
+        per_page: string;
     };
+    can: ResourceAbilities;
 }>();
 
 const page = usePage();
@@ -62,25 +56,13 @@ const { t } = useT();
 
 const currentUserId = computed(() => String(page.props.auth.user?.id ?? ''));
 
-const search = ref(props.filters.search ?? '');
-const filter = ref(props.filters.filter ?? 'all');
-const role = ref(props.filters.role ?? 'all');
+const { isLoading, isEmpty, rows, links } = useDeferredPaginator<UserRow>(
+    () => props.users,
+);
+
 const formOpen = ref(false);
 const editing = ref<UserRow | null>(null);
 const roleValue = ref('customer');
-const deleting = ref<UserRow | null>(null);
-
-function applyFilters() {
-    router.get(
-        usersIndex().url,
-        {
-            search: search.value || undefined,
-            filter: filter.value !== 'all' ? filter.value : undefined,
-            role: role.value !== 'all' ? role.value : undefined,
-        },
-        { preserveState: true, preserveScroll: true },
-    );
-}
 
 function openCreate() {
     editing.value = null;
@@ -94,105 +76,96 @@ function openEdit(user: UserRow) {
     formOpen.value = true;
 }
 
-function confirmDelete() {
-    if (!deleting.value) {
-        return;
-    }
-
-    router.delete(userDestroy(deleting.value.id).url, {
-        preserveScroll: true,
-        onFinish: () => (deleting.value = null),
-    });
+function sendResetLink(user: UserRow) {
+    router.post(userResetLink(user.id).url, {}, { preserveScroll: true });
 }
 </script>
 
 <template>
     <Head :title="t('app.admin.users.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">{{ t('app.admin.users.title') }}</h1>
-        <Button type="button" @click="openCreate">
-            <Plus />
-            {{ t('app.admin.users.new') }}
-        </Button>
-    </div>
+    <ListPage
+        :title="t('app.admin.users.title')"
+        :loading="isLoading"
+        :empty="isEmpty"
+        :columns="4"
+        :links="links"
+    >
+        <template #actions>
+            <Button v-if="can.create" type="button" @click="openCreate">
+                <Plus class="size-4" />
+                {{ t('app.admin.users.new') }}
+            </Button>
+        </template>
 
-    <div class="flex flex-wrap items-center gap-3">
-        <Input
-            v-model="search"
-            type="search"
-            :placeholder="t('app.admin.common.search_placeholder')"
-            class="max-w-xs"
-            @keydown.enter="applyFilters"
-        />
-        <Select v-model="role" @update:model-value="applyFilters">
-            <SelectTrigger class="w-full sm:w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">
-                    {{ t('app.admin.users.filter_all_roles') }}
-                </SelectItem>
-                <SelectItem
-                    v-for="option in roles"
-                    :key="option.value"
-                    :value="option.value"
-                >
-                    {{ option.label }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-        <Select v-model="filter" @update:model-value="applyFilters">
-            <SelectTrigger class="w-full sm:w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">
-                    {{ t('app.admin.common.filter_all') }}
-                </SelectItem>
-                <SelectItem value="trashed">
-                    {{ t('app.admin.common.filter_trashed') }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.users.fields.name') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.users.fields.role') }}
-                    </th>
-                    <th class="px-4 py-3 text-right font-medium">
-                        {{ t('app.admin.common.actions') }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="users.data.length === 0">
-                    <td
-                        colspan="3"
-                        class="px-4 py-8 text-center text-muted-foreground"
+        <template #filters>
+            <ListFiltersBar
+                :index-url="usersIndex().url"
+                :filters="{
+                    search: filters.search,
+                    role: filters.role || 'all',
+                    trashed: filters.trashed,
+                    per_page: filters.per_page,
+                }"
+                :search-placeholder="t('app.admin.common.search_placeholder')"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.role"
+                        @update:model-value="set('role', String($event ?? 'all'))"
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="user in users.data"
-                    :key="user.id"
-                    class="border-b last:border-b-0"
-                >
-                    <td class="px-4 py-3">
-                        <p class="font-medium">{{ user.name }}</p>
-                        <p class="text-xs text-muted-foreground">
-                            {{ user.email }}
-                        </p>
-                    </td>
-                    <td class="px-4 py-3">
+                        <SelectTrigger
+                            class="w-44"
+                            :aria-label="t('app.admin.users.fields.role')"
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">
+                                {{ t('app.admin.users.filter_all_roles') }}
+                            </SelectItem>
+                            <SelectItem
+                                v-for="option in roles"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.name') }}</th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.users.fields.phone') }}
+            </th>
+            <th class="px-4 py-3 font-medium">
+                {{ t('app.admin.users.fields.role') }}
+            </th>
+            <th class="px-4 py-3 text-right font-medium">
+                {{ t('app.admin.common.actions') }}
+            </th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="user in rows"
+                :key="user.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': user.deleted }"
+            >
+                <td class="px-4 py-3">
+                    <p class="font-medium text-foreground">{{ user.name }}</p>
+                    <p class="text-xs text-muted-foreground">{{ user.email }}</p>
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">
+                    {{ user.phone ?? t('app.admin.common.none') }}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
                         <Badge
                             :variant="
                                 user.role === 'admin' ? 'default' : 'secondary'
@@ -200,79 +173,55 @@ function confirmDelete() {
                         >
                             {{ user.roleLabel }}
                         </Badge>
-                        <Badge
-                            v-if="user.deleted"
-                            variant="destructive"
-                            class="ml-1"
-                        >
+                        <Badge v-if="user.deleted" variant="destructive">
                             {{ t('app.admin.common.deleted_badge') }}
                         </Badge>
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex justify-end gap-1">
-                            <template v-if="user.deleted">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.restore')"
-                                    @click="
-                                        router.post(
-                                            userRestore(user.id).url,
-                                            {},
-                                            { preserveScroll: true },
-                                        )
-                                    "
-                                >
-                                    <RotateCcw />
-                                </Button>
-                            </template>
-                            <template v-else>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="
-                                        t('app.admin.users.send_reset_link')
-                                    "
-                                    @click="
-                                        router.post(
-                                            userResetLink(user.id).url,
-                                            {},
-                                            { preserveScroll: true },
-                                        )
-                                    "
-                                >
-                                    <KeyRound />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.edit')"
-                                    @click="openEdit(user)"
-                                >
-                                    <Pencil />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="icon"
-                                    :disabled="user.id === currentUserId"
-                                    :aria-label="t('app.admin.common.delete')"
-                                    @click="deleting = user"
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </template>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <AdminPagination :links="users.links" />
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                        <template v-if="!user.deleted">
+                            <Button
+                                v-if="can.update"
+                                size="icon"
+                                variant="outline"
+                                type="button"
+                                :aria-label="t('app.admin.users.send_reset_link')"
+                                @click="sendResetLink(user)"
+                            >
+                                <KeyRound class="size-4" />
+                            </Button>
+                            <Button
+                                v-if="can.update"
+                                size="icon"
+                                variant="outline"
+                                type="button"
+                                :aria-label="t('app.admin.common.edit')"
+                                @click="openEdit(user)"
+                            >
+                                <Pencil class="size-4" />
+                            </Button>
+                            <DeleteButton
+                                v-if="can.delete && user.id !== currentUserId"
+                                :href="userDestroy(user.id).url"
+                            />
+                        </template>
+                        <template v-else>
+                            <RestoreButton
+                                v-if="can.delete"
+                                :href="userRestore(user.id).url"
+                            />
+                            <DeleteButton
+                                v-if="can.delete"
+                                :href="userDestroy(user.id).url"
+                                permanent
+                            />
+                        </template>
+                    </div>
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 
     <Dialog v-model:open="formOpen">
         <DialogContent>
@@ -338,9 +287,13 @@ function confirmDelete() {
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="admin">Administrador</SelectItem>
-                            <SelectItem value="manager">Gerente</SelectItem>
-                            <SelectItem value="customer">Cliente</SelectItem>
+                            <SelectItem
+                                v-for="option in roles"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                     <InputError :message="errors.role" />
@@ -379,10 +332,4 @@ function confirmDelete() {
             </Form>
         </DialogContent>
     </Dialog>
-
-    <ConfirmDeleteDialog
-        :open="deleting !== null"
-        @update:open="deleting = $event ? deleting : null"
-        @confirm="confirmDelete"
-    />
 </template>

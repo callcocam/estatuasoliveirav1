@@ -2,29 +2,38 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Concerns\InteractsWithResourceAbilities;
+use App\Http\Controllers\Concerns\InteractsWithTrashedFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\SliderRequest;
+use App\Http\Requests\Admin\SliderStoreRequest;
+use App\Http\Requests\Admin\SliderUpdateRequest;
 use App\Models\Slider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class SliderController extends Controller
 {
+    use InteractsWithResourceAbilities;
+    use InteractsWithTrashedFilter;
+
+    /**
+     * The list is intentionally not paginated: manual reordering needs the
+     * whole ordered collection on the client.
+     */
     public function index(Request $request): Response
     {
-        $filter = (string) $request->string('filter');
+        $this->authorize('viewAny', Slider::class);
+
         $search = (string) $request->string('search');
+        $status = (string) $request->string('status');
+        $trashed = $this->resolveTrashedFilter($request);
 
         return Inertia::render('admin/sliders/Index', [
-            'sliders' => Slider::query()
-                ->withTrashed()
-                ->when($filter === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
-                ->when($filter !== 'trashed' && $filter !== '', fn ($query) => $query
-                    ->whereNull('deleted_at')
-                    ->where('status', $filter))
-                ->when($filter === '', fn ($query) => $query->whereNull('deleted_at'))
+            'sliders' => $this->applyTrashedToQuery(Slider::query(), $trashed)
+                ->when($status !== '', fn ($query) => $query->where('status', $status))
                 ->when($search !== '', fn ($query) => $query
                     ->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($search).'%']))
                 ->with('media')
@@ -40,18 +49,22 @@ class SliderController extends Controller
                     'deleted' => $slider->trashed(),
                 ]),
             'filters' => [
-                'filter' => $filter !== '' ? $filter : null,
-                'search' => $search !== '' ? $search : null,
+                'search' => $search,
+                'status' => $status,
+                'trashed' => $trashed,
             ],
+            'can' => $this->resolveResourceAbilities(Slider::class),
         ]);
     }
 
     public function create(): Response
     {
+        $this->authorize('create', Slider::class);
+
         return Inertia::render('admin/sliders/Form', ['slider' => null]);
     }
 
-    public function store(SliderRequest $request): RedirectResponse
+    public function store(SliderStoreRequest $request): RedirectResponse
     {
         $slider = Slider::query()->create($request->validated());
 
@@ -62,6 +75,8 @@ class SliderController extends Controller
 
     public function edit(Slider $slider): Response
     {
+        $this->authorize('update', $slider);
+
         $slider->load('media');
 
         return Inertia::render('admin/sliders/Form', [
@@ -83,7 +98,7 @@ class SliderController extends Controller
         ]);
     }
 
-    public function update(SliderRequest $request, Slider $slider): RedirectResponse
+    public function update(SliderUpdateRequest $request, Slider $slider): RedirectResponse
     {
         $slider->update($request->validated());
 
@@ -92,8 +107,27 @@ class SliderController extends Controller
         return back();
     }
 
+    /**
+     * Soft delete on the first call; permanently delete (with media files)
+     * when the slider is already trashed.
+     */
     public function destroy(Slider $slider): RedirectResponse
     {
+        $this->authorize('delete', $slider);
+
+        if ($slider->trashed()) {
+            foreach ($slider->media as $media) {
+                Storage::disk($media->disk)->delete($media->path);
+                $media->forceDelete();
+            }
+
+            $slider->forceDelete();
+
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.sliders.force_deleted')]);
+
+            return to_route('admin.sliders.index', ['trashed' => 'only']);
+        }
+
         $slider->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.sliders.deleted')]);
@@ -103,6 +137,8 @@ class SliderController extends Controller
 
     public function restore(Slider $slider): RedirectResponse
     {
+        $this->authorize('delete', $slider);
+
         $slider->restore();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.sliders.restored')]);
@@ -112,13 +148,15 @@ class SliderController extends Controller
 
     public function reorder(Request $request): RedirectResponse
     {
+        $this->authorize('update', Slider::class);
+
         $validated = $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['string'],
         ]);
 
         foreach ($validated['ids'] as $index => $id) {
-            Slider::query()->whereKey($id)->update(['sort_order' => $index]);
+            Slider::query()->withTrashed()->whereKey($id)->update(['sort_order' => $index]);
         }
 
         return back();

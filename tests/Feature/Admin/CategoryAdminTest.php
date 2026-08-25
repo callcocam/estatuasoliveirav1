@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 
 beforeEach(function () {
@@ -24,8 +25,12 @@ test('filters categories by trashed, status and search', function () {
     Category::factory()->create(['name' => 'Vasos'])->delete();
 
     $this->actingAs($this->admin)
-        ->get(route('admin.categories.index', ['status' => 'trashed']))
+        ->get(route('admin.categories.index', ['trashed' => 'only']))
         ->assertInertia(fn ($page) => $page->has('categories', 1));
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.categories.index', ['trashed' => 'with']))
+        ->assertInertia(fn ($page) => $page->has('categories', 3));
 
     $this->actingAs($this->admin)
         ->get(route('admin.categories.index', ['status' => 'draft']))
@@ -83,6 +88,26 @@ test('soft deletes and restores a category', function () {
 
     $this->actingAs($this->admin)->post(route('admin.categories.restore', $category->slug));
     expect($category->refresh()->trashed())->toBeFalse();
+});
+
+test('permanently deletes a trashed category keeping its products', function () {
+    $category = Category::factory()->trashed()->create();
+    $product = Product::factory()->create(['category_id' => $category->id]);
+
+    $this->actingAs($this->admin)
+        ->delete(route('admin.categories.destroy', $category->slug))
+        ->assertRedirect();
+
+    $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+    expect($product->refresh()->category_id)->toBeNull();
+});
+
+test('customers cannot manage categories', function () {
+    $customer = User::factory()->create();
+    $category = Category::factory()->create();
+
+    $this->actingAs($customer)->get(route('admin.categories.index'))->assertForbidden();
+    $this->actingAs($customer)->delete(route('admin.categories.destroy', $category))->assertForbidden();
 });
 
 test('reorders categories', function () {

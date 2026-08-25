@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { Plus, RotateCcw } from '@lucide/vue';
-import { ref } from 'vue';
-import AdminPagination from '@/components/admin/AdminPagination.vue';
+import { Head, Link } from '@inertiajs/vue3';
+import { Plus } from '@lucide/vue';
+import ColumnActions from '@/components/admin/ColumnActions.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -13,50 +13,37 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useDeferredPaginator } from '@/composables/useDeferredPaginator';
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     create as quoteCreate,
+    destroy as quoteDestroy,
     index as quotesIndex,
     restore as quoteRestore,
     show as quoteShow,
 } from '@/routes/admin/quotes';
-import type { Paginated } from '@/types/admin';
+import type { Paginated, QuoteRow, ResourceAbilities } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
-type QuoteRow = {
-    id: string;
-    userName: string | null;
-    status: string;
-    statusLabel: string;
-    total: string;
-    itemsCount: number;
-    createdAt: string | null;
-    deleted: boolean;
-};
-
 const props = defineProps<{
-    quotes: Paginated<QuoteRow>;
+    quotes?: Paginated<QuoteRow>;
     statuses: { value: string; label: string }[];
-    filters: { status: string | null; search: string | null };
+    filters: {
+        search: string;
+        status: string;
+        trashed: string;
+        per_page: string;
+    };
+    can: ResourceAbilities;
 }>();
 
 const { t } = useT();
 
-const status = ref(props.filters.status ?? 'all');
-const search = ref(props.filters.search ?? '');
-
-function applyFilters() {
-    router.get(
-        quotesIndex().url,
-        {
-            status: status.value !== 'all' ? status.value : undefined,
-            search: search.value || undefined,
-        },
-        { preserveState: true, preserveScroll: true },
-    );
-}
+const { isLoading, isEmpty, rows, links } = useDeferredPaginator<QuoteRow>(
+    () => props.quotes,
+);
 
 function formatDate(value: string | null): string {
     return value ? new Date(value).toLocaleDateString('pt-BR') : '';
@@ -66,139 +53,108 @@ function formatDate(value: string | null): string {
 <template>
     <Head :title="t('app.admin.quotes.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">
-            {{ t('app.admin.quotes.title') }}
-        </h1>
-        <Button as-child>
-            <Link :href="quoteCreate().url">
-                <Plus />
-                {{ t('app.admin.quotes.new') }}
-            </Link>
-        </Button>
-    </div>
+    <ListPage
+        :title="t('app.admin.quotes.title')"
+        :loading="isLoading"
+        :empty="isEmpty"
+        :columns="5"
+        :links="links"
+    >
+        <template #actions>
+            <Button v-if="can.create" as-child>
+                <Link :href="quoteCreate().url">
+                    <Plus class="size-4" />
+                    {{ t('app.admin.quotes.new') }}
+                </Link>
+            </Button>
+        </template>
 
-    <div class="flex flex-wrap items-center gap-3">
-        <Input
-            v-model="search"
-            type="search"
-            :placeholder="t('app.admin.quotes.search_placeholder')"
-            class="max-w-xs"
-            @keydown.enter="applyFilters"
-        />
-        <Select v-model="status" @update:model-value="applyFilters">
-            <SelectTrigger class="w-full sm:w-52">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">{{
-                    t('app.admin.common.filter_all')
-                }}</SelectItem>
-                <SelectItem
-                    v-for="option in statuses"
-                    :key="option.value"
-                    :value="option.value"
-                >
-                    {{ option.label }}
-                </SelectItem>
-                <SelectItem value="trashed">
-                    {{ t('app.admin.common.filter_trashed') }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.quotes.customer') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.status') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.quotes.items') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.quotes.total') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="quotes.data.length === 0">
-                    <td
-                        colspan="5"
-                        class="px-4 py-8 text-center text-muted-foreground"
+        <template #filters>
+            <ListFiltersBar
+                :index-url="quotesIndex().url"
+                :filters="{
+                    search: filters.search,
+                    status: filters.status || 'all',
+                    trashed: filters.trashed,
+                    per_page: filters.per_page,
+                }"
+                :search-placeholder="t('app.admin.quotes.search_placeholder')"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.status"
+                        @update:model-value="set('status', String($event ?? 'all'))"
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="quote in quotes.data"
-                    :key="quote.id"
-                    class="border-b last:border-b-0"
-                >
-                    <td class="px-4 py-3">
-                        <p class="font-medium">
-                            {{
-                                quote.userName ??
-                                t('app.admin.quotes.no_customer')
-                            }}
-                        </p>
-                        <p class="text-xs text-muted-foreground">
-                            {{ formatDate(quote.createdAt) }}
-                        </p>
-                    </td>
-                    <td class="px-4 py-3">
-                        <Badge
-                            :variant="
-                                quote.status === 'pending'
-                                    ? 'default'
-                                    : 'secondary'
-                            "
-                        >
+                        <SelectTrigger class="w-44" :aria-label="t('app.admin.common.status')">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">
+                                {{ t('app.admin.common.filter_all') }}
+                            </SelectItem>
+                            <SelectItem
+                                v-for="option in statuses"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.quotes.customer') }}</th>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.status') }}</th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.quotes.items') }}
+            </th>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.quotes.total') }}</th>
+            <th class="px-4 py-3 text-right font-medium">
+                {{ t('app.admin.common.actions') }}
+            </th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="quote in rows"
+                :key="quote.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': quote.deleted }"
+            >
+                <td class="px-4 py-3">
+                    <p class="font-medium text-foreground">
+                        {{ quote.userName ?? t('app.admin.quotes.no_customer') }}
+                    </p>
+                    <p class="text-xs text-muted-foreground">
+                        {{ formatDate(quote.createdAt) }}
+                    </p>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge :variant="quote.status === 'pending' ? 'default' : 'secondary'">
                             {{ quote.statusLabel }}
                         </Badge>
-                        <Badge
-                            v-if="quote.deleted"
-                            variant="destructive"
-                            class="ml-1"
-                        >
+                        <Badge v-if="quote.deleted" variant="destructive">
                             {{ t('app.admin.common.deleted_badge') }}
                         </Badge>
-                    </td>
-                    <td class="px-4 py-3">{{ quote.itemsCount }}</td>
-                    <td class="px-4 py-3">R$ {{ quote.total }}</td>
-                    <td class="px-4 py-3 text-right">
-                        <Button
-                            v-if="quote.deleted"
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            @click="
-                                router.post(
-                                    quoteRestore(quote.id).url,
-                                    {},
-                                    { preserveScroll: true },
-                                )
-                            "
-                        >
-                            <RotateCcw />
-                            {{ t('app.admin.common.restore') }}
-                        </Button>
-                        <Button v-else variant="outline" size="sm" as-child>
-                            <Link :href="quoteShow(quote.id).url">{{
-                                t('app.admin.common.edit')
-                            }}</Link>
-                        </Button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <AdminPagination :links="quotes.links" />
+                    </div>
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">{{ quote.itemsCount }}</td>
+                <td class="px-4 py-3">R$ {{ quote.total }}</td>
+                <td class="px-4 py-3">
+                    <ColumnActions
+                        :trashed="quote.deleted"
+                        :edit-href="quoteShow(quote.id).url"
+                        :delete-href="quoteDestroy(quote.id).url"
+                        :restore-href="quoteRestore(quote.id).url"
+                        :can-update="can.update"
+                        :can-delete="can.delete"
+                    />
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 </template>

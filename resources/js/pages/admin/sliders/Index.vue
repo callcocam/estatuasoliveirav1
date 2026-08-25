@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import {
-    ArrowDown,
-    ArrowUp,
-    Pencil,
-    Plus,
-    RotateCcw,
-    Trash2,
-} from '@lucide/vue';
-import { ref } from 'vue';
-import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
+import { ArrowDown, ArrowUp, Plus } from '@lucide/vue';
+import ColumnActions from '@/components/admin/ColumnActions.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -30,6 +23,7 @@ import {
     reorder as sliderReorder,
     restore as sliderRestore,
 } from '@/routes/admin/sliders';
+import type { ResourceAbilities } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -45,25 +39,18 @@ type SliderRow = {
 
 const props = defineProps<{
     sliders: SliderRow[];
-    filters: { filter: string | null; search: string | null };
+    filters: { search: string; status: string; trashed: string };
+    can: ResourceAbilities;
 }>();
 
 const { t } = useT();
 
-const filter = ref(props.filters.filter ?? 'all');
-const search = ref(props.filters.search ?? '');
-const deleting = ref<SliderRow | null>(null);
-
-function applyFilters() {
-    router.get(
-        slidersIndex().url,
-        {
-            filter: filter.value !== 'all' ? filter.value : undefined,
-            search: search.value || undefined,
-        },
-        { preserveState: true, preserveScroll: true },
-    );
-}
+const statusOptions = [
+    { value: 'all', label: t('app.admin.common.filter_all') },
+    { value: 'draft', label: t('app.admin.status.draft') },
+    { value: 'published', label: t('app.admin.status.published') },
+    { value: 'archived', label: t('app.admin.status.archived') },
+];
 
 function move(index: number, delta: number) {
     const ids = props.sliders.map((slider) => slider.id);
@@ -77,213 +64,131 @@ function move(index: number, delta: number) {
 
     router.post(sliderReorder().url, { ids }, { preserveScroll: true });
 }
-
-function confirmDelete() {
-    if (!deleting.value) {
-        return;
-    }
-
-    router.delete(sliderDestroy(deleting.value.id).url, {
-        preserveScroll: true,
-        onFinish: () => (deleting.value = null),
-    });
-}
 </script>
 
 <template>
     <Head :title="t('app.admin.sliders.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">
-            {{ t('app.admin.sliders.title') }}
-        </h1>
-        <Button as-child>
-            <Link :href="sliderCreate().url">
-                <Plus />
-                {{ t('app.admin.sliders.new') }}
-            </Link>
-        </Button>
-    </div>
+    <ListPage
+        :title="t('app.admin.sliders.title')"
+        :loading="false"
+        :empty="sliders.length === 0"
+        :columns="3"
+    >
+        <template #actions>
+            <Button v-if="can.create" as-child>
+                <Link :href="sliderCreate().url">
+                    <Plus class="size-4" />
+                    {{ t('app.admin.sliders.new') }}
+                </Link>
+            </Button>
+        </template>
 
-    <div class="flex flex-wrap items-center gap-3">
-        <Input
-            v-model="search"
-            type="search"
-            :placeholder="t('app.admin.common.search_placeholder')"
-            class="max-w-xs"
-            @keydown.enter="applyFilters"
-        />
-        <Select v-model="filter" @update:model-value="applyFilters">
-            <SelectTrigger class="w-full sm:w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">
-                    {{ t('app.admin.common.filter_all') }}
-                </SelectItem>
-                <SelectItem value="draft">
-                    {{ t('app.admin.status.draft') }}
-                </SelectItem>
-                <SelectItem value="published">
-                    {{ t('app.admin.status.published') }}
-                </SelectItem>
-                <SelectItem value="archived">
-                    {{ t('app.admin.status.archived') }}
-                </SelectItem>
-                <SelectItem value="trashed">
-                    {{ t('app.admin.common.filter_trashed') }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.sliders.fields.title') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.status') }}
-                    </th>
-                    <th class="px-4 py-3 text-right font-medium">
-                        {{ t('app.admin.common.actions') }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="sliders.length === 0">
-                    <td
-                        colspan="3"
-                        class="px-4 py-8 text-center text-muted-foreground"
+        <template #filters>
+            <ListFiltersBar
+                :index-url="slidersIndex().url"
+                :filters="{
+                    search: filters.search,
+                    status: filters.status || 'all',
+                    trashed: filters.trashed,
+                }"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.status"
+                        @update:model-value="set('status', String($event ?? 'all'))"
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="(slider, index) in sliders"
-                    :key="slider.id"
-                    class="border-b last:border-b-0"
-                >
-                    <td class="px-4 py-3">
-                        <div class="flex items-center gap-3">
-                            <img
-                                v-if="slider.image"
-                                :src="slider.image"
-                                alt=""
-                                class="h-10 w-16 rounded-md object-cover"
-                            />
-                            <div
-                                v-else
-                                class="h-10 w-16 rounded-md bg-muted"
-                                aria-hidden="true"
-                            ></div>
-                            <div class="min-w-0">
-                                <p class="truncate font-medium">
-                                    {{ slider.title }}
-                                </p>
-                                <p
-                                    class="truncate text-xs text-muted-foreground"
-                                >
-                                    {{
-                                        slider.subtitle ??
-                                        t('app.admin.common.none')
-                                    }}
-                                </p>
-                            </div>
+                        <SelectTrigger class="w-44" :aria-label="t('app.admin.common.status')">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in statusOptions" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.sliders.fields.title') }}</th>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.status') }}</th>
+            <th class="px-4 py-3 text-right font-medium">{{ t('app.admin.common.actions') }}</th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="(slider, index) in sliders"
+                :key="slider.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': slider.deleted }"
+            >
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <img
+                            v-if="slider.image"
+                            :src="slider.image"
+                            :alt="slider.title"
+                            class="h-10 w-16 rounded-md object-cover"
+                        />
+                        <div
+                            v-else
+                            class="h-10 w-16 rounded-md bg-muted"
+                            aria-hidden="true"
+                        />
+                        <div class="min-w-0">
+                            <p class="truncate font-medium text-foreground">{{ slider.title }}</p>
+                            <p v-if="slider.subtitle" class="truncate text-xs text-muted-foreground">
+                                {{ slider.subtitle }}
+                            </p>
                         </div>
-                    </td>
-                    <td class="px-4 py-3">
-                        <Badge
-                            :variant="
-                                slider.status === 'published'
-                                    ? 'default'
-                                    : 'secondary'
-                            "
-                        >
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge :variant="slider.status === 'published' ? 'default' : 'secondary'">
                             {{ t(`app.admin.status.${slider.status}`) }}
                         </Badge>
-                        <Badge
-                            v-if="slider.deleted"
-                            variant="destructive"
-                            class="ml-1"
-                        >
+                        <Badge v-if="slider.deleted" variant="destructive">
                             {{ t('app.admin.common.deleted_badge') }}
                         </Badge>
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex justify-end gap-1">
-                            <template v-if="slider.deleted">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.restore')"
-                                    @click="
-                                        router.post(
-                                            sliderRestore(slider.id).url,
-                                            {},
-                                            { preserveScroll: true },
-                                        )
-                                    "
-                                >
-                                    <RotateCcw />
-                                </Button>
-                            </template>
-                            <template v-else>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :disabled="index === 0"
-                                    :aria-label="t('app.admin.common.move_up')"
-                                    @click="move(index, -1)"
-                                >
-                                    <ArrowUp />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :disabled="index === sliders.length - 1"
-                                    :aria-label="
-                                        t('app.admin.common.move_down')
-                                    "
-                                    @click="move(index, 1)"
-                                >
-                                    <ArrowDown />
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    as-child
-                                    :aria-label="t('app.admin.common.edit')"
-                                >
-                                    <Link :href="sliderEdit(slider.id).url">
-                                        <Pencil />
-                                    </Link>
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.delete')"
-                                    @click="deleting = slider"
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </template>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <ConfirmDeleteDialog
-        :open="deleting !== null"
-        @update:open="deleting = $event ? deleting : null"
-        @confirm="confirmDelete"
-    />
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    <ColumnActions
+                        :trashed="slider.deleted"
+                        :edit-href="sliderEdit(slider.id).url"
+                        :delete-href="sliderDestroy(slider.id).url"
+                        :restore-href="sliderRestore(slider.id).url"
+                        :can-update="can.update"
+                        :can-delete="can.delete"
+                    >
+                        <Button
+                            v-if="can.update"
+                            size="icon"
+                            variant="outline"
+                            type="button"
+                            :disabled="index === 0"
+                            :aria-label="t('app.admin.common.move_up')"
+                            @click="move(index, -1)"
+                        >
+                            <ArrowUp class="size-4" />
+                        </Button>
+                        <Button
+                            v-if="can.update"
+                            size="icon"
+                            variant="outline"
+                            type="button"
+                            :disabled="index === sliders.length - 1"
+                            :aria-label="t('app.admin.common.move_down')"
+                            @click="move(index, 1)"
+                        >
+                            <ArrowDown class="size-4" />
+                        </Button>
+                    </ColumnActions>
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 </template>

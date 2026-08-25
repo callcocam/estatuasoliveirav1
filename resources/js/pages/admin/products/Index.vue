@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Copy, Pencil, Plus, RotateCcw, Trash2 } from '@lucide/vue';
-import { ref } from 'vue';
-import AdminPagination from '@/components/admin/AdminPagination.vue';
-import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
+import { Copy } from '@lucide/vue';
+import ColumnActions from '@/components/admin/ColumnActions.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -14,6 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useDeferredPaginator } from '@/composables/useDeferredPaginator';
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
@@ -24,211 +24,190 @@ import {
     index as productsIndex,
     restore as productRestore,
 } from '@/routes/admin/products';
-import type { Paginated } from '@/types/admin';
+import type { Paginated, ProductRow, ResourceAbilities } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
-type ProductRow = {
-    id: string;
-    name: string;
-    slug: string;
-    reference: string | null;
-    categoryName: string | null;
-    status: string;
-    statusLabel: string;
-    featured: boolean;
-    stock: number | null;
-    image: string | null;
-    deleted: boolean;
-};
-
 const props = defineProps<{
-    products: Paginated<ProductRow>;
+    products?: Paginated<ProductRow>;
     categories: { id: string; name: string }[];
     filters: {
-        status: string | null;
-        category: string | null;
-        search: string | null;
+        search: string;
+        status: string;
+        category: string;
+        trashed: string;
+        per_page: string;
     };
+    can: ResourceAbilities;
 }>();
 
 const { t } = useT();
 
-const search = ref(props.filters.search ?? '');
-const status = ref(props.filters.status ?? 'all');
-const category = ref(props.filters.category ?? 'all');
-const deleting = ref<ProductRow | null>(null);
+const { isLoading, isEmpty, rows, links } = useDeferredPaginator<ProductRow>(
+    () => props.products,
+);
 
-function applyFilters() {
-    router.get(
-        productsIndex().url,
-        {
-            search: search.value || undefined,
-            status: status.value !== 'all' ? status.value : undefined,
-            category: category.value !== 'all' ? category.value : undefined,
-        },
-        { preserveState: true, preserveScroll: true },
+const statusOptions = [
+    { value: 'all', label: t('app.admin.common.filter_all') },
+    { value: 'draft', label: t('app.admin.status.draft') },
+    { value: 'published', label: t('app.admin.status.published') },
+    { value: 'archived', label: t('app.admin.status.archived') },
+];
+
+function duplicateProduct(product: ProductRow): void {
+    router.post(
+        productDuplicate(product.slug).url,
+        {},
+        { preserveScroll: true },
     );
-}
-
-function confirmDelete() {
-    if (!deleting.value) {
-        return;
-    }
-
-    router.delete(productDestroy(deleting.value.slug).url, {
-        preserveScroll: true,
-        onFinish: () => (deleting.value = null),
-    });
 }
 </script>
 
 <template>
     <Head :title="t('app.admin.products.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">
-            {{ t('app.admin.products.title') }}
-        </h1>
-        <Button as-child>
-            <Link :href="productCreate().url">
-                <Plus />
-                {{ t('app.admin.products.new') }}
-            </Link>
-        </Button>
-    </div>
+    <ListPage
+        :title="t('app.admin.products.title')"
+        :loading="isLoading"
+        :empty="isEmpty"
+        :columns="5"
+        :links="links"
+    >
+        <template #actions>
+            <Button v-if="can.create" as-child>
+                <Link :href="productCreate().url">{{
+                    t('app.admin.products.new')
+                }}</Link>
+            </Button>
+        </template>
 
-    <div class="flex flex-wrap items-center gap-3">
-        <Input
-            v-model="search"
-            type="search"
-            :placeholder="t('app.admin.common.search_placeholder')"
-            class="max-w-xs"
-            @keydown.enter="applyFilters"
-        />
-        <Select v-model="status" @update:model-value="applyFilters">
-            <SelectTrigger class="w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">{{
-                    t('app.admin.common.filter_all')
-                }}</SelectItem>
-                <SelectItem value="draft">{{
-                    t('app.admin.status.draft')
-                }}</SelectItem>
-                <SelectItem value="published">{{
-                    t('app.admin.status.published')
-                }}</SelectItem>
-                <SelectItem value="archived">{{
-                    t('app.admin.status.archived')
-                }}</SelectItem>
-                <SelectItem value="trashed">{{
-                    t('app.admin.products.filter_trashed')
-                }}</SelectItem>
-            </SelectContent>
-        </Select>
-        <Select v-model="category" @update:model-value="applyFilters">
-            <SelectTrigger class="w-52">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">{{
-                    t('app.admin.common.filter_all')
-                }}</SelectItem>
-                <SelectItem
-                    v-for="option in categories"
-                    :key="option.id"
-                    :value="option.id"
-                >
-                    {{ option.name }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.name') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.products.fields.category') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.status') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.products.fields.stock') }}
-                    </th>
-                    <th class="px-4 py-3 text-right font-medium">
-                        {{ t('app.admin.common.actions') }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="products.data.length === 0">
-                    <td
-                        colspan="5"
-                        class="px-4 py-8 text-center text-muted-foreground"
+        <template #filters>
+            <ListFiltersBar
+                :index-url="productsIndex().url"
+                :filters="{
+                    search: filters.search,
+                    status: filters.status || 'all',
+                    category: filters.category || 'all',
+                    trashed: filters.trashed,
+                    per_page: filters.per_page,
+                }"
+                :search-placeholder="t('app.admin.common.search_placeholder')"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.status"
+                        @update:model-value="
+                            set('status', String($event ?? 'all'))
+                        "
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="product in products.data"
-                    :key="product.id"
-                    class="border-b last:border-b-0"
-                    :class="{ 'opacity-60': product.deleted }"
-                >
-                    <td class="px-4 py-3">
-                        <div class="flex items-center gap-3">
-                            <img
-                                v-if="product.image"
-                                :src="product.image"
-                                alt=""
-                                class="size-10 rounded-md object-cover"
-                            />
-                            <div
-                                v-else
-                                class="size-10 rounded-md bg-muted"
-                                aria-hidden="true"
-                            ></div>
-                            <div class="min-w-0">
-                                <p class="truncate font-medium">
-                                    {{ product.name }}
-                                </p>
-                                <p
-                                    class="truncate text-xs text-muted-foreground"
-                                >
-                                    {{
-                                        product.reference ??
-                                        t('app.admin.common.none')
-                                    }}
-                                    <span
-                                        v-if="product.featured"
-                                        class="ml-1 text-primary"
-                                    >
-                                        · {{ t('app.admin.common.featured') }}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-4 py-3">
-                        {{
-                            product.categoryName ??
-                            t('app.admin.products.no_category')
-                        }}
-                    </td>
-                    <td class="px-4 py-3">
-                        <Badge v-if="product.deleted" variant="destructive">
-                            {{ t('app.admin.common.deleted_badge') }}
-                        </Badge>
-                        <Badge
+                        <SelectTrigger
+                            class="w-44"
+                            :aria-label="t('app.admin.products.filter_status')"
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem
+                                v-for="option in statusOptions"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        :model-value="values.category"
+                        @update:model-value="
+                            set('category', String($event ?? 'all'))
+                        "
+                    >
+                        <SelectTrigger
+                            class="w-52"
+                            :aria-label="
+                                t('app.admin.products.fields.category')
+                            "
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">{{
+                                t('app.admin.common.filter_all')
+                            }}</SelectItem>
+                            <SelectItem
+                                v-for="category in categories"
+                                :key="category.id"
+                                :value="category.id"
+                            >
+                                {{ category.name }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">
+                {{ t('app.admin.common.name') }}
+            </th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.products.fields.category') }}
+            </th>
+            <th class="px-4 py-3 font-medium">
+                {{ t('app.admin.common.status') }}
+            </th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.products.fields.stock') }}
+            </th>
+            <th class="px-4 py-3 text-right font-medium">
+                {{ t('app.admin.common.actions') }}
+            </th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="product in rows"
+                :key="product.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': product.deleted }"
+            >
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <img
+                            v-if="product.image"
+                            :src="product.image"
+                            :alt="product.name"
+                            class="size-10 rounded-md bg-muted object-cover"
+                        />
+                        <div
                             v-else
+                            class="size-10 rounded-md bg-muted"
+                            aria-hidden="true"
+                        />
+                        <div class="min-w-0">
+                            <p class="truncate font-medium text-foreground">
+                                {{ product.name }}
+                            </p>
+                            <p class="truncate text-xs text-muted-foreground">
+                                {{
+                                    product.reference ??
+                                    t('app.admin.common.none')
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">
+                    {{
+                        product.categoryName ??
+                        t('app.admin.products.no_category')
+                    }}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge
                             :variant="
                                 product.status === 'published'
                                     ? 'default'
@@ -237,75 +216,39 @@ function confirmDelete() {
                         >
                             {{ product.statusLabel }}
                         </Badge>
-                    </td>
-                    <td class="px-4 py-3">
-                        {{ product.stock ?? t('app.admin.common.none') }}
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex justify-end gap-1">
-                            <template v-if="!product.deleted">
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    as-child
-                                    :aria-label="t('app.admin.common.edit')"
-                                >
-                                    <Link :href="productEdit(product.slug).url">
-                                        <Pencil />
-                                    </Link>
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="
-                                        t('app.admin.common.duplicate')
-                                    "
-                                    @click="
-                                        router.post(
-                                            productDuplicate(product.slug).url,
-                                        )
-                                    "
-                                >
-                                    <Copy />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.delete')"
-                                    @click="deleting = product"
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </template>
-                            <Button
-                                v-else
-                                type="button"
-                                variant="outline"
-                                @click="
-                                    router.post(
-                                        productRestore(product.slug).url,
-                                        {},
-                                        { preserveScroll: true },
-                                    )
-                                "
-                            >
-                                <RotateCcw />
-                                {{ t('app.admin.common.restore') }}
-                            </Button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <AdminPagination :links="products.links" />
-
-    <ConfirmDeleteDialog
-        :open="deleting !== null"
-        @update:open="deleting = $event ? deleting : null"
-        @confirm="confirmDelete"
-    />
+                        <Badge v-if="product.featured" variant="outline">
+                            {{ t('app.admin.common.featured') }}
+                        </Badge>
+                        <Badge v-if="product.deleted" variant="destructive">
+                            {{ t('app.admin.common.deleted_badge') }}
+                        </Badge>
+                    </div>
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">
+                    {{ product.stock }}
+                </td>
+                <td class="px-4 py-3">
+                    <ColumnActions
+                        :trashed="product.deleted"
+                        :edit-href="productEdit(product.slug).url"
+                        :delete-href="productDestroy(product.slug).url"
+                        :restore-href="productRestore(product.slug).url"
+                        :can-update="can.update"
+                        :can-delete="can.delete"
+                    >
+                        <Button
+                            v-if="can.create"
+                            size="icon"
+                            variant="outline"
+                            type="button"
+                            :aria-label="t('app.admin.common.duplicate')"
+                            @click="duplicateProduct(product)"
+                        >
+                            <Copy class="size-4" />
+                        </Button>
+                    </ColumnActions>
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 </template>

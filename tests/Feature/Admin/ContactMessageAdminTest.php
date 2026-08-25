@@ -12,11 +12,12 @@ test('lists messages filtered by read state', function () {
     ContactMessage::factory()->read()->create();
 
     $this->actingAs($this->admin)
-        ->get(route('admin.messages.index', ['filter' => 'unread']))
+        ->get(route('admin.messages.index', ['read' => 'unread']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/messages/Index')
-            ->has('messages.data', 1)
-            ->where('messages.data.0.read', false));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('messages.data', 1)
+                ->where('messages.data.0.read', false)));
 });
 
 test('viewing a message marks it as read', function () {
@@ -54,12 +55,13 @@ test('lists only trashed messages with the trashed filter', function () {
     ContactMessage::factory()->create();
 
     $this->actingAs($this->admin)
-        ->get(route('admin.messages.index', ['filter' => 'trashed']))
+        ->get(route('admin.messages.index', ['trashed' => 'only']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/messages/Index')
-            ->has('messages.data', 1)
-            ->where('messages.data.0.id', $trashed->id)
-            ->where('messages.data.0.deleted', true));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('messages.data', 1)
+                ->where('messages.data.0.id', $trashed->id)
+                ->where('messages.data.0.deleted', true)));
 });
 
 test('restores a trashed message', function () {
@@ -79,6 +81,25 @@ test('filters messages by search', function () {
         ->get(route('admin.messages.index', ['search' => 'carlos']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/messages/Index')
-            ->has('messages.data', 1)
-            ->where('messages.data.0.name', 'Carlos Souza'));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('messages.data', 1)
+                ->where('messages.data.0.name', 'Carlos Souza')));
+});
+
+test('permanently deletes a trashed message', function () {
+    $message = ContactMessage::factory()->trashed()->create();
+
+    $this->actingAs($this->admin)
+        ->delete(route('admin.messages.destroy', $message))
+        ->assertRedirect(route('admin.messages.index', ['trashed' => 'only']));
+
+    $this->assertDatabaseMissing('contact_messages', ['id' => $message->id]);
+});
+
+test('customers cannot manage messages', function () {
+    $customer = User::factory()->create();
+    $message = ContactMessage::factory()->create();
+
+    $this->actingAs($customer)->get(route('admin.messages.index'))->assertForbidden();
+    $this->actingAs($customer)->delete(route('admin.messages.destroy', $message))->assertForbidden();
 });

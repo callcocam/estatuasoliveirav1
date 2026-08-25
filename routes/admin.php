@@ -24,7 +24,9 @@ Route::prefix('admin')
         Route::post('categories/{category}/restore', [CategoryController::class, 'restore'])
             ->withTrashed()
             ->name('categories.restore');
-        Route::resource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('categories', CategoryController::class)
+            ->only(['index', 'store', 'update', 'destroy'])
+            ->withTrashed(['destroy']);
 
         Route::post('products/generate-description', [ProductController::class, 'generateDescription'])
             ->middleware('throttle:10,1')
@@ -33,19 +35,25 @@ Route::prefix('admin')
         Route::post('products/{product}/restore', [ProductController::class, 'restore'])
             ->withTrashed()
             ->name('products.restore');
-        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('products', ProductController::class)
+            ->except(['show'])
+            ->withTrashed(['destroy']);
 
         Route::post('sliders/reorder', [SliderController::class, 'reorder'])->name('sliders.reorder');
         Route::post('sliders/{slider}/restore', [SliderController::class, 'restore'])
             ->withTrashed()
             ->name('sliders.restore');
-        Route::resource('sliders', SliderController::class)->except(['show']);
+        Route::resource('sliders', SliderController::class)
+            ->except(['show'])
+            ->withTrashed(['destroy']);
 
         Route::patch('quotes/{quote}/status', [QuoteController::class, 'updateStatus'])->name('quotes.status');
         Route::post('quotes/{quote}/restore', [QuoteController::class, 'restore'])
             ->withTrashed()
             ->name('quotes.restore');
-        Route::resource('quotes', QuoteController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        Route::resource('quotes', QuoteController::class)
+            ->only(['index', 'create', 'store', 'show', 'destroy'])
+            ->withTrashed(['destroy']);
 
         Route::patch('messages/{message}/read', [ContactMessageController::class, 'toggleRead'])->name('messages.read');
         Route::post('messages/{message}/restore', [ContactMessageController::class, 'restore'])
@@ -53,7 +61,9 @@ Route::prefix('admin')
             ->name('messages.restore');
         Route::get('messages', [ContactMessageController::class, 'index'])->name('messages.index');
         Route::get('messages/{message}', [ContactMessageController::class, 'show'])->name('messages.show');
-        Route::delete('messages/{message}', [ContactMessageController::class, 'destroy'])->name('messages.destroy');
+        Route::delete('messages/{message}', [ContactMessageController::class, 'destroy'])
+            ->withTrashed()
+            ->name('messages.destroy');
 
         Route::post('media', [MediaController::class, 'store'])->name('media.store');
         Route::post('media/reorder', [MediaController::class, 'reorder'])->name('media.reorder');
@@ -65,7 +75,9 @@ Route::prefix('admin')
             Route::post('users/{user}/restore', [UserController::class, 'restore'])
                 ->withTrashed()
                 ->name('users.restore');
-            Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::resource('users', UserController::class)
+                ->only(['index', 'store', 'update', 'destroy'])
+                ->withTrashed(['destroy']);
 
             Route::get('settings', [SiteSettingsController::class, 'edit'])->name('settings.edit');
             Route::post('settings', [SiteSettingsController::class, 'update'])->name('settings.update');

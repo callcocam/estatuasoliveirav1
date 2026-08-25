@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { RotateCcw } from '@lucide/vue';
-import { ref } from 'vue';
-import AdminPagination from '@/components/admin/AdminPagination.vue';
+import { Head } from '@inertiajs/vue3';
+import ColumnActions from '@/components/admin/ColumnActions.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -13,47 +11,40 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useDeferredPaginator } from '@/composables/useDeferredPaginator';
 import { useT } from '@/composables/useT';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
+    destroy as messageDestroy,
     index as messagesIndex,
     restore as messageRestore,
     show as messageShow,
 } from '@/routes/admin/messages';
-import type { Paginated } from '@/types/admin';
+import type { ContactMessageRow, Paginated, ResourceAbilities } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
-type MessageRow = {
-    id: string;
-    name: string;
-    email: string;
-    subject: string | null;
-    read: boolean;
-    createdAt: string | null;
-    deleted: boolean;
-};
-
 const props = defineProps<{
-    messages: Paginated<MessageRow>;
-    filters: { filter: string | null; search: string | null };
+    messages?: Paginated<ContactMessageRow>;
+    filters: {
+        search: string;
+        read: string;
+        trashed: string;
+        per_page: string;
+    };
+    can: ResourceAbilities;
 }>();
 
 const { t } = useT();
 
-const filter = ref(props.filters.filter ?? 'all');
-const search = ref(props.filters.search ?? '');
+const { isLoading, isEmpty, rows, links } =
+    useDeferredPaginator<ContactMessageRow>(() => props.messages);
 
-function applyFilters() {
-    router.get(
-        messagesIndex().url,
-        {
-            filter: filter.value !== 'all' ? filter.value : undefined,
-            search: search.value || undefined,
-        },
-        { preserveState: true, preserveScroll: true },
-    );
-}
+const readOptions = [
+    { value: 'all', label: t('app.admin.common.filter_all') },
+    { value: 'unread', label: t('app.admin.messages.unread') },
+    { value: 'read', label: t('app.admin.messages.read') },
+];
 
 function formatDate(value: string | null): string {
     return value ? new Date(value).toLocaleDateString('pt-BR') : '';
@@ -63,131 +54,104 @@ function formatDate(value: string | null): string {
 <template>
     <Head :title="t('app.admin.messages.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">
-            {{ t('app.admin.messages.title') }}
-        </h1>
-        <div class="flex flex-wrap items-center gap-3">
-            <Input
-                v-model="search"
-                type="search"
-                :placeholder="t('app.admin.messages.search_placeholder')"
-                class="max-w-xs"
-                @keydown.enter="applyFilters"
-            />
-            <Select v-model="filter" @update:model-value="applyFilters">
-                <SelectTrigger class="w-full sm:w-44">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">{{
-                        t('app.admin.common.filter_all')
-                    }}</SelectItem>
-                    <SelectItem value="unread">{{
-                        t('app.admin.messages.unread')
-                    }}</SelectItem>
-                    <SelectItem value="read">{{
-                        t('app.admin.messages.read')
-                    }}</SelectItem>
-                    <SelectItem value="trashed">{{
-                        t('app.admin.common.filter_trashed')
-                    }}</SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.messages.from') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.messages.subject') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.messages.received_at') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.status') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="messages.data.length === 0">
-                    <td
-                        colspan="5"
-                        class="px-4 py-8 text-center text-muted-foreground"
+    <ListPage
+        :title="t('app.admin.messages.title')"
+        :loading="isLoading"
+        :empty="isEmpty"
+        :columns="5"
+        :links="links"
+    >
+        <template #filters>
+            <ListFiltersBar
+                :index-url="messagesIndex().url"
+                :filters="{
+                    search: filters.search,
+                    read: filters.read || 'all',
+                    trashed: filters.trashed,
+                    per_page: filters.per_page,
+                }"
+                :search-placeholder="t('app.admin.messages.search_placeholder')"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.read"
+                        @update:model-value="set('read', String($event ?? 'all'))"
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="message in messages.data"
-                    :key="message.id"
-                    class="border-b last:border-b-0"
-                    :class="{ 'font-medium': !message.read }"
-                >
-                    <td class="px-4 py-3">
-                        <p>{{ message.name }}</p>
-                        <p class="text-xs font-normal text-muted-foreground">
-                            {{ message.email }}
-                        </p>
-                    </td>
-                    <td class="px-4 py-3">
-                        {{ message.subject ?? t('app.admin.common.none') }}
-                    </td>
-                    <td class="px-4 py-3">
-                        {{ formatDate(message.createdAt) }}
-                    </td>
-                    <td class="px-4 py-3">
-                        <Badge
-                            :variant="message.read ? 'secondary' : 'default'"
-                        >
+                        <SelectTrigger class="w-44" :aria-label="t('app.admin.common.status')">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem
+                                v-for="option in readOptions"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.messages.from') }}</th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.messages.subject') }}
+            </th>
+            <th class="hidden px-4 py-3 font-medium md:table-cell">
+                {{ t('app.admin.messages.received_at') }}
+            </th>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.status') }}</th>
+            <th class="px-4 py-3 text-right font-medium">
+                {{ t('app.admin.common.actions') }}
+            </th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="message in rows"
+                :key="message.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': message.deleted, 'font-medium': !message.read }"
+            >
+                <td class="px-4 py-3">
+                    <p class="text-foreground">{{ message.name }}</p>
+                    <p class="text-xs font-normal text-muted-foreground">
+                        {{ message.email }}
+                    </p>
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">
+                    {{ message.subject ?? t('app.admin.common.none') }}
+                </td>
+                <td class="hidden px-4 py-3 md:table-cell">
+                    {{ formatDate(message.createdAt) }}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge :variant="message.read ? 'secondary' : 'default'">
                             {{
                                 message.read
                                     ? t('app.admin.messages.read')
                                     : t('app.admin.messages.unread')
                             }}
                         </Badge>
-                        <Badge
-                            v-if="message.deleted"
-                            variant="destructive"
-                            class="ml-1"
-                        >
+                        <Badge v-if="message.deleted" variant="destructive">
                             {{ t('app.admin.common.deleted_badge') }}
                         </Badge>
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                        <Button
-                            v-if="message.deleted"
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            @click="
-                                router.post(
-                                    messageRestore(message.id).url,
-                                    {},
-                                    { preserveScroll: true },
-                                )
-                            "
-                        >
-                            <RotateCcw />
-                            {{ t('app.admin.common.restore') }}
-                        </Button>
-                        <Button v-else variant="outline" size="sm" as-child>
-                            <Link :href="messageShow(message.id).url">{{
-                                t('app.admin.common.edit')
-                            }}</Link>
-                        </Button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <AdminPagination :links="messages.links" />
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    <ColumnActions
+                        :trashed="message.deleted"
+                        :edit-href="messageShow(message.id).url"
+                        :delete-href="messageDestroy(message.id).url"
+                        :restore-href="messageRestore(message.id).url"
+                        :can-update="can.update"
+                        :can-delete="can.delete"
+                    />
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 </template>

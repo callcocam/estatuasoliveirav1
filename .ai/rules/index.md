@@ -11,6 +11,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/js/composables/useCompany.ts,resources/js/components/site/**,resources/js/layouts/auth/** | .ai/rules/auth.md |
 | app/Http/Middleware/HandleInertiaRequests.php,resources/js/types/auth.ts,resources/js/components/site/SiteUserMenu.vue | .ai/rules/components-site.md |
 | app/Support/CompanyProfile.php,resources/views/app.blade.php,resources/js/composables/useCompany.ts | .ai/rules/composables.md |
+| app/Http/Controllers/Admin/** | .ai/rules/controllers-admin.md |
 | resources/js/**,app/Http/Middleware/**,resources/css/** | .ai/rules/css.md |
 | resources/js/components/AppSidebar.vue,resources/js/components/admin/AdminSidebar.vue,tests/Feature/Admin/AdminAccessTest.php | .ai/rules/feature-admin.md |
 | app/Actions/Fortify/**,app/Models/User.php | .ai/rules/fortify-models.md |
@@ -21,6 +22,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/views/vendor/mail/**,config/mail.php | .ai/rules/mail.md |
 | database/migrations/** | .ai/rules/migrations.md |
 | app/Models/** | .ai/rules/models.md |
+| resources/js/pages/admin/** | .ai/rules/pages-admin.md |
 | app/Http/Controllers/Site/ContactController.php,resources/js/pages/site/Contact.vue | .ai/rules/pages-site.md |
 | app/Console/Commands/**,storage/app/public/** | .ai/rules/public.md |
 | resources/css/**, resources/css/themes.css | .ai/rules/resources-css.md |

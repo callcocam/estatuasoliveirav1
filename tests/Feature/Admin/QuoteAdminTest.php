@@ -17,8 +17,9 @@ test('lists quotes filtered by status', function () {
         ->get(route('admin.quotes.index', ['status' => 'pending']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/quotes/Index')
-            ->has('quotes.data', 1)
-            ->where('quotes.data.0.status', 'pending'));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('quotes.data', 1)
+                ->where('quotes.data.0.status', 'pending')));
 });
 
 test('shows a quote with its items', function () {
@@ -81,12 +82,13 @@ test('lists only trashed quotes with the trashed filter', function () {
     Quote::factory()->create();
 
     $this->actingAs($this->admin)
-        ->get(route('admin.quotes.index', ['status' => 'trashed']))
+        ->get(route('admin.quotes.index', ['trashed' => 'only']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/quotes/Index')
-            ->has('quotes.data', 1)
-            ->where('quotes.data.0.id', $trashed->id)
-            ->where('quotes.data.0.deleted', true));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('quotes.data', 1)
+                ->where('quotes.data.0.id', $trashed->id)
+                ->where('quotes.data.0.deleted', true)));
 });
 
 test('hides trashed quotes from the default listing', function () {
@@ -98,8 +100,9 @@ test('hides trashed quotes from the default listing', function () {
         ->get(route('admin.quotes.index'))
         ->assertInertia(fn ($page) => $page
             ->component('admin/quotes/Index')
-            ->has('quotes.data', 1)
-            ->where('quotes.data.0.id', $active->id));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('quotes.data', 1)
+                ->where('quotes.data.0.id', $active->id)));
 });
 
 test('restores a trashed quote', function () {
@@ -119,6 +122,43 @@ test('filters quotes by customer search', function () {
         ->get(route('admin.quotes.index', ['search' => 'maria']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/quotes/Index')
-            ->has('quotes.data', 1)
-            ->where('quotes.data.0.userName', 'Maria Silva'));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('quotes.data', 1)
+                ->where('quotes.data.0.userName', 'Maria Silva')));
+});
+
+test('soft deletes a quote', function () {
+    $quote = Quote::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->delete(route('admin.quotes.destroy', $quote))
+        ->assertRedirect(route('admin.quotes.index'));
+
+    expect($quote->refresh()->trashed())->toBeTrue();
+});
+
+test('permanently deletes a trashed quote with its items', function () {
+    $quote = Quote::factory()->trashed()->create();
+    $item = $quote->items()->create([
+        'product_id' => null,
+        'name' => 'Estátua sob medida',
+        'quantity' => 1,
+        'unit_price' => 100,
+        'total' => 100,
+    ]);
+
+    $this->actingAs($this->admin)
+        ->delete(route('admin.quotes.destroy', $quote))
+        ->assertRedirect(route('admin.quotes.index', ['trashed' => 'only']));
+
+    $this->assertDatabaseMissing('quotes', ['id' => $quote->id]);
+    $this->assertDatabaseMissing('quote_items', ['id' => $item->id]);
+});
+
+test('customers cannot manage quotes', function () {
+    $customer = User::factory()->create();
+    $quote = Quote::factory()->create();
+
+    $this->actingAs($customer)->get(route('admin.quotes.index'))->assertForbidden();
+    $this->actingAs($customer)->delete(route('admin.quotes.destroy', $quote))->assertForbidden();
 });

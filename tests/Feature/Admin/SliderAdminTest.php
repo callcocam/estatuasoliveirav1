@@ -59,7 +59,7 @@ test('lists only trashed sliders with the trashed filter', function () {
     Slider::factory()->create();
 
     $this->actingAs($this->admin)
-        ->get(route('admin.sliders.index', ['filter' => 'trashed']))
+        ->get(route('admin.sliders.index', ['trashed' => 'only']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/sliders/Index')
             ->has('sliders', 1)
@@ -74,6 +74,24 @@ test('restores a trashed slider', function () {
     $this->actingAs($this->admin)->post(route('admin.sliders.restore', $slider));
 
     expect($slider->refresh()->trashed())->toBeFalse();
+});
+
+test('permanently deletes a trashed slider', function () {
+    $slider = Slider::factory()->trashed()->create();
+
+    $this->actingAs($this->admin)
+        ->delete(route('admin.sliders.destroy', $slider))
+        ->assertRedirect(route('admin.sliders.index', ['trashed' => 'only']));
+
+    $this->assertDatabaseMissing('sliders', ['id' => $slider->id]);
+});
+
+test('customers cannot manage sliders', function () {
+    $customer = User::factory()->create();
+    $slider = Slider::factory()->create();
+
+    $this->actingAs($customer)->get(route('admin.sliders.index'))->assertForbidden();
+    $this->actingAs($customer)->delete(route('admin.sliders.destroy', $slider))->assertForbidden();
 });
 
 test('reorders sliders', function () {
@@ -92,7 +110,7 @@ test('filters sliders by status and search', function () {
     Slider::factory()->create(['title' => 'Rascunho Inverno', 'status' => 'draft']);
 
     $this->actingAs($this->admin)
-        ->get(route('admin.sliders.index', ['filter' => 'draft']))
+        ->get(route('admin.sliders.index', ['status' => 'draft']))
         ->assertInertia(fn ($page) => $page->has('sliders', 1));
 
     $this->actingAs($this->admin)

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\QuoteStatus;
+use App\Http\Controllers\Concerns\InteractsWithDeferredIndex;
+use App\Http\Controllers\Concerns\InteractsWithResourceAbilities;
+use App\Http\Controllers\Concerns\InteractsWithTrashedFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\QuoteStoreRequest;
 use App\Models\Product;
@@ -11,58 +14,42 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class QuoteController extends Controller
 {
+    use InteractsWithDeferredIndex;
+    use InteractsWithResourceAbilities;
+    use InteractsWithTrashedFilter;
+
     public function index(Request $request): Response
     {
-        $status = (string) $request->string('status');
-        $search = (string) $request->string('search');
+        $this->authorize('viewAny', Quote::class);
 
-        $quotes = Quote::query()
-            ->withTrashed()
-            ->with(['user' => fn ($query) => $query->withoutGlobalScope(SoftDeletingScope::class)])
-            ->withCount('items')
-            ->when($status === 'trashed', fn ($query) => $query->whereNotNull('deleted_at'))
-            ->when($status !== '' && $status !== 'trashed', fn ($query) => $query
-                ->whereNull('deleted_at')
-                ->where('status', $status))
-            ->when($status === '', fn ($query) => $query->whereNull('deleted_at'))
-            ->when($search !== '', fn ($query) => $query
-                ->whereHas('user', fn ($userQuery) => $userQuery
-                    ->withoutGlobalScope(SoftDeletingScope::class)
-                    ->where(fn ($searchQuery) => $searchQuery
-                        ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
-                        ->orWhereRaw('LOWER(email) LIKE ?', ['%'.mb_strtolower($search).'%']))))
-            ->latest()
-            ->paginate(15)
-            ->withQueryString()
-            ->through(fn (Quote $quote): array => [
-                'id' => $quote->id,
-                'userName' => $quote->user?->name,
-                'status' => $quote->status->value,
-                'statusLabel' => $quote->status->label(),
-                'total' => $quote->total,
-                'itemsCount' => $quote->items_count,
-                'createdAt' => $quote->created_at?->toIso8601String(),
-                'deleted' => $quote->trashed(),
-            ]);
-
-        return Inertia::render('admin/quotes/Index', [
-            'quotes' => $quotes,
-            'statuses' => $this->statusOptions(),
-            'filters' => [
-                'status' => $status !== '' ? $status : null,
-                'search' => $search !== '' ? $search : null,
+        return $this->renderDeferredIndex(
+            'admin/quotes/Index',
+            'quotes',
+            fn (): LengthAwarePaginator => $this->quotesPaginator($request),
+            [
+                'statuses' => $this->statusOptions(),
+                'filters' => [
+                    'search' => (string) $request->string('search'),
+                    'status' => (string) $request->string('status'),
+                    'trashed' => $this->resolveTrashedFilter($request),
+                    'per_page' => (string) $this->resolvePerPage($request),
+                ],
+                'can' => $this->resolveResourceAbilities(Quote::class),
             ],
-        ]);
+        );
     }
 
     public function show(Quote $quote): Response
     {
+        $this->authorize('view', $quote);
+
         $quote->load(['user', 'items.product']);
 
         return Inertia::render('admin/quotes/Show', [
@@ -93,6 +80,8 @@ class QuoteController extends Controller
 
     public function create(Request $request): Response
     {
+        $this->authorize('create', Quote::class);
+
         $search = (string) $request->string('search');
 
         return Inertia::render('admin/quotes/Create', [
@@ -147,6 +136,8 @@ class QuoteController extends Controller
 
     public function updateStatus(Request $request, Quote $quote): RedirectResponse
     {
+        $this->authorize('update', $quote);
+
         $validated = $request->validate([
             'status' => ['required', Rule::enum(QuoteStatus::class)],
         ]);
@@ -158,8 +149,22 @@ class QuoteController extends Controller
         return back();
     }
 
+    /**
+     * Soft delete on the first call; permanently delete (items cascade at the
+     * database level) when the quote is already trashed.
+     */
     public function destroy(Quote $quote): RedirectResponse
     {
+        $this->authorize('delete', $quote);
+
+        if ($quote->trashed()) {
+            $quote->forceDelete();
+
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.quotes.force_deleted')]);
+
+            return to_route('admin.quotes.index', ['trashed' => 'only']);
+        }
+
         $quote->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.quotes.deleted')]);
@@ -169,11 +174,45 @@ class QuoteController extends Controller
 
     public function restore(Quote $quote): RedirectResponse
     {
+        $this->authorize('delete', $quote);
+
         $quote->restore();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('app.admin.quotes.restored')]);
 
         return back();
+    }
+
+    private function quotesPaginator(Request $request): LengthAwarePaginator
+    {
+        $status = (string) $request->string('status');
+        $search = (string) $request->string('search');
+        $trashed = $this->resolveTrashedFilter($request);
+
+        return $this->applyTrashedToQuery(Quote::query(), $trashed)
+            ->with(['user' => fn ($query) => $query->withoutGlobalScope(SoftDeletingScope::class)])
+            ->withCount('items')
+            ->when($status !== '', fn ($query) => $query->where('status', $status))
+            ->when($search !== '', fn ($query) => $query
+                ->whereHas('user', fn ($userQuery) => $userQuery
+                    ->withoutGlobalScope(SoftDeletingScope::class)
+                    ->where(fn ($searchQuery) => $searchQuery
+                        ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
+                        ->orWhereRaw('LOWER(email) LIKE ?', ['%'.mb_strtolower($search).'%']))))
+            ->latest()
+            ->orderBy('id', 'desc')
+            ->paginate($this->resolvePerPage($request))
+            ->withQueryString()
+            ->through(fn (Quote $quote): array => [
+                'id' => $quote->id,
+                'userName' => $quote->user?->name,
+                'status' => $quote->status->value,
+                'statusLabel' => $quote->status->label(),
+                'total' => $quote->total,
+                'itemsCount' => $quote->items_count,
+                'createdAt' => $quote->created_at?->toIso8601String(),
+                'deleted' => $quote->trashed(),
+            ]);
     }
 
     /**

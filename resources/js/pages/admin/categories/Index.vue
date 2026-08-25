@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { Form, Head, router } from '@inertiajs/vue3';
-import {
-    ArrowDown,
-    ArrowUp,
-    Pencil,
-    Plus,
-    RotateCcw,
-    Trash2,
-} from '@lucide/vue';
+import { ArrowDown, ArrowUp, Pencil, Plus } from '@lucide/vue';
 import { ref } from 'vue';
-import ConfirmDeleteDialog from '@/components/admin/ConfirmDeleteDialog.vue';
+import DeleteButton from '@/components/admin/DeleteButton.vue';
+import ListFiltersBar from '@/components/admin/ListFiltersBar.vue';
+import ListPage from '@/components/admin/ListPage.vue';
+import RestoreButton from '@/components/admin/RestoreButton.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -38,6 +34,7 @@ import {
     store as categoryStore,
     update as categoryUpdate,
 } from '@/routes/admin/categories';
+import type { ResourceAbilities } from '@/types/admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -54,28 +51,22 @@ type Category = {
 
 const props = defineProps<{
     categories: Category[];
-    filters: { search: string | null; status: string | null };
+    filters: { search: string; status: string; trashed: string };
+    can: ResourceAbilities;
 }>();
 
 const { t } = useT();
 
-const search = ref(props.filters.search ?? '');
-const status = ref(props.filters.status ?? 'all');
 const formOpen = ref(false);
 const editing = ref<Category | null>(null);
 const statusValue = ref('published');
-const deleting = ref<Category | null>(null);
 
-function applyFilters() {
-    router.get(
-        categoriesIndex().url,
-        {
-            search: search.value || undefined,
-            status: status.value !== 'all' ? status.value : undefined,
-        },
-        { preserveState: true, preserveScroll: true },
-    );
-}
+const statusOptions = [
+    { value: 'all', label: t('app.admin.common.filter_all') },
+    { value: 'draft', label: t('app.admin.status.draft') },
+    { value: 'published', label: t('app.admin.status.published') },
+    { value: 'archived', label: t('app.admin.status.archived') },
+];
 
 function openCreate() {
     editing.value = null;
@@ -90,8 +81,7 @@ function openEdit(category: Category) {
 }
 
 function move(index: number, delta: number) {
-    const active = props.categories;
-    const ids = active.map((category) => category.id);
+    const ids = props.categories.map((category) => category.id);
     const target = index + delta;
 
     if (target < 0 || target >= ids.length) {
@@ -102,186 +92,140 @@ function move(index: number, delta: number) {
 
     router.post(categoryReorder().url, { ids }, { preserveScroll: true });
 }
-
-function confirmDelete() {
-    if (!deleting.value) {
-        return;
-    }
-
-    router.delete(categoryDestroy(deleting.value.slug).url, {
-        preserveScroll: true,
-        onFinish: () => (deleting.value = null),
-    });
-}
-
-function restore(category: Category) {
-    router.post(
-        categoryRestore(category.slug).url,
-        {},
-        { preserveScroll: true },
-    );
-}
 </script>
 
 <template>
     <Head :title="t('app.admin.categories.title')" />
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-semibold">
-            {{ t('app.admin.categories.title') }}
-        </h1>
-        <Button type="button" @click="openCreate">
-            <Plus />
-            {{ t('app.admin.categories.new') }}
-        </Button>
-    </div>
+    <ListPage
+        :title="t('app.admin.categories.title')"
+        :loading="false"
+        :empty="categories.length === 0"
+        :columns="4"
+    >
+        <template #actions>
+            <Button v-if="can.create" type="button" @click="openCreate">
+                <Plus class="size-4" />
+                {{ t('app.admin.categories.new') }}
+            </Button>
+        </template>
 
-    <div class="flex flex-wrap items-center gap-3">
-        <Input
-            v-model="search"
-            type="search"
-            :placeholder="t('app.admin.common.search_placeholder')"
-            class="max-w-xs"
-            @keydown.enter="applyFilters"
-        />
-        <Select v-model="status" @update:model-value="applyFilters">
-            <SelectTrigger class="w-full sm:w-44">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="all">
-                    {{ t('app.admin.common.filter_all') }}
-                </SelectItem>
-                <SelectItem value="draft">
-                    {{ t('app.admin.status.draft') }}
-                </SelectItem>
-                <SelectItem value="published">
-                    {{ t('app.admin.status.published') }}
-                </SelectItem>
-                <SelectItem value="archived">
-                    {{ t('app.admin.status.archived') }}
-                </SelectItem>
-                <SelectItem value="trashed">
-                    {{ t('app.admin.common.filter_trashed') }}
-                </SelectItem>
-            </SelectContent>
-        </Select>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border">
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b bg-muted/50 text-left">
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.name') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.common.status') }}
-                    </th>
-                    <th class="px-4 py-3 font-medium">
-                        {{ t('app.admin.categories.products_count') }}
-                    </th>
-                    <th class="px-4 py-3 text-right font-medium">
-                        {{ t('app.admin.common.actions') }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="categories.length === 0">
-                    <td
-                        colspan="4"
-                        class="px-4 py-8 text-center text-muted-foreground"
+        <template #filters>
+            <ListFiltersBar
+                :index-url="categoriesIndex().url"
+                :filters="{
+                    search: filters.search,
+                    status: filters.status || 'all',
+                    trashed: filters.trashed,
+                }"
+            >
+                <template #default="{ values, set }">
+                    <Select
+                        :model-value="values.status"
+                        @update:model-value="set('status', String($event ?? 'all'))"
                     >
-                        {{ t('app.admin.common.empty') }}
-                    </td>
-                </tr>
-                <tr
-                    v-for="(category, index) in categories"
-                    :key="category.id"
-                    class="border-b last:border-b-0"
-                    :class="{ 'opacity-60': category.deleted }"
-                >
-                    <td class="px-4 py-3">
-                        <span class="font-medium">{{ category.name }}</span>
-                        <span class="ml-2 text-xs text-muted-foreground"
-                            >/{{ category.slug }}</span
-                        >
-                    </td>
-                    <td class="px-4 py-3">
+                        <SelectTrigger class="w-44" :aria-label="t('app.admin.categories.fields.status')">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in statusOptions" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </template>
+            </ListFiltersBar>
+        </template>
+
+        <template #head>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.name') }}</th>
+            <th class="px-4 py-3 font-medium">{{ t('app.admin.common.status') }}</th>
+            <th class="hidden px-4 py-3 text-center font-medium md:table-cell">
+                {{ t('app.admin.categories.products_count') }}
+            </th>
+            <th class="px-4 py-3 text-right font-medium">{{ t('app.admin.common.actions') }}</th>
+        </template>
+
+        <template #body>
+            <tr
+                v-for="(category, index) in categories"
+                :key="category.id"
+                class="border-b border-border last:border-b-0"
+                :class="{ 'opacity-60': category.deleted }"
+            >
+                <td class="px-4 py-3">
+                    <p class="font-medium text-foreground">{{ category.name }}</p>
+                    <p class="text-xs text-muted-foreground">{{ category.slug }}</p>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge :variant="category.status === 'published' ? 'default' : 'secondary'">
+                            {{ t(`app.admin.status.${category.status}`) }}
+                        </Badge>
                         <Badge v-if="category.deleted" variant="destructive">
                             {{ t('app.admin.common.deleted_badge') }}
                         </Badge>
-                        <Badge
-                            v-else
-                            :variant="
-                                category.status === 'published'
-                                    ? 'default'
-                                    : 'secondary'
-                            "
-                        >
-                            {{ t(`app.admin.status.${category.status}`) }}
-                        </Badge>
-                    </td>
-                    <td class="px-4 py-3">{{ category.productsCount }}</td>
-                    <td class="px-4 py-3">
-                        <div class="flex justify-end gap-1">
-                            <template v-if="!category.deleted">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :disabled="index === 0"
-                                    :aria-label="t('app.admin.common.move_up')"
-                                    @click="move(index, -1)"
-                                >
-                                    <ArrowUp />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :disabled="index === categories.length - 1"
-                                    :aria-label="
-                                        t('app.admin.common.move_down')
-                                    "
-                                    @click="move(index, 1)"
-                                >
-                                    <ArrowDown />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.edit')"
-                                    @click="openEdit(category)"
-                                >
-                                    <Pencil />
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="icon"
-                                    :aria-label="t('app.admin.common.delete')"
-                                    @click="deleting = category"
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </template>
+                    </div>
+                </td>
+                <td class="hidden px-4 py-3 text-center md:table-cell">
+                    {{ category.productsCount }}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                        <template v-if="!category.deleted">
                             <Button
-                                v-else
-                                type="button"
+                                v-if="can.update"
+                                size="icon"
                                 variant="outline"
-                                @click="restore(category)"
+                                type="button"
+                                :disabled="index === 0"
+                                :aria-label="t('app.admin.common.move_up')"
+                                @click="move(index, -1)"
                             >
-                                <RotateCcw />
-                                {{ t('app.admin.common.restore') }}
+                                <ArrowUp class="size-4" />
                             </Button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                            <Button
+                                v-if="can.update"
+                                size="icon"
+                                variant="outline"
+                                type="button"
+                                :disabled="index === categories.length - 1"
+                                :aria-label="t('app.admin.common.move_down')"
+                                @click="move(index, 1)"
+                            >
+                                <ArrowDown class="size-4" />
+                            </Button>
+                            <Button
+                                v-if="can.update"
+                                size="icon"
+                                variant="outline"
+                                type="button"
+                                :aria-label="t('app.admin.common.edit')"
+                                @click="openEdit(category)"
+                            >
+                                <Pencil class="size-4" />
+                            </Button>
+                            <DeleteButton
+                                v-if="can.delete"
+                                :href="categoryDestroy(category.slug).url"
+                            />
+                        </template>
+                        <template v-else>
+                            <RestoreButton
+                                v-if="can.delete"
+                                :href="categoryRestore(category.slug).url"
+                            />
+                            <DeleteButton
+                                v-if="can.delete"
+                                :href="categoryDestroy(category.slug).url"
+                                permanent
+                            />
+                        </template>
+                    </div>
+                </td>
+            </tr>
+        </template>
+    </ListPage>
 
     <Dialog v-model:open="formOpen">
         <DialogContent>
@@ -381,10 +325,4 @@ function restore(category: Category) {
             </Form>
         </DialogContent>
     </Dialog>
-
-    <ConfirmDeleteDialog
-        :open="deleting !== null"
-        @update:open="deleting = $event ? deleting : null"
-        @confirm="confirmDelete"
-    />
 </template>

@@ -62,6 +62,14 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * Determine if the user may manage panel content (Admin or Manager).
+     */
+    public function canManageContent(): bool
+    {
+        return in_array($this->role, [UserRole::Admin, UserRole::Manager], true);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

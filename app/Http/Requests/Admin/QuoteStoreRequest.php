@@ -2,11 +2,17 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Quote;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class QuoteStoreRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return $this->user()?->can('create', Quote::class) ?? false;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

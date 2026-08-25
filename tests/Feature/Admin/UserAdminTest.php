@@ -16,8 +16,9 @@ test('lists users with search', function () {
         ->get(route('admin.users.index', ['search' => 'maria']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/users/Index')
-            ->has('users.data', 1)
-            ->where('users.data.0.name', 'Maria Silva'));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.name', 'Maria Silva')));
 });
 
 test('creates a user with a role', function () {
@@ -79,6 +80,15 @@ test('deletes another user', function () {
     expect($user->refresh()->trashed())->toBeTrue();
 });
 
+test('permanently deletes a trashed user', function () {
+    $user = User::factory()->create();
+    $user->delete();
+
+    $this->actingAs($this->admin)->delete(route('admin.users.destroy', $user));
+
+    $this->assertDatabaseMissing('users', ['id' => $user->id]);
+});
+
 test('sends a password reset link', function () {
     Notification::fake();
 
@@ -95,12 +105,13 @@ test('lists only trashed users with the trashed filter', function () {
     User::factory()->create(['name' => 'Usuário Ativo']);
 
     $this->actingAs($this->admin)
-        ->get(route('admin.users.index', ['filter' => 'trashed']))
+        ->get(route('admin.users.index', ['trashed' => 'only']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/users/Index')
-            ->has('users.data', 1)
-            ->where('users.data.0.name', 'Usuário Excluído')
-            ->where('users.data.0.deleted', true));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.name', 'Usuário Excluído')
+                ->where('users.data.0.deleted', true)));
 });
 
 test('hides trashed users from the default listing', function () {
@@ -111,8 +122,9 @@ test('hides trashed users from the default listing', function () {
         ->get(route('admin.users.index'))
         ->assertInertia(fn ($page) => $page
             ->component('admin/users/Index')
-            ->has('users.data', 1)
-            ->where('users.data.0.id', $this->admin->id));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.id', $this->admin->id)));
 });
 
 test('restores a trashed user', function () {
@@ -132,6 +144,7 @@ test('filters users by role', function () {
         ->get(route('admin.users.index', ['role' => 'customer']))
         ->assertInertia(fn ($page) => $page
             ->component('admin/users/Index')
-            ->has('users.data', 1)
-            ->where('users.data.0.name', 'Cliente Um'));
+            ->loadDeferredProps(fn ($page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.name', 'Cliente Um')));
 });

@@ -53,6 +53,21 @@ return [
         'move_down' => 'Mover para baixo',
         'previous' => 'Anterior',
         'next' => 'Próxima',
+        'loading' => 'Carregando…',
+        'per_page' => 'Por página',
+        'clear_filters' => 'Limpar filtros',
+        'filter_trashed_without' => 'Não excluídos',
+        'filter_trashed_only' => 'Somente excluídos',
+        'filter_trashed_with' => 'Com excluídos',
+        'delete_permanently' => 'Excluir definitivamente',
+        'delete_dialog' => [
+            'title' => 'Confirmar exclusão',
+            'title_permanent' => 'Excluir definitivamente',
+            'description' => 'O registro irá para a lixeira e poderá ser restaurado pelo filtro ":filter".',
+            'description_permanent' => 'Esta ação não pode ser desfeita. O registro será apagado definitivamente.',
+            'confirm_prompt' => 'Para confirmar, digite a palavra:',
+            'confirm_mismatch' => 'A palavra digitada não confere.',
+        ],
     ],
 
     'dashboard' => [
@@ -83,6 +98,7 @@ return [
         'created' => 'Categoria criada.',
         'updated' => 'Categoria atualizada.',
         'deleted' => 'Categoria excluída.',
+        'force_deleted' => 'Categoria excluída definitivamente.',
         'restored' => 'Categoria restaurada.',
     ],
 
@@ -114,6 +130,7 @@ return [
         'created' => 'Produto criado. Agora adicione as imagens.',
         'updated' => 'Produto atualizado.',
         'deleted' => 'Produto excluído.',
+        'force_deleted' => 'Produto excluído definitivamente.',
         'restored' => 'Produto restaurado.',
         'duplicated' => 'Produto duplicado como rascunho.',
         'copy_name' => ':name (cópia)',
@@ -142,6 +159,7 @@ return [
         'created' => 'Slider criado. Agora adicione a imagem.',
         'updated' => 'Slider atualizado.',
         'deleted' => 'Slider excluído.',
+        'force_deleted' => 'Slider excluído definitivamente.',
         'restored' => 'Slider restaurado.',
     ],
 
@@ -165,6 +183,7 @@ return [
         'created' => 'Orçamento criado.',
         'status_updated' => 'Status do orçamento atualizado.',
         'deleted' => 'Orçamento excluído.',
+        'force_deleted' => 'Orçamento excluído definitivamente.',
         'restored' => 'Orçamento restaurado.',
     ],
 
@@ -180,6 +199,7 @@ return [
         'mark_read' => 'Marcar como lida',
         'mark_unread' => 'Marcar como não lida',
         'deleted' => 'Mensagem excluída.',
+        'force_deleted' => 'Mensagem excluída definitivamente.',
         'restored' => 'Mensagem restaurada.',
     ],
 
@@ -200,6 +220,7 @@ return [
         'created' => 'Usuário criado.',
         'updated' => 'Usuário atualizado.',
         'deleted' => 'Usuário excluído.',
+        'force_deleted' => 'Usuário excluído definitivamente.',
         'restored' => 'Usuário restaurado.',
         'cannot_delete_self' => 'Você não pode excluir a sua própria conta.',
         'reset_link_sent' => 'Link de redefinição de senha enviado.',

@@ -36,11 +36,7 @@ const { whatsappUrl, whatsappUrlWithMessage } = useCompany();
             <h2 class="mt-14 font-display text-2xl text-site-on-surface">
                 {{ t('app.site.help.faq_title') }}
             </h2>
-            <section
-                v-for="item in faq"
-                :key="item.question"
-                class="mt-8"
-            >
+            <section v-for="item in faq" :key="item.question" class="mt-8">
                 <h3 class="font-display text-xl text-site-primary">
                     {{ item.question }}
                 </h3>

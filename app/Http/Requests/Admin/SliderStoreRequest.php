@@ -3,11 +3,20 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\PublishStatus;
+use App\Models\Slider;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class SliderRequest extends FormRequest
+class SliderStoreRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return $this->user()?->can('create', Slider::class) ?? false;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
