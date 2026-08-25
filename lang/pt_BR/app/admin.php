@@ -139,6 +139,17 @@ return [
             'generating' => 'Gerando…',
             'confirm_overwrite' => 'Substituir a descrição atual pela gerada por IA?',
             'failed' => 'Não foi possível gerar a descrição, tente novamente.',
+            'errors' => [
+                'not_configured' => 'A geração por IA não está configurada. Informe a chave do provedor no arquivo .env.',
+                'unauthorized' => 'O provedor de IA recusou a chave de API. Verifique a chave configurada no .env.',
+                'model_not_found' => 'O modelo de IA configurado não existe mais no provedor. Atualize o modelo no .env.',
+                'rate_limited' => 'O limite de uso do provedor de IA foi atingido. Tente novamente em alguns minutos.',
+                'unreachable' => 'Não foi possível conectar ao provedor de IA. Verifique a conexão e tente novamente.',
+                'empty_response' => 'O provedor de IA respondeu sem texto. Tente novamente.',
+                'network' => 'Falha de conexão ao falar com o servidor. Verifique a internet e tente novamente.',
+                'server' => 'O servidor respondeu com erro (:status) ao gerar a descrição. Tente novamente.',
+                'session_expired' => 'Sua sessão expirou. Recarregue a página e entre novamente.',
+            ],
         ],
     ],
 

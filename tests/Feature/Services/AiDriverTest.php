@@ -21,7 +21,7 @@ test('gemini driver sends the expected request and parses the text', function ()
 
     expect(app(TextGenerator::class)->generate('meu prompt'))->toBe('Descrição gerada.');
 
-    Http::assertSent(fn ($request): bool => $request->url() === 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+    Http::assertSent(fn ($request): bool => $request->url() === 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent'
         && $request->hasHeader('x-goog-api-key', 'gemini-test-key')
         && $request['contents'][0]['parts'][0]['text'] === 'meu prompt');
 });
@@ -106,6 +106,40 @@ test('provider http errors raise a text generation exception', function () {
 
     app(TextGenerator::class)->generate('meu prompt');
 })->throws(TextGenerationFailedException::class);
+
+test('a missing api key fails before any request is sent', function () {
+    config()->set('ai.driver', 'gemini');
+    config()->set('ai.drivers.gemini.key', '');
+
+    expect(fn () => app(TextGenerator::class)->generate('meu prompt'))
+        ->toThrow(TextGenerationFailedException::class);
+
+    Http::assertNothingSent();
+});
+
+test('provider statuses map to actionable reasons', function (int $status, string $reason) {
+    config()->set('ai.driver', 'gemini');
+    config()->set('ai.drivers.gemini.key', 'gemini-test-key');
+
+    Http::fake([
+        'generativelanguage.googleapis.com/*' => Http::response(['error' => 'boom'], $status),
+    ]);
+
+    try {
+        app(TextGenerator::class)->generate('meu prompt');
+    } catch (TextGenerationFailedException $exception) {
+        expect($exception->reason)->toBe($reason);
+
+        return;
+    }
+
+    $this->fail('The driver did not raise a text generation exception.');
+})->with([
+    [401, 'unauthorized'],
+    [404, 'model_not_found'],
+    [429, 'rate_limited'],
+    [500, 'bad_status'],
+]);
 
 test('empty provider responses raise a text generation exception', function () {
     config()->set('ai.driver', 'gemini');

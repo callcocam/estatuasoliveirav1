@@ -65,6 +65,38 @@ test('provider failure returns 422 with a translated message', function () {
         ->assertJsonPath('errors.description.0', __('app.admin.products.ai.failed'));
 });
 
+test('a retired provider model returns its own actionable message', function () {
+    config()->set('ai.drivers.gemini.key', 'gemini-test-key');
+
+    Http::fake([
+        'generativelanguage.googleapis.com/*' => Http::response([
+            'error' => ['message' => 'This model is no longer available.'],
+        ], 404),
+    ]);
+
+    $this->actingAs($this->admin)
+        ->postJson(route('admin.products.generate-description'), ['name' => 'Buda'])
+        ->assertUnprocessable()
+        ->assertJsonPath(
+            'errors.description.0',
+            __('app.admin.products.ai.errors.model_not_found'),
+        );
+});
+
+test('a missing api key returns the not configured message', function () {
+    config()->set('ai.drivers.gemini.key', '');
+
+    $this->actingAs($this->admin)
+        ->postJson(route('admin.products.generate-description'), ['name' => 'Buda'])
+        ->assertUnprocessable()
+        ->assertJsonPath(
+            'errors.description.0',
+            __('app.admin.products.ai.errors.not_configured'),
+        );
+
+    Http::assertNothingSent();
+});
+
 test('generation is throttled after ten requests per minute', function () {
     fakeGeminiDescriptionResponse();
 

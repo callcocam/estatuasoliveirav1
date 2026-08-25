@@ -34,4 +34,9 @@ class OpenAiCompatibleDriver extends HttpTextDriver
     {
         return 'choices.0.message.content';
     }
+
+    protected function apiKey(): ?string
+    {
+        return $this->key;
+    }
 }

@@ -29,4 +29,9 @@ class GeminiDriver extends HttpTextDriver
     {
         return 'candidates.0.content.parts.0.text';
     }
+
+    protected function apiKey(): ?string
+    {
+        return $this->key;
+    }
 }

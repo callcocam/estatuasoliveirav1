@@ -21,6 +21,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -128,9 +130,20 @@ class ProductController extends Controller
 
         try {
             $description = $generator->generate($request->validated());
-        } catch (TextGenerationFailedException) {
+        } catch (TextGenerationFailedException $exception) {
+            Log::error('AI description generation failed.', [
+                'driver' => config('ai.driver'),
+                'reason' => $exception->reason,
+                'detail' => $exception->getMessage(),
+                'context' => $exception->context,
+            ]);
+
+            $message = 'app.admin.products.ai.errors.'.$exception->reason;
+
             throw ValidationException::withMessages([
-                'description' => __('app.admin.products.ai.failed'),
+                'description' => Lang::has($message)
+                    ? __($message)
+                    : __('app.admin.products.ai.failed'),
             ]);
         }
 

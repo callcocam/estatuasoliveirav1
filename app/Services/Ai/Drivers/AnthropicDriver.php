@@ -34,4 +34,9 @@ class AnthropicDriver extends HttpTextDriver
     {
         return 'content.0.text';
     }
+
+    protected function apiKey(): ?string
+    {
+        return $this->key;
+    }
 }

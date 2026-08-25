@@ -29,4 +29,9 @@ class OllamaDriver extends HttpTextDriver
     {
         return 'message.content';
     }
+
+    protected function apiKey(): ?string
+    {
+        return null;
+    }
 }

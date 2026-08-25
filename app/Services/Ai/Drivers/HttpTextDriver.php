@@ -11,6 +11,10 @@ abstract class HttpTextDriver implements TextGenerator
 {
     public function generate(string $prompt): string
     {
+        if ($this->apiKey() === '') {
+            throw TextGenerationFailedException::notConfigured(static::class);
+        }
+
         try {
             $response = $this->send($prompt);
         } catch (ConnectionException $exception) {
@@ -18,13 +22,13 @@ abstract class HttpTextDriver implements TextGenerator
         }
 
         if ($response->failed()) {
-            throw TextGenerationFailedException::badStatus($response->status());
+            throw TextGenerationFailedException::badStatus($response->status(), $response->body());
         }
 
         $text = trim((string) $response->json($this->textPath()));
 
         if ($text === '') {
-            throw TextGenerationFailedException::emptyResponse();
+            throw TextGenerationFailedException::emptyResponse($response->body());
         }
 
         return $text;
@@ -39,4 +43,10 @@ abstract class HttpTextDriver implements TextGenerator
      * Dot-notation path of the generated text inside the JSON response.
      */
     abstract protected function textPath(): string;
+
+    /**
+     * Configured API key, or null for providers that need no authentication.
+     * An empty string fails fast instead of burning a request on a 401.
+     */
+    abstract protected function apiKey(): ?string;
 }

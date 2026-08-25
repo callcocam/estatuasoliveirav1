@@ -64,23 +64,50 @@ function generateDescription(event: MouseEvent): void {
         .transform(() => payload)
         .post(props.endpoint, {
             onSuccess: (response) => {
-                emit(
-                    'update:modelValue',
-                    (response as { description?: string }).description ?? '',
-                );
-            },
-            onError: () => {
-                const errors = aiHttp.errors as Record<
-                    string,
-                    string | undefined
-                >;
+                const description = (response as { description?: string })
+                    .description;
 
+                if (typeof description !== 'string' || description === '') {
+                    aiError.value = t('app.admin.products.ai.failed');
+
+                    return;
+                }
+
+                emit('update:modelValue', description);
+            },
+            // 422: mensagem já traduzida vinda do backend.
+            onError: (errors) => {
                 aiError.value =
-                    Object.values(errors).find(
-                        (message) => typeof message === 'string',
+                    Object.values(errors as Record<string, unknown>).find(
+                        (message): message is string =>
+                            typeof message === 'string',
                     ) ?? t('app.admin.products.ai.failed');
             },
+            // 419/429/500: sem corpo de validação; evita o modal de erro do
+            // Inertia e mostra o motivo no próprio campo.
+            onHttpException: (response) => {
+                aiError.value = messageForStatus(response.status);
+
+                return true;
+            },
+            onNetworkError: () => {
+                aiError.value = t('app.admin.products.ai.errors.network');
+
+                return true;
+            },
         });
+}
+
+function messageForStatus(status: number): string {
+    if (status === 419) {
+        return t('app.admin.products.ai.errors.session_expired');
+    }
+
+    if (status === 429) {
+        return t('app.admin.products.ai.errors.rate_limited');
+    }
+
+    return t('app.admin.products.ai.errors.server', { status });
 }
 </script>
 

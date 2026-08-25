@@ -15,13 +15,17 @@ return [
 
     'driver' => env('AI_DRIVER', 'gemini'),
 
-    'timeout' => (int) env('AI_TIMEOUT', 20),
+    /*
+    | Reasoning models take ~10s for a description and occasionally stall,
+    | so the window is wider than a typical API call.
+    */
+    'timeout' => (int) env('AI_TIMEOUT', 45),
 
     'drivers' => [
 
         'gemini' => [
             'key' => env('GEMINI_API_KEY'),
-            'model' => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+            'model' => env('GEMINI_MODEL', 'gemini-3.6-flash'),
             'base_url' => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'),
         ],
 
