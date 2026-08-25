@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Media;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Slider;
@@ -24,6 +25,20 @@ it('renders the home page with published content', function () {
             ->has('featuredProducts', 1)
             ->where('featuredProducts.0.name', 'Buda destaque')
             ->has('categories', 1));
+});
+
+it('exposes one slide per slider image so the hero rotates', function () {
+    $slider = Slider::factory()->published()->create(['title' => 'Estátuas Oliveira']);
+
+    $slider->media()->saveMany(Media::factory()->count(3)->make());
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('sliders', 3)
+            ->where('sliders.0.title', 'Estátuas Oliveira')
+            ->where('sliders.2.title', 'Estátuas Oliveira')
+            ->whereNot('sliders.0.image', null));
 });
 
 it('shares the company profile from settings', function () {

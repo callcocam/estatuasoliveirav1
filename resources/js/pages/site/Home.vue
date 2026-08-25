@@ -54,29 +54,39 @@ onBeforeUnmount(() => {
             class="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[85vh]"
         >
             <template v-for="(slider, index) in sliders" :key="slider.id">
-                <img
+                <div
                     v-if="slider.image"
-                    :src="slider.image"
-                    :alt="slider.title"
                     :class="[
-                        'absolute inset-0 h-full w-full object-cover transition-opacity duration-1000',
+                        'absolute inset-0 transition-opacity duration-1000',
                         index === currentSlide ? 'opacity-100' : 'opacity-0',
                     ]"
-                />
+                >
+                    <img
+                        :src="slider.image"
+                        alt=""
+                        aria-hidden="true"
+                        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
+                    />
+                    <img
+                        :src="slider.image"
+                        :alt="slider.title"
+                        class="absolute inset-0 h-full w-full object-contain object-center"
+                    />
+                </div>
             </template>
             <div
-                class="absolute inset-0 bg-gradient-to-t from-site-inverse-surface/70 via-site-inverse-surface/30 to-transparent"
+                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/40"
             />
 
             <div class="relative z-10 mx-auto max-w-3xl px-4 py-24 text-center">
                 <h1
-                    class="font-display text-4xl leading-tight text-site-inverse-on-surface drop-shadow-sm md:text-6xl"
+                    class="font-display text-4xl leading-tight text-white [text-shadow:0_2px_12px_rgb(0_0_0_/_0.6)] md:text-6xl"
                 >
                     {{ activeSlider?.title ?? t('app.site.meta.home_title') }}
                 </h1>
                 <p
                     v-if="activeSlider?.subtitle || activeSlider?.description"
-                    class="mt-5 text-lg text-site-inverse-on-surface/90"
+                    class="mt-5 text-lg text-white/90 [text-shadow:0_1px_8px_rgb(0_0_0_/_0.6)]"
                 >
                     {{ activeSlider?.subtitle ?? activeSlider?.description }}
                 </p>
@@ -91,7 +101,7 @@ onBeforeUnmount(() => {
                     </Link>
                     <Link
                         :href="contact()"
-                        class="rounded-site border border-site-inverse-on-surface/60 px-7 py-3 text-sm font-medium text-site-inverse-on-surface transition-colors hover:bg-site-inverse-on-surface/10"
+                        class="rounded-site border border-white/70 px-7 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/10"
                     >
                         {{ t('app.site.home.hero_secondary_cta') }}
                     </Link>
@@ -110,8 +120,8 @@ onBeforeUnmount(() => {
                     :class="[
                         'h-2 rounded-full transition-all',
                         index === currentSlide
-                            ? 'w-8 bg-site-inverse-on-surface'
-                            : 'w-2 bg-site-inverse-on-surface/50',
+                            ? 'w-8 bg-white'
+                            : 'w-2 bg-white/50',
                     ]"
                     @click="currentSlide = index"
                 />
