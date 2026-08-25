@@ -10,6 +10,7 @@ return [
         'contact' => 'Contato',
         'terms' => 'Termos de Uso',
         'privacy' => 'Política de Privacidade',
+        'help' => 'Ajuda',
         'open_menu' => 'Abrir menu',
         'close_menu' => 'Fechar menu',
         'tagline' => 'Estátuas, vasos e fontes artesanais',
@@ -34,6 +35,7 @@ return [
         'contact_title' => 'Contato',
         'terms_title' => 'Termos de Uso',
         'privacy_title' => 'Política de Privacidade',
+        'help_title' => 'Ajuda',
     ],
 
     'home' => [
@@ -245,8 +247,48 @@ return [
     'whatsapp' => [
         'button' => 'Chamar no WhatsApp',
         'aria_label' => 'Conversar no WhatsApp',
-        'default_message' => "Olá! Vim pelo site da :company (:url) e gostaria de mais informações.",
+        'default_message' => 'Olá! Vim pelo site da :company (:url) e gostaria de mais informações.',
         'product_message' => "Olá! Vi esta peça no site da :company e gostaria de consultar disponibilidade e valores:\n\n:product\n:url",
+    ],
+
+    'help' => [
+        'subtitle' => 'Central de ajuda',
+        'title' => 'Ajuda',
+        'intro' => 'Reunimos aqui as dúvidas mais comuns sobre como comprar, prazos, entrega e cuidados com as peças em cimento, mármore e gesso. Se não encontrar a resposta que procura, fale conosco — teremos prazer em ajudar.',
+        'faq_title' => 'Perguntas frequentes',
+        'faq' => [
+            [
+                'question' => 'Como faço para comprar ou solicitar um orçamento?',
+                'answer' => 'Navegue pelo nosso catálogo de produtos, escolha as peças que deseja e solicite um orçamento pelo formulário de contato ou pelo botão de WhatsApp disponível em todas as páginas do site. Informe o nome da peça (ou envie o link do produto) e a cidade de entrega; retornamos com valores, disponibilidade e formas de pagamento.',
+            ],
+            [
+                'question' => 'Quais são os prazos de produção e entrega?',
+                'answer' => 'Peças em estoque são despachadas em poucos dias úteis após a confirmação do pedido. Peças fabricadas sob encomenda podem levar mais tempo, pois o cimento precisa de cura e acabamento adequados. O prazo exato depende do modelo, do tamanho e da região de entrega, e é sempre informado junto com o orçamento.',
+            ],
+            [
+                'question' => 'Como funciona a entrega de peças grandes e pesadas?',
+                'answer' => 'Estátuas, fontes e vasos em cimento são itens pesados e frágeis, por isso a entrega é combinada caso a caso: retirada no ateliê, entrega própria na região ou envio por transportadora com embalagem reforçada. O valor do frete é calculado no orçamento, de acordo com o peso, as dimensões e o destino.',
+            ],
+            [
+                'question' => 'De que materiais são feitas as peças?',
+                'answer' => 'Trabalhamos principalmente com cimento, mármore (pó de mármore) e gesso. As peças para jardim e áreas externas são produzidas em cimento, material resistente às variações de clima. Peças em gesso são indicadas para ambientes internos. Por serem artesanais, pequenas variações de tom, textura e acabamento fazem parte de cada peça.',
+            ],
+            [
+                'question' => 'Como conservar minha estátua de cimento?',
+                'answer' => 'Limpe as peças com pano ou escova macia e água, sem produtos abrasivos e sem lavadora de alta pressão. Em áreas externas, uma demão de resina acrílica ou impermeabilizante incolor a cada um ou dois anos ajuda a proteger a superfície e a conservar a pintura. Evite arrastar a peça ao movê-la: prefira levantá-la com apoio na base.',
+            ],
+            [
+                'question' => 'As peças podem ficar ao ar livre, no sol e na chuva?',
+                'answer' => 'Sim. As peças em cimento são feitas justamente para jardins, sítios e áreas externas, e resistem bem ao sol e à chuva. Com o tempo, a exposição pode desgastar a pintura — o que muitos clientes até apreciam, pelo aspecto envelhecido. Para manter as cores originais, basta refazer a impermeabilização periodicamente. Peças em gesso, porém, devem ficar em ambientes internos.',
+            ],
+        ],
+        'contact_title' => 'Ainda com dúvidas?',
+        'contact_text' => 'Fale com a nossa equipe: respondemos pelo WhatsApp em horário comercial ou pelo formulário de contato do site.',
+        'contact_button' => 'Ir para o contato',
+        'whatsapp_button' => 'Chamar no WhatsApp',
+        'legal_text' => 'Você também pode consultar nossos documentos legais:',
+        'legal_terms' => 'Termos de Uso',
+        'legal_privacy' => 'Política de Privacidade',
     ],
 
     'cookies' => [

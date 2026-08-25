@@ -17,6 +17,7 @@ return [
         'settings' => 'Configurações do site',
         'view_site' => 'Ver site',
         'help' => 'Ajuda',
+        'appearance' => 'Aparência',
         'admin_panel' => 'Painel administrativo',
     ],
 

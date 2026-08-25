@@ -126,7 +126,7 @@ function restore(category: Category) {
 <template>
     <Head :title="t('app.admin.categories.title')" />
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-semibold">
             {{ t('app.admin.categories.title') }}
         </h1>
@@ -136,7 +136,7 @@ function restore(category: Category) {
         </Button>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-3">
         <Input
             v-model="search"
             type="search"
@@ -145,7 +145,7 @@ function restore(category: Category) {
             @keydown.enter="applyFilters"
         />
         <Select v-model="status" @update:model-value="applyFilters">
-            <SelectTrigger class="w-44">
+            <SelectTrigger class="w-full sm:w-44">
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>

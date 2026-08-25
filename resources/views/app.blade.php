@@ -19,14 +19,16 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
+        {{-- Inline style to set the HTML background color based on the active site theme.
+             `--site-surface` é definido em themes.css via [data-theme=...] (e .dark[data-theme=...]);
+             os fallbacks em oklch cobrem o instante antes do CSS do Vite carregar. --}}
         <style>
             html {
-                background-color: oklch(1 0 0);
+                background-color: var(--site-surface, oklch(1 0 0));
             }
 
             html.dark {
-                background-color: oklch(0.145 0 0);
+                background-color: var(--site-surface, oklch(0.145 0 0));
             }
         </style>
 

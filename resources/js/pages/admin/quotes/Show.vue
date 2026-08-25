@@ -116,46 +116,50 @@ function confirmDelete() {
                 <CardTitle>{{ t('app.admin.quotes.items') }}</CardTitle>
             </CardHeader>
             <CardContent>
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b text-left">
-                            <th class="py-2 font-medium">
-                                {{ t('app.admin.quotes.item_name') }}
-                            </th>
-                            <th class="py-2 font-medium">
-                                {{ t('app.admin.quotes.quantity') }}
-                            </th>
-                            <th class="py-2 font-medium">
-                                {{ t('app.admin.quotes.unit_price') }}
-                            </th>
-                            <th class="py-2 text-right font-medium">
-                                {{ t('app.admin.quotes.total') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="item in quote.items"
-                            :key="item.id"
-                            class="border-b last:border-b-0"
-                        >
-                            <td class="py-2">{{ item.name }}</td>
-                            <td class="py-2">{{ item.quantity }}</td>
-                            <td class="py-2">R$ {{ item.unitPrice }}</td>
-                            <td class="py-2 text-right">R$ {{ item.total }}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="py-2 font-medium">
-                                {{ t('app.admin.quotes.total') }}
-                            </td>
-                            <td class="py-2 text-right font-semibold">
-                                R$ {{ quote.total }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b text-left">
+                                <th class="py-2 font-medium">
+                                    {{ t('app.admin.quotes.item_name') }}
+                                </th>
+                                <th class="py-2 font-medium">
+                                    {{ t('app.admin.quotes.quantity') }}
+                                </th>
+                                <th class="py-2 font-medium">
+                                    {{ t('app.admin.quotes.unit_price') }}
+                                </th>
+                                <th class="py-2 text-right font-medium">
+                                    {{ t('app.admin.quotes.total') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="item in quote.items"
+                                :key="item.id"
+                                class="border-b last:border-b-0"
+                            >
+                                <td class="py-2">{{ item.name }}</td>
+                                <td class="py-2">{{ item.quantity }}</td>
+                                <td class="py-2">R$ {{ item.unitPrice }}</td>
+                                <td class="py-2 text-right">
+                                    R$ {{ item.total }}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="py-2 font-medium">
+                                    {{ t('app.admin.quotes.total') }}
+                                </td>
+                                <td class="py-2 text-right font-semibold">
+                                    R$ {{ quote.total }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </CardContent>
         </Card>
 

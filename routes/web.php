@@ -4,6 +4,7 @@ use App\Http\Controllers\Customer\QuoteController;
 use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\GalleryController;
+use App\Http\Controllers\Site\HelpController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PrivacyController;
 use App\Http\Controllers\Site\ProductController;
@@ -20,6 +21,7 @@ Route::get('produtos/{product:slug}', [ProductController::class, 'show'])->name(
 Route::get('galeria', GalleryController::class)->name('gallery');
 Route::get('contato', [ContactController::class, 'show'])->name('contact');
 Route::post('contato', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
+Route::get('ajuda', HelpController::class)->name('help');
 Route::get('termos-de-uso', TermsController::class)->name('terms');
 Route::get('politica-de-privacidade', PrivacyController::class)->name('privacy');
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');

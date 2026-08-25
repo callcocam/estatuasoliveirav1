@@ -86,7 +86,7 @@ function confirmDelete() {
 <template>
     <Head :title="t('app.admin.products.title')" />
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-semibold">
             {{ t('app.admin.products.title') }}
         </h1>

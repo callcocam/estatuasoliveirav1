@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Form, Head, Link, useHttp } from '@inertiajs/vue3';
-import { Sparkles } from '@lucide/vue';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import AiDescriptionField from '@/components/admin/AiDescriptionField.vue';
 import MediaUploader from '@/components/admin/MediaUploader.vue';
 import type { MediaItem } from '@/components/admin/MediaUploader.vue';
 import InputError from '@/components/InputError.vue';
@@ -59,65 +59,30 @@ const featured = ref(props.product?.featured ?? false);
 const description = ref(props.product?.description ?? '');
 
 /**
- * Geração de descrição por IA: envia os campos atuais do form (lidos do
- * próprio <form>, já que os inputs são não-controlados) para o endpoint
- * admin e preenche o textarea com o resultado.
+ * Geração de descrição por IA: monta o payload com os campos atuais do
+ * form (lidos do próprio <form>, já que os inputs são não-controlados);
+ * a chamada ao endpoint fica no AiDescriptionField.
  */
-const aiError = ref<string | null>(null);
-
-const aiHttp = useHttp({
-    name: '',
-    category: null as string | null,
-    reference: null as string | null,
-    width_cm: null as string | null,
-    height_cm: null as string | null,
-    weight_kg: null as string | null,
-});
-
-function generateDescription(event: MouseEvent): void {
-    if (
-        description.value.trim() !== '' &&
-        !window.confirm(t('app.admin.products.ai.confirm_overwrite'))
-    ) {
-        return;
-    }
-
-    const formElement = (event.currentTarget as HTMLElement).closest('form');
-    const data = formElement ? new FormData(formElement) : new FormData();
+function buildAiPayload(data: FormData): Record<string, string | null> {
     const field = (name: string): string | null => {
         const value = data.get(name);
 
         return typeof value === 'string' && value.trim() !== '' ? value : null;
     };
 
-    aiHttp.name = field('name') ?? '';
-    aiHttp.category =
-        categoryValue.value === 'none'
-            ? null
-            : (props.categories.find(
-                  (category) => category.id === categoryValue.value,
-              )?.name ?? null);
-    aiHttp.reference = field('reference');
-    aiHttp.width_cm = field('width_cm');
-    aiHttp.height_cm = field('height_cm');
-    aiHttp.weight_kg = field('weight_kg');
-
-    aiError.value = null;
-
-    aiHttp.post(generateDescriptionRoute.url(), {
-        onSuccess: (response) => {
-            description.value =
-                (response as { description?: string }).description ?? '';
-        },
-        onError: () => {
-            const errors = aiHttp.errors as Record<string, string | undefined>;
-
-            aiError.value =
-                errors.name ??
-                errors.description ??
-                t('app.admin.products.ai.failed');
-        },
-    });
+    return {
+        name: field('name') ?? '',
+        category:
+            categoryValue.value === 'none'
+                ? null
+                : (props.categories.find(
+                      (category) => category.id === categoryValue.value,
+                  )?.name ?? null),
+        reference: field('reference'),
+        width_cm: field('width_cm'),
+        height_cm: field('height_cm'),
+        weight_kg: field('weight_kg'),
+    };
 }
 </script>
 
@@ -221,35 +186,14 @@ function generateDescription(event: MouseEvent): void {
                             <InputError :message="errors.reference" />
                         </div>
                     </div>
-                    <div class="grid gap-2">
-                        <div class="flex items-center justify-between gap-2">
-                            <Label for="product-description">{{
-                                t('app.admin.products.fields.description')
-                            }}</Label>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                :disabled="aiHttp.processing"
-                                @click="generateDescription"
-                            >
-                                <Sparkles class="size-4" />
-                                {{
-                                    aiHttp.processing
-                                        ? t('app.admin.products.ai.generating')
-                                        : t('app.admin.products.ai.generate')
-                                }}
-                            </Button>
-                        </div>
-                        <textarea
-                            id="product-description"
-                            name="description"
-                            rows="6"
-                            class="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                            v-model="description"
-                        ></textarea>
-                        <InputError :message="aiError ?? errors.description" />
-                    </div>
+                    <AiDescriptionField
+                        id="product-description"
+                        v-model="description"
+                        :endpoint="generateDescriptionRoute.url()"
+                        :payload="buildAiPayload"
+                        :error="errors.description"
+                        :label="t('app.admin.products.fields.description')"
+                    />
                     <div class="grid gap-4 sm:grid-cols-3">
                         <div class="grid gap-2">
                             <Label for="product-width">{{

@@ -44,7 +44,7 @@ const { t } = useT();
 
     <h1 class="text-2xl font-semibold">{{ t('app.admin.dashboard.title') }}</h1>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <Card>
             <CardHeader class="pb-2">
                 <CardTitle class="text-sm font-medium text-muted-foreground">

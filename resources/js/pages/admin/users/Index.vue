@@ -109,7 +109,7 @@ function confirmDelete() {
 <template>
     <Head :title="t('app.admin.users.title')" />
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-semibold">{{ t('app.admin.users.title') }}</h1>
         <Button type="button" @click="openCreate">
             <Plus />
@@ -117,7 +117,7 @@ function confirmDelete() {
         </Button>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-3">
         <Input
             v-model="search"
             type="search"
@@ -126,7 +126,7 @@ function confirmDelete() {
             @keydown.enter="applyFilters"
         />
         <Select v-model="role" @update:model-value="applyFilters">
-            <SelectTrigger class="w-44">
+            <SelectTrigger class="w-full sm:w-44">
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -143,7 +143,7 @@ function confirmDelete() {
             </SelectContent>
         </Select>
         <Select v-model="filter" @update:model-value="applyFilters">
-            <SelectTrigger class="w-44">
+            <SelectTrigger class="w-full sm:w-44">
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>

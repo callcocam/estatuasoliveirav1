@@ -120,7 +120,7 @@ const whatsappQuoteMessage = computed(() =>
                     </p>
 
                     <dl
-                        class="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-site-outline-variant pt-8 text-sm"
+                        class="mt-8 grid gap-x-6 gap-y-4 border-t border-site-outline-variant pt-8 text-sm sm:grid-cols-2"
                     >
                         <template v-if="product.reference">
                             <div>

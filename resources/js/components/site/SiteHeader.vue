@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import SiteAppearanceToggle from '@/components/site/SiteAppearanceToggle.vue';
 import SiteUserMenu from '@/components/site/SiteUserMenu.vue';
 import ThemeSwitcher from '@/components/site/ThemeSwitcher.vue';
@@ -21,6 +21,27 @@ watch(
         mobileMenuOpen.value = false;
     },
 );
+
+function closeOnEscape(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+        mobileMenuOpen.value = false;
+    }
+}
+
+watch(mobileMenuOpen, (open) => {
+    document.body.style.overflow = open ? 'hidden' : '';
+
+    if (open) {
+        document.addEventListener('keydown', closeOnEscape);
+    } else {
+        document.removeEventListener('keydown', closeOnEscape);
+    }
+});
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', closeOnEscape);
+    document.body.style.overflow = '';
+});
 
 const links = computed(() => [
     { label: t('app.site.nav.home'), href: home(), active: page.url === '/' },
@@ -207,7 +228,7 @@ const phoneHref = computed(() =>
         <!-- Mobile menu -->
         <nav
             v-if="mobileMenuOpen"
-            class="border-t border-site-outline-variant bg-site-surface px-4 pt-2 pb-4 md:hidden"
+            class="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-site-outline-variant bg-site-surface px-4 pt-2 pb-4 md:hidden"
             :aria-label="t('app.site.nav.open_menu')"
         >
             <Link

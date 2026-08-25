@@ -13,6 +13,7 @@ import {
     Users,
 } from '@lucide/vue';
 import { computed } from 'vue';
+import AppearanceToggle from '@/components/AppearanceToggle.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -168,6 +169,14 @@ const groups = computed<{ label: string; items: NavItem[] }[]>(() => {
 
         <SidebarFooter>
             <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        as-child
+                        :tooltip="t('app.admin.nav.appearance')"
+                    >
+                        <AppearanceToggle />
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         as-child

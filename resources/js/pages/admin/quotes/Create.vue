@@ -93,7 +93,7 @@ function submit() {
 <template>
     <Head :title="t('app.admin.quotes.new')" />
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-semibold">{{ t('app.admin.quotes.new') }}</h1>
         <Button variant="outline" as-child>
             <Link :href="quotesIndex().url">{{

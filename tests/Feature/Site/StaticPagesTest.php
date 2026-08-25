@@ -19,6 +19,19 @@ it('has a dedicated craft card text distinct from the intro text', function () {
         ->and(__('app.site.about.craft_card_text'))->not->toBe(__('app.site.about.craft_text'));
 });
 
+it('renders the help page with the translated FAQ items', function () {
+    app()->setLocale('pt_BR');
+
+    $this->withoutVite();
+
+    $this->get(route('help'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('site/Help')
+            ->has('faq', count(__('app.site.help.faq')))
+            ->where('faq.0.question', __('app.site.help.faq')[0]['question']));
+});
+
 it('renders the terms page with settings content', function () {
     Setting::set('content_terms', 'Conteúdo dos termos.');
 

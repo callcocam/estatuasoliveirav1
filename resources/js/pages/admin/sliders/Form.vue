@@ -53,7 +53,7 @@ const statusValue = ref(props.slider?.status ?? 'draft');
         "
     />
 
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-semibold">
             {{
                 slider
